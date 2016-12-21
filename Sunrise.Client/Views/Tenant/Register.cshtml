@@ -14,7 +14,7 @@
                         <label class="col-sm-2 text-right">Type:</label>
                         <div class="col-sm-4">
                             <!-- selection -->
-                            <select class="form-control" ng-model="tenant.type"  ng-change="tenantTypeOnChange()">
+                            <select class="form-control" ng-model="tenant.type" ng-change="tenantTypeOnChange()">
                                 <option ng-repeat="type in tenant.tenantTypes" value="{{type.value}}" ng-selected="type.selected">{{type.text}}</option>
                             </select>
                         </div>
@@ -32,6 +32,7 @@
 </div>
 
 @section scripts {
+    <script src="@Url.Content("~/Scripts/app/service/villaService.js")"></script>
     <script src="@Url.Content("~/Scripts/app/service/tenantService.js")"></script>
     <script src="@Url.Content("~/Scripts/app/controller/tenantRegisterController.js")"></script>
 }

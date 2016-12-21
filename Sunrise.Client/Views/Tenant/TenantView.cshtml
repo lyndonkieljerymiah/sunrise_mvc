@@ -19,7 +19,7 @@
     <div class="form-group">
         @Html.LabelFor(m => m.Individual.Gender, new {@class = "col-sm-2 text-right"})
         <div class="col-sm-4">
-            @Html.DropDownListFor(m => m.Individual.Gender, Model.Genders, new {@class = "form-control", ng_model = "tenant.individual.gender"})
+            @Html.DropDownListFor(m => m.Individual.Gender, Model.Individual.Genders, new {@class = "form-control", ng_model = "tenant.individual.gender"})
         </div>
         @Html.LabelFor(m => m.Individual.Birthday, new {@class = "col-sm-2 text-right"})
         <div class="col-sm-4">

@@ -8,7 +8,15 @@ namespace Sunrise.Client.Domains.Models
 {
     public class Villa
     {
+
+        public Villa()
+        {
+            DateStamp = DateTime.Now;
+        }
+
         public int Id { get; set; }
+
+        public DateTime DateStamp { get; private set; } 
 
         public string VillaNo { get; set; }
 
@@ -18,13 +26,15 @@ namespace Sunrise.Client.Domains.Models
 
         public string QtelNo { get; set; }
 
-        public string Status { get; set; }
+        public int Status { get; set; }
         
         public string Type { get; set; }
 
+        public int Capacity { get; set; }
+
+        public string Description { get; set; }
+
         public byte[] Picture { get; set; }
-
-
 
     }
 }

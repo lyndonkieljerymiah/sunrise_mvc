@@ -71,7 +71,9 @@ namespace Sunrise.Client.Controllers.Api
         public IHttpActionResult Update(TenantRegisterViewModel vm)
         {
 
-            return Ok();
+            if (!ModelState.IsValid)
+                return BadRequest();
+            return Ok(vm);
         }
     }
 }

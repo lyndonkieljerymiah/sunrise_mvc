@@ -21,6 +21,28 @@ namespace Sunrise.Client.Domains.ViewModels
         public int Id { get; set; }
 
         public string Type { get; set; }
+
+        public string FullType
+        {
+            get
+            {
+                return (this.Type == "in") ? "Individual" : "Company";
+
+            }
+        }
+
+        public IEnumerable<SelectListItem> TenantTypes
+        {
+            get
+            {
+                return new List<SelectListItem>
+                {
+                    new SelectListItem() { Text = "Individual", Value= "in",Selected = true},
+                    new SelectListItem() { Text = "Company", Value= "co"}
+                };
+            }
+        }
+
         public string Code { get; set; }
         public string Name { get; set; }
         [Display(Name = "Email Address")]
@@ -42,18 +64,23 @@ namespace Sunrise.Client.Domains.ViewModels
         public CompanyViewModel Company { get; set; }
 
         public ICollection<SalesViewModel> Sales { get; set; }
+        
+    }
 
-        public IEnumerable<SelectListItem> TenantTypes
+    public class IndividualViewModel   
+    {
+
+        
+        public string Gender { get; set; }
+
+        public string FullGender
         {
-            get
-            {
-                return new List<SelectListItem>
-                {
-                    new SelectListItem() { Text = "Individual", Value= "in",Selected = true},
-                    new SelectListItem() { Text = "Company", Value= "co"}
-                };
-            }
+            get { return (this.Gender == "male") ? "Male" : "Female"; }
         }
+
+        public DateTime Birthday { get; set; }
+
+        public string Company { get; set; }
 
         public IEnumerable<SelectListItem> Genders
         {
@@ -66,16 +93,6 @@ namespace Sunrise.Client.Domains.ViewModels
                 };
             }
         }
-
-       
-
-    }
-
-    public class IndividualViewModel   
-    {
-        public string Gender { get; set; }
-        public DateTime Birthday { get; set; }
-        public string Company { get; set; }
     }
 
     public class CompanyViewModel
