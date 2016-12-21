@@ -1,0 +1,55 @@
+﻿@model Sunrise.Client.Domains.ViewModels.SalesViewModel
+<div>
+    <div class="page-header">
+        <h3>Choose Villa</h3>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(m => m.VillaNo, new {@class = "col-md-3 text-right"})
+                <div class="col-md-9">
+                    @Html.TextBoxFor(m => m.VillaNo, new {@class = "form-control", ng_model = "data.tenant.sales.villaNo"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.RentalType, new {@class = "col-md-3 text-right"})
+                <div class="col-md-9">
+                    @Html.DropDownListFor(m => m.RentalType, Model.RentalTypes, new {@class = "form-control", ng_model = "data.tenant.sales.rentalType"})
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ContractStatus, new {@class = "col-md-3 text-right"})
+                <div class="col-md-9">
+                    @Html.DropDownListFor(m => m.ContractStatus, Model.ContractStatuses, new {@class = "form-control", ng_model = "data.tenant.sales.contractStatus"})
+                </div>
+            </div>
+            <div class="page-header">
+                <strong>Period</strong>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.PeriodStart, new {@class = "col-md-3 text-right"})
+                <div class="col-md-9">
+                    @Html.TextBoxFor(m => m.PeriodStart, new {@class = "form-control", ng_model = "data.tenant.sales.periodStart"})
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.PeriodEnd, new {@class = "col-md-3 text-right"})
+                <div class="col-md-9">
+                    @Html.TextBoxFor(m => m.PeriodEnd, new {@class = "form-control", ng_model = "data.tenant.sales.periodEnd"})
+                </div>
+            </div>
+            <hr/>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Amount, new {@class = "col-md-3 text-right"})
+                <div class="col-md-9">
+                    @Html.TextBoxFor(m => m.Amount, new {@class = "form-control", ng_model = "data.tenant.sales.amount"})
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+
+        </div>
+
+    </div>
+</div>

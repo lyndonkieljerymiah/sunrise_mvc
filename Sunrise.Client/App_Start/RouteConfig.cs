@@ -13,6 +13,15 @@ namespace Sunrise.Client
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            routes.MapMvcAttributeRoutes();
+
+
+            routes.MapRoute(
+                name: "Tenant",
+                url: "Tenant/{action}/{tv}",
+                defaults:new {controller = "Tenant", action="Index", tv= UrlParameter.Optional}
+            );
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

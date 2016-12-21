@@ -19,13 +19,20 @@ namespace Sunrise.Client
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
+            bundles.Add(new ScriptBundle("~/bundles/ui-bootstrap").Include(
+                      "~/Scripts/angular-ui/ui-bootstrap-tpls.js",
                       "~/Scripts/respond.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/angular").Include(
+                      "~/Scripts/libs/angular.js",
+                      "~/Scripts/libs/angular-route.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/app").Include(
+                      "~/Scripts/app/app-bootstrap.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/default.css"));
         }
     }
 }

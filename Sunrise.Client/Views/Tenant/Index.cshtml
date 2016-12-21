@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "Tenants";
+}
+
+<div ng-controller="tenantsController as $ctrl">
+    <div class="page-header">
+        <h3>Tenant List</h3>
+        <a href="@Url.Action("Register","Tenant")" class="btn btn-primary">Add Tenant</a>
+    </div>
+    <div>
+        <table class="table">
+            <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Email Address</th>
+                <th>Type</th>
+            </tr>
+            <tr ng-repeat="tenant in tenants">
+                <td></td>
+                <td>{{tenant.name}}</td>
+                <td>{{tenant.emailAddress}}</td>
+                <td>{{tenant.type}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+@section scripts {
+<script src="@Url.Content("~/Scripts/app/service/tenantService.js")"></script>
+    <script src="@Url.Content("~/Scripts/app/controller/tenantsController.js")"></script>
+}

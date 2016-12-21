@@ -1,0 +1,81 @@
+﻿@model Sunrise.Client.Domains.ViewModels.TenantProfileViewModel
+
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-heading">Tenant Information</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-2">Tenant Code:</div>
+                    <div class="col-md-10">@Model.Code</div>
+                    <div class="col-md-2">Name :</div>
+                    <div class="col-md-10">@Model.Name</div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Selected Villa</div>
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <th>Villa No</th>
+                        <th>Rental Type</th>
+                        <th>Elec. No.</th>
+                        <th>Period Start</th>
+                        <th>Period End</th>
+                        <th>Amount</th>
+                    </tr>
+                    @foreach (var sale in @Model.Sales)
+                    {
+                        <tr>
+                            <td>@sale.VillaNo</td>
+                            <td>@sale.RentalType</td>
+                            <td>@sale.ElectricNo</td>
+                            <td>@sale.PeriodStart.ToShortDateString()</td>
+                            <td>@sale.PeriodEnd.ToShortDateString()</td>
+                            <td>QR. @sale.Amount.ToString("##,###.00")</td>
+                        </tr>
+                    }
+
+                </table>
+
+                <div>
+                    <h3 class="text-warning">Total Amount: 0.00 QR</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel panel-danger">
+            <div class="panel-heading"></div>
+            <div class="panel-body">
+                <strong class="text-danger text-center">Status: Waiting</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Payment Details</div>
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <th>Cheque No</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Status Date</th>
+                        <th>Remarks</th>
+                    </tr>
+                </table>
+                <div class="pull-right">
+                    <button class="btn btn-primary">Add Payment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
