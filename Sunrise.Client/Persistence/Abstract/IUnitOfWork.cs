@@ -11,6 +11,7 @@ namespace Sunrise.Client.Persistence.Abstract
 
         ITenantRepository Tenants { get; }
         ISelectionRepository Selections { get; }
+        IVillaRepository Villas { get; }
 
         void SaveChanges();
 

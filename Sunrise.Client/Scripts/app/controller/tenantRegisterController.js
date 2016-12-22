@@ -24,28 +24,34 @@ mainApp.directive("villa", function () {
         template: '<div ng-include="getSalesTemplate()"></div>',
         controller: function ($scope, villaService)
         {
+
+
+
             $scope.reset = function ()
             {
                 $scope.showWarning = false;
                 $scope.villaModel = null;
             }
 
-            $scope.checkAvailability = function ()
+            $scope.showDetail = function ()
             {
                 var villaNo = $scope.tenant.sales[0].villaNo;
-                villaService.checkAvailability(villaNo,
+                console.log(villaNo);
+                villaService.getVilla(villaNo,
                     function(data) {
                         $scope.villaModel = data;
                         $scope.showWarning = true;
                     });
             }
+
+            
         }
     };
 });
 
 
 
-mainApp.controller("tenantRegisterController", function ($scope, tenantService) {
+mainApp.controller("tenantRegisterController", function ($scope, tenantService,villaService) {
 
     var ctrl = this;
     var templateUrl = "";
@@ -59,7 +65,12 @@ mainApp.controller("tenantRegisterController", function ($scope, tenantService) 
     function getTemplateStep(step)
     {
         if (step === 2) {
+
             $scope.salesTemplate = tenantService.getSalesView();
+            //populate
+            villaService.getVillas(function(data) {
+                $scope.villas = data;
+            });
         }
         if (step === 3)
         {   

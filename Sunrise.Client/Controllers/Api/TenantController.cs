@@ -48,6 +48,7 @@ namespace Sunrise.Client.Controllers.Api
         [Route("list")]
         public ICollection<TenantRegisterViewModel> List()
         {
+
             var tenants = new List<TenantRegisterViewModel>()
             {
                 new TenantRegisterViewModel
@@ -73,7 +74,18 @@ namespace Sunrise.Client.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var tenant = new Tenant();
+            //create tenant
+            var tenant = Tenant.Create(vm.Type, vm.Code, vm.Name, vm.EmailAddress,
+                vm.TelNo, vm.MobileNo, vm.FaxNo, vm.Address1, vm.Address2, vm.City, vm.PostalCode);
+
+            if (vm.Type == "ttin")
+            {
+                tenant.AddIndividual(vm.Individual.Birthday,vm.Individual.Gender,vm.Individual.QatarId,vm.Individual.Company);
+            }
+            else
+            {
+                tenant.AddCompany(vm.Company.CrNo,vm.Company.BusinessType,vm.Company.ValidityDate,vm.Company.Representative);
+            }
 
             return Ok(vm);
         }

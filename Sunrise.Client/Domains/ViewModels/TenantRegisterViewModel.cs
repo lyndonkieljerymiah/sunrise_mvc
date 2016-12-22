@@ -24,9 +24,9 @@ namespace Sunrise.Client.Domains.ViewModels
         {
             this.Individual = new IndividualViewModel();
             this.Company = new CompanyViewModel();
-            this.Sales = new HashSet<SalesViewModel>();
-
         }
+        
+
         public int Id { get; set; }
 
         [Required]
@@ -68,6 +68,9 @@ namespace Sunrise.Client.Domains.ViewModels
         public string TelNo { get; set; }
         [Display(Name = "Mobile No.")]
         public string MobileNo { get; set; }
+        [Display(Name = "Fax No.")]
+        public string FaxNo { get; set; }
+
         [Required]
         [Display(Name = "Address 1")]
         public string Address1 { get; set; }
@@ -79,11 +82,11 @@ namespace Sunrise.Client.Domains.ViewModels
         [Required]
         public string City { get; set; }
 
-        public IndividualViewModel Individual { get; set; }
 
+        public IndividualViewModel Individual { get; set; }
         public CompanyViewModel Company { get; set; }
 
-        public ICollection<SalesViewModel> Sales { get; set; }
+       
         
     }
 
@@ -96,6 +99,10 @@ namespace Sunrise.Client.Domains.ViewModels
         }
         [Required]
         public GenderEnum Gender { get; set; }
+
+        [Required]
+        [Display(Name="Qatar Id")]
+        public string QatarId { get; set; }
 
         public string FullGender
         {

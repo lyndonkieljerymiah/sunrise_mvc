@@ -27,33 +27,15 @@ namespace Sunrise.Client.Controllers
             return View();
         }
 
-        [Route("Register")]
-        public async Task<ActionResult> Register()
-        {
-            var selections = await _uw.Selections.GetSelections(new string[] {"TenantType"});
-            var vmTenant = new TenantRegisterViewModel(selections);
-            return View(vmTenant);
-        }
-        
-
-        [Route("View/{tv?}")]
-        public async Task<PartialViewResult> TenantView(string tv)
+        [Route("Template/Register/{tv?}")]
+        public async Task<PartialViewResult> Register(string tv = "ttin")
         {
             var selections = await _uw.Selections.GetSelections(new string[] { "TenantType" });
             var vmTenant = new TenantRegisterViewModel(selections);
             vmTenant.Type = tv;
-            return PartialView(vmTenant);
+            return PartialView("_Register",vmTenant);
         }
-
-        [Route("Sales")]
-        public async Task<PartialViewResult> SalesView()
-        {
-            var selections = await _uw.Selections.GetSelections(new string[] { "RentalType","ContractStatus" });
-            return PartialView(new SalesViewModel(selections));
-        }
-
-
-       
         
+
     }
 }

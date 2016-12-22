@@ -1,0 +1,48 @@
+﻿@model Sunrise.Client.Domains.ViewModels.SalesViewModel
+@{
+    ViewBag.Title = "Checkout";
+
+}
+
+<div class="page-header">
+    <h1>Checkout Villa</h1>
+</div>
+<form class="form-horizontal">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">New Tenant</div>
+                <div class="panel-body">
+                    <!-- angular -->
+                    <tenant-register template='register'></tenant-register>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Villa Information
+                </div>
+                <div class="panel-body">
+                    <div class="thumbnail">
+                        <img src="~/Content/imgs/villa-spalletti-1.jpg" />
+                    </div>
+                    <p>Villa No: @Model.Villa.VillaNo</p>
+                    <p>Descripton: @Model.Villa.Description</p>
+                </div>
+            </div>
+            <hr />
+            <div class="panel panel-default">
+                <div class="panel-heading">Details</div>
+                <div class="panel-body">
+                    @Html.Partial("_SalesView")
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts
+{
+    <script src="~/Scripts/app/controller/checkoutController.js"></script>
+}

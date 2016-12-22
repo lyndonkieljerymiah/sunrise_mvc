@@ -42,7 +42,5 @@ namespace Sunrise.Client.Domains.Models
         public virtual Villa Villa { get; set; }
         public virtual Tenant Tenant { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
-
-
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Sunrise.Client.Domains.Enum;
 
 namespace Sunrise.Client.Domains.Models
 {
@@ -10,19 +11,10 @@ namespace Sunrise.Client.Domains.Models
     {
         public static Tenant Create(string type, string code, string name, string emailAddress, string telNo,
             string mobileNo,
-            string faxNo,string address1,string address2, string city,string postalCode, Individual individual = null,Company company = null)
+            string faxNo,string address1,string address2, string city,string postalCode)
         {
             var tenant = new Tenant(type,code,name,emailAddress,telNo,mobileNo,faxNo);
             tenant.Address = new Address(address1, address2, city, postalCode);
-
-            if (type == "ttin")
-            {
-                tenant.Individual = individual;
-            }
-            else
-            {
-                tenant.Company = company;
-            }
             return tenant;
         }
 
@@ -64,12 +56,27 @@ namespace Sunrise.Client.Domains.Models
         public Company Company { get; private set; }
         public Address Address { get; private set; }
 
-        public ICollection<SalesTransaction> SalesTransaction { get; set; }
+        public ICollection<SalesTransaction> SalesTransaction { get; private set; }
 
-        public void AddSalesTransaction()
+        public void AddSalesTransaction(string rentalType, string contractStatus,
+            DateTime periodStart, DateTime periodEnd, decimal amount)
         {
-            
+
+            SalesTransaction.Add(new SalesTransaction(rentalType,contractStatus,periodStart,periodEnd,amount));
         }
+
+        public void AddIndividual(DateTime bday,GenderEnum gender,string qatarId,string company)
+        {
+
+            this.Individual = new Individual(bday,gender,qatarId,company);
+        }
+
+        public void AddCompany(string crNo,string businessType, DateTime validityDate,string representative)
+        {
+
+            this.Company = new Company(crNo,businessType,validityDate,representative);
+        }
+
 
     }
 }

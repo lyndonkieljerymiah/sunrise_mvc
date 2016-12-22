@@ -10,7 +10,19 @@ namespace Sunrise.Client.Domains.ViewModels
     public class SalesViewModel
     {
         private readonly IEnumerable<Selection> _selections;
-        
+
+
+        public static SalesViewModel Create(VillaViewModel vm, 
+            IEnumerable<Selection> selections)
+        {
+            var sales = new SalesViewModel(selections);
+            sales.Tenant = new TenantRegisterViewModel(selections);
+            sales.Villa = vm;
+            return sales;
+        }
+
+       
+
         public SalesViewModel(IEnumerable<Selection> selections)
         {
             _selections = selections;
@@ -40,6 +52,11 @@ namespace Sunrise.Client.Domains.ViewModels
 
         [Display(Name = "Amount")]
         public Decimal Amount { get; set; }
+
+        public VillaViewModel Villa { get; set; }
+        
+        public TenantRegisterViewModel Tenant { get; set; }
+
 
         public IEnumerable<SelectListItem> RentalTypes
         {

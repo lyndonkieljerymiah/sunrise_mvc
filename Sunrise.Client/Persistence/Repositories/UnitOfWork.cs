@@ -11,7 +11,8 @@ namespace Sunrise.Client.Persistence.Repositories
     {
         private AppDbContext _context;
         private ITenantRepository _tenantRepo;
-        private SelectionRepository _selRepo;
+        private ISelectionRepository _selRepo;
+        private IVillaRepository _villaRepo;
 
         public UnitOfWork()
         {
@@ -26,6 +27,15 @@ namespace Sunrise.Client.Persistence.Repositories
         {
             get { return _selRepo ?? (_selRepo = new SelectionRepository(_context)); }
         }
+
+        public IVillaRepository Villas
+        {
+            get
+            {
+                return _villaRepo ?? (_villaRepo = new VillaRepository(_context));
+            }
+        }
+
         public void SaveChanges()
         {
             _context.SaveChanges();

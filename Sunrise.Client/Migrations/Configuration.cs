@@ -30,6 +30,7 @@ namespace Sunrise.Client.Migrations
             //    );
             //
 
+            //seed
             if (!context.Selections.Any())
             {
                 ICollection<Selection> selections = new List<Selection>
@@ -52,6 +53,36 @@ namespace Sunrise.Client.Migrations
                 };
                 context.Selections.AddRange(selections);
             }
+
+
+            if (!context.Villas.Any())
+            {
+                ICollection<Villa> villas = new List<Villa>()
+                {
+                    new Villa()
+                    {
+                        VillaNo = "V100",
+                        ElecNo = "E12344",
+                        WaterNo = "W123",
+                        QtelNo = "Q1234",
+                        Status = "available",
+                        Capacity = 9,
+                        Description = "3 Rooms and 2 Toilets full furnished"
+                    },
+                    new Villa()
+                    {
+                        VillaNo = "V200",
+                        ElecNo = "E32344",
+                        WaterNo = "W223",
+                        QtelNo = "Q2234",
+                        Status = "available",
+                        Capacity = 10,
+                        Description = "3 Rooms and 5 Toilets full furnished"
+                    }
+                };
+                context.Villas.AddRange(villas);
+            }
+            context.SaveChanges();
         }
     }
 }

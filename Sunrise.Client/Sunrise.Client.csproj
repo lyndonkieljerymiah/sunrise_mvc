@@ -44,6 +44,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=5.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.5.2.0\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.1\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -233,6 +237,7 @@
     <Compile Include="Controllers\BillingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SalesController.cs" />
     <Compile Include="Controllers\TenantController.cs" />
     <Compile Include="Domains\Enum\Enums.cs" />
     <Compile Include="Domains\Models\Address.cs" />
@@ -264,6 +269,7 @@
     <Compile Include="Domains\ViewModels\Manage\VerifyPhoneNumberViewModel.cs" />
     <Compile Include="Domains\ViewModels\PaymentViewModel.cs" />
     <Compile Include="Domains\ViewModels\SalesViewModel.cs" />
+    <Compile Include="Domains\ViewModels\ShopViewModel.cs" />
     <Compile Include="Domains\ViewModels\TenantRegisterViewModel.cs" />
     <Compile Include="Domains\ViewModels\VillaViewModel.cs" />
     <Compile Include="Global.asax.cs">
@@ -273,11 +279,16 @@
     <Compile Include="Migrations\201612211757171_Initial.Designer.cs">
       <DependentUpon>201612211757171_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612221332365_AddBusinessType.cs" />
+    <Compile Include="Migrations\201612221332365_AddBusinessType.Designer.cs">
+      <DependentUpon>201612221332365_AddBusinessType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Persistence\Abstract\IBaseRepository.cs" />
     <Compile Include="Persistence\Abstract\ISelectionRepository.cs" />
     <Compile Include="Persistence\Abstract\ITenantRepository.cs" />
     <Compile Include="Persistence\Abstract\IUnitOfWork.cs" />
+    <Compile Include="Persistence\Abstract\IVillaRepository.cs" />
     <Compile Include="Persistence\AppDbContext.cs" />
     <Compile Include="Persistence\EntityConfigurations\CompanyConfig.cs" />
     <Compile Include="Persistence\EntityConfigurations\IndividualConfig.cs" />
@@ -289,6 +300,7 @@
     <Compile Include="Persistence\Repositories\SelectionRepository.cs" />
     <Compile Include="Persistence\Repositories\TenantRepository.cs" />
     <Compile Include="Persistence\Repositories\UnitOfWork.cs" />
+    <Compile Include="Persistence\Repositories\VillaRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -308,6 +320,8 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\app\controller\checkoutController.js" />
+    <Content Include="Scripts\app\controller\shopController.js" />
     <Content Include="Scripts\app\controller\tenantsController.js" />
     <Content Include="Scripts\app\service\villaService.js" />
     <Content Include="Scripts\libs\angular-animate.js" />
@@ -1148,13 +1162,17 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Scripts\version.json" />
-    <Content Include="Views\Tenant\Register.cshtml" />
+    <Content Include="Views\Tenant\_Register.cshtml" />
     <Content Include="Views\Tenant\TenantView.cshtml" />
     <Content Include="Views\Tenant\SalesView.cshtml" />
     <Content Include="Views\Tenant\ProfileView.cshtml" />
     <Content Include="Views\Billing\ViewBill.cshtml" />
     <Content Include="Views\Billing\PaymentView.cshtml" />
     <Content Include="Views\Tenant\Index.cshtml" />
+    <Content Include="Views\Sales\Transaction.cshtml" />
+    <Content Include="Views\Sales\Index.cshtml" />
+    <Content Include="Views\Sales\Checkout.cshtml" />
+    <Content Include="Views\Sales\_SalesView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1171,6 +1189,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201612211757171_Initial.resx">
       <DependentUpon>201612211757171_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612221332365_AddBusinessType.resx">
+      <DependentUpon>201612221332365_AddBusinessType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -36,5 +36,6 @@ namespace Sunrise.Client.Domains.Models
 
         public byte[] Picture { get; set; }
 
+
     }
 }

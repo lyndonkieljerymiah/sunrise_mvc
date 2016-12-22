@@ -1,0 +1,29 @@
+﻿@model Sunrise.Client.Domains.ViewModels.ShopViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<div ng-controller="shopController as $ctrl">
+    <div class="jumbotron">
+        <h1>Villa</h1>
+        <p class="lead">Choose Available Villa</p>
+    </div>
+    <div class="row">
+        <div class="col-md-4" ng-repeat="villa in villas" ng-show="villas">
+            <div class="thumbnail">
+                <img src="~/Content/imgs/villa-spalletti-1.jpg"/>
+                <div class="caption">
+                    <div>Villa No: {{villa.villaNo}}</div>
+                    <button class="btn btn-primary btn-block" ng-click="select(villa.id)">Select</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+<script src="~/Scripts/app/service/salesService.js"></script>
+    <script src="~/Scripts/app/service/villaService.js"></script>
+    <script src="~/Scripts/app/controller/shopController.js"></script>
+}

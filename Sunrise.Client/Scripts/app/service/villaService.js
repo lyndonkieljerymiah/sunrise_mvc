@@ -1,16 +1,25 @@
 ﻿mainApp.factory("villaService",
-    function($http) {
+
+    function ($http) {
+
         var villa = {};
 
-        function checkAvailability(villaNo, action) {
-            $http.get("/api/villa/availability/" + villaNo)
+        function getVilla(villaNo, action) {
+            $http.get("/api/villa/" + villaNo)
                         .then(function (response) {
-                            villa = response.data;
                             action(response.data);
                 });
         }
 
+        function getVillas(action) {
+            $http.get("/api/villa")
+                .then(function(response) {
+                    action(response.data);
+                });
+        }
+
         return {
-            checkAvailability: checkAvailability
+            getVilla: getVilla,
+            getVillas: getVillas
         }
     });

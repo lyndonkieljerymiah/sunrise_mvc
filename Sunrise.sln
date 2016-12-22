@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunrise.Client", "Sunrise.Client\Sunrise.Client.csproj", "{823D2C0A-1234-4996-952A-25457230BA84}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppUnitTest", "AppUnitTest\AppUnitTest.csproj", "{8D8E60AD-0C19-467C-9FE6-C8E52CFA67D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{823D2C0A-1234-4996-952A-25457230BA84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{823D2C0A-1234-4996-952A-25457230BA84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{823D2C0A-1234-4996-952A-25457230BA84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D8E60AD-0C19-467C-9FE6-C8E52CFA67D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D8E60AD-0C19-467C-9FE6-C8E52CFA67D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D8E60AD-0C19-467C-9FE6-C8E52CFA67D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D8E60AD-0C19-467C-9FE6-C8E52CFA67D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
