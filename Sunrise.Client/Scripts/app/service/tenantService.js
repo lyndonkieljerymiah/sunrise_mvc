@@ -26,6 +26,7 @@ mainApp.factory("tenantService",
                     data.individual.birthday = new Date(data.individual.birthday);
                     data.company.validityDate = new Date(data.company.validityDate);
                     tenantModel = data;
+                    console.log(data);
                     action(data);
                 });
         }

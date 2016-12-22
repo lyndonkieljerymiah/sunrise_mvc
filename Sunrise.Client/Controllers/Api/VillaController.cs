@@ -29,8 +29,6 @@ namespace Sunrise.Client.Controllers.Api
                     Description = "This 6 bedroom villa was recently refurbished, creating the perfect holiday villa rental in the heart of Jomtien. There are 6 beautifully appointed bedrooms in the villa, sleeping 12 people in total, set over upper and lower floors."
                 };
             }
-
-
             return vm;
         }
     }

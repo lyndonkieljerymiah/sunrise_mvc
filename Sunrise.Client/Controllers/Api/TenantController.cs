@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
+using Sunrise.Client.Domains.Models;
 using Sunrise.Client.Domains.ViewModels;
+using Sunrise.Client.Persistence.Abstract;
 
 namespace Sunrise.Client.Controllers.Api
 {
@@ -12,6 +15,13 @@ namespace Sunrise.Client.Controllers.Api
     [RoutePrefix("api/tenant")]
     public class TenantController : ApiController
     {
+        private readonly IUnitOfWork _uw;
+
+        public TenantController(IUnitOfWork uw)
+        {
+            _uw = uw;
+        }
+
 
         /// <summary>
         /// Create new Tenant Register Form API
@@ -20,26 +30,16 @@ namespace Sunrise.Client.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("create")]
-        public IHttpActionResult Create()
+        public async Task<IHttpActionResult> Create()
         {
-            var newTenant = new TenantRegisterViewModel
-            {
-                Type = "in",
-                Individual = new IndividualViewModel()
-                {
-                    Gender = "male",
-                    Birthday = DateTime.Now
-                },
-                Company = new CompanyViewModel()
-                {
-                    ValidityDate = DateTime.Now
-                }
-            };
-            
+            var strKeys = new string[] { "TenantType" };
+            var selections = await _uw.Selections.GetSelections(strKeys);
+            var newTenant = new TenantRegisterViewModel(selections);
+
             return Ok(newTenant);
         }
 
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -53,7 +53,6 @@ namespace Sunrise.Client.Controllers.Api
                 new TenantRegisterViewModel
                 {
                     Name = "Arnold Mercado",
-                    Type = "Individual",
                     EmailAddress = "arnold.mercado@hotmail.com"
                 }
             };
@@ -73,7 +72,19 @@ namespace Sunrise.Client.Controllers.Api
 
             if (!ModelState.IsValid)
                 return BadRequest();
+
+            var tenant = new Tenant();
+
             return Ok(vm);
+        }
+
+
+        
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            _uw.Dispose();
         }
     }
 }

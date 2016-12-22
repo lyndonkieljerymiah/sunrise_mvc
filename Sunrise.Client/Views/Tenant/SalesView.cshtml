@@ -12,7 +12,6 @@
                     <strong ng-show="(showWarning && villaModel.status != 'Available')" class="text-danger">Not Available</strong>
                 </div>
             </div>
-
             <div class="form-group">
                 @Html.LabelFor(m => m.RentalType, new { @class = "col-md-3 text-right" })
                 <div class="col-md-9">
@@ -60,7 +59,7 @@
                             <ul>
                                 <li><span class="text-primary">Villa No: {{villaModel.villaNo}} </span> </li>   
                                 <li><span class="text-primary">Capacity: {{villaModel.capacity}} </span> </li>   
-                                <li><span class="text-primary">Description: {{villaModel.description}} </span> </li>   
+                                <li><span class="text-primary">Description: {{villaModel.description}} </span></li>   
                             </ul>
                         </div>
                     </div>

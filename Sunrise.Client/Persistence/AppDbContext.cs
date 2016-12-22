@@ -13,8 +13,8 @@ namespace Sunrise.Client.Persistence
         public DbSet<Villa> Villas { get; set; }
         public DbSet<SalesTransaction> Sales {get; set;}
         public DbSet<Payment> Payments { get; set; }
-
-
+        public DbSet<Selection> Selections { get; set; }
+        
         public AppDbContext()
             : base("DbConnection", throwIfV1Schema: false)
         {
@@ -39,13 +39,13 @@ namespace Sunrise.Client.Persistence
 
             modelBuilder.Entity<Tenant>().ToTable("Tenant");
             modelBuilder.Entity<Villa>().ToTable("Villa");
-
+            modelBuilder.Entity<Selection>().ToTable("Selection");
 
             modelBuilder.Configurations.Add(new IndividualConfig());
             modelBuilder.Configurations.Add(new CompanyConfig());
             modelBuilder.Configurations.Add(new TenantConfig());
             modelBuilder.Configurations.Add(new VillaConfig());
-            modelBuilder.Configurations.Add(new TenantConfig());
+            modelBuilder.Configurations.Add(new SelectionConfig());
 
         }
     }

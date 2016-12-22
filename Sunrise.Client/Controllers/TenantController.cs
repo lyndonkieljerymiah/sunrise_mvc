@@ -1,15 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Sunrise.Client.Domains.ViewModels;
+using Sunrise.Client.Persistence.Abstract;
 
 namespace Sunrise.Client.Controllers
 {
     [RoutePrefix("Tenant")]
     public class TenantController : Controller
     {
+        private readonly IUnitOfWork _uw;
+
+
+        public TenantController(IUnitOfWork uw)
+        {
+            _uw = uw;
+        }
+
         // GET: Tenant
         [Route("List")]
         public ActionResult Index()
@@ -18,59 +28,32 @@ namespace Sunrise.Client.Controllers
         }
 
         [Route("Register")]
-        public ActionResult Register()
+        public async Task<ActionResult> Register()
         {
-            var vmTenant = new TenantRegisterViewModel
-            {
-                Type = "in"
-            };
+            var selections = await _uw.Selections.GetSelections(new string[] {"TenantType"});
+            var vmTenant = new TenantRegisterViewModel(selections);
             return View(vmTenant);
         }
         
 
         [Route("View/{tv?}")]
-        public PartialViewResult TenantView(string tv)
+        public async Task<PartialViewResult> TenantView(string tv)
         {
-            var vmTenant = new TenantRegisterViewModel
-            {
-                Type = tv
-            };
-
+            var selections = await _uw.Selections.GetSelections(new string[] { "TenantType" });
+            var vmTenant = new TenantRegisterViewModel(selections);
+            vmTenant.Type = tv;
             return PartialView(vmTenant);
         }
 
         [Route("Sales")]
-        public PartialViewResult SalesView()
-        {   
-
-            return PartialView(new SalesViewModel());
-        }
-
-
-        [Route("Profile")]
-        public ActionResult ProfileView()
+        public async Task<PartialViewResult> SalesView()
         {
-
-            var profile = new TenantProfileViewModel()
-            {
-                Name = "Arnold Mercado",
-                Code = "V12222333",
-                Sales = new List<SalesViewModel>
-                {
-                    new SalesViewModel
-                    {
-                        VillaNo = "V1000",
-                        RentalType = "Fully Furnished",
-                        ElectricNo = "E1323333",
-                        PeriodStart = Convert.ToDateTime("01/01/2017"),
-                        PeriodEnd = Convert.ToDateTime("01/01/2019"),
-                        Amount = 450000m
-                    }
-                }
-            };
-
-            return View(profile);
+            var selections = await _uw.Selections.GetSelections(new string[] { "RentalType","ContractStatus" });
+            return PartialView(new SalesViewModel(selections));
         }
+
+
+       
         
     }
 }

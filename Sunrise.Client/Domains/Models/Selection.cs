@@ -10,7 +10,9 @@ namespace Sunrise.Client.Domains.Models
     {
         public int Id { get; set; }
 
-        public int Type { get; set; }
+        public string Type { get; set; }
+
+        public string Code { get; set; }
 
         public string Description { get; set; }
 
