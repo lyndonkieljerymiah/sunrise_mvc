@@ -32,15 +32,10 @@ namespace Sunrise.Client.Controllers
         }
         
         [Route("checkout/{villaId?}")]
-        public async Task<ViewResult> Checkout(int villaId)
+        public ViewResult Checkout(int villaId)
         {
-            var villa = await _unitOfWork.Villas.FindAsync(villaId);
-            var selections = await _unitOfWork.Selections.GetSelections(new string[] {"TenantType", "RentalType", "ContractStatus"});
-            
-            var vmVilla = VillaViewModel.Create(villa);
-            var salesVm = SalesViewModel.Create(vmVilla, selections);
-
-            return View(salesVm);
+            ViewBag.Id = villaId;
+            return View();
         }
 
         

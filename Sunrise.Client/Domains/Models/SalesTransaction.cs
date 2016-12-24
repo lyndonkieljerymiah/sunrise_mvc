@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations.Model;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,16 @@ namespace Sunrise.Client.Domains.Models
     public class SalesTransaction
     {
 
-        public SalesTransaction(string rentalType,string contractStatus,
+
+        public static SalesTransaction CreateTransaction(int villaId, string rentalType, string contractStatus,
+            DateTime periodStart, DateTime periodEnd, decimal amount)
+        {
+            return  new SalesTransaction(villaId,rentalType,contractStatus,periodStart,periodEnd,amount);
+        }
+
+
+
+        public SalesTransaction(int villaId,string rentalType,string contractStatus,
             DateTime periodStart,DateTime periodEnd,decimal amount) : this()
         {
 
@@ -17,11 +27,13 @@ namespace Sunrise.Client.Domains.Models
             this.ContractStatus = contractStatus;
             this.PeriodStart = periodStart;
             this.PeriodEnd = periodEnd;
+            this.VillaId = villaId;
         }
 
         public SalesTransaction()
         {
             this.DateCreated = DateTime.Today;
+            this.Status = "Waiting";
         }
 
         public int Id { get; set; }

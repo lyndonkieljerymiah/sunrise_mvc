@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ninject.Infrastructure.Language;
 using Sunrise.Client.Domains.Enum;
 
 namespace Sunrise.Client.Domains.Models
 {
     public class Tenant
     {
+
         public static Tenant Create(string type, string code, string name, string emailAddress, string telNo,
             string mobileNo,
             string faxNo,string address1,string address2, string city,string postalCode)
@@ -34,14 +36,13 @@ namespace Sunrise.Client.Domains.Models
 
         public Tenant()
         {
-            this.SalesTransaction = new HashSet<SalesTransaction>();
+            this.SalesTransactions = new HashSet<SalesTransaction>();
             this.DateRegistered = DateTime.Today;
             this.Individual = null;
             this.Company = null;
         }
 
         public int Id { get; private set; }
-        
         public string Name { get; set; }
         public string Code { get; set; }
         public string TenantType { get; set; }
@@ -52,25 +53,23 @@ namespace Sunrise.Client.Domains.Models
         public string FaxNo { get; set; }
         public bool IsActive { get; set; }
 
-        public Individual Individual { get; private set; }
-        public Company Company { get; private set; }
-        public Address Address { get; private set; }
+        public virtual Individual Individual { get; private set; }
+        public virtual Company Company { get; private set; }
+        public virtual Address Address { get; private set; }
+        
 
-        public ICollection<SalesTransaction> SalesTransaction { get; private set; }
-
-        public void AddSalesTransaction(string rentalType, string contractStatus,
+        public virtual ICollection<SalesTransaction> SalesTransactions { get; private set; }
+        public void AddSalesTransaction(int villaId,string rentalType, string contractStatus,
             DateTime periodStart, DateTime periodEnd, decimal amount)
         {
-
-            SalesTransaction.Add(new SalesTransaction(rentalType,contractStatus,periodStart,periodEnd,amount));
+            var sales = SalesTransaction.CreateTransaction(villaId, rentalType, contractStatus, periodStart, periodEnd, amount);
+            SalesTransactions.Add(sales);
         }
-
         public void AddIndividual(DateTime bday,GenderEnum gender,string qatarId,string company)
         {
 
             this.Individual = new Individual(bday,gender,qatarId,company);
         }
-
         public void AddCompany(string crNo,string businessType, DateTime validityDate,string representative)
         {
 

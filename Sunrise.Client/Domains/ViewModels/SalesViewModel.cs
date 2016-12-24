@@ -12,20 +12,19 @@ namespace Sunrise.Client.Domains.ViewModels
         private readonly IEnumerable<Selection> _selections;
 
 
+        
         public static SalesViewModel Create(VillaViewModel vm, 
             IEnumerable<Selection> selections)
         {
             var sales = new SalesViewModel(selections);
-            sales.Tenant = new TenantRegisterViewModel(selections);
             sales.Villa = vm;
             return sales;
         }
 
-       
-
         public SalesViewModel(IEnumerable<Selection> selections)
         {
             _selections = selections;
+
             this.RentalType = _selections.Where(t => t.Type == "RentalType").FirstOrDefault()?.Code;
             this.ContractStatus = _selections.Where(t => t.Type == "ContractStatus").FirstOrDefault()?.Code;
         }
@@ -55,13 +54,13 @@ namespace Sunrise.Client.Domains.ViewModels
 
         public VillaViewModel Villa { get; set; }
         
-        public TenantRegisterViewModel Tenant { get; set; }
-
-
         public IEnumerable<SelectListItem> RentalTypes
         {
             get
             {
+                if (_selections == null)
+                    return new List<SelectListItem>();
+
                 var types = _selections
                     .Where(s => s.Type == "RentalType")
                     .Select(s => new SelectListItem() { Text = s.Description, Value = s.Code });
@@ -73,6 +72,9 @@ namespace Sunrise.Client.Domains.ViewModels
         {
             get
             {
+                if (_selections == null)
+                    return new List<SelectListItem>();
+
                 var statuses = _selections
                     .Where(s => s.Type == "ContractStatus")
                     .Select(s => new SelectListItem() { Text = s.Description, Value = s.Code });

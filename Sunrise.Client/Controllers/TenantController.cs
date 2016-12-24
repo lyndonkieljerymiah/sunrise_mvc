@@ -27,13 +27,11 @@ namespace Sunrise.Client.Controllers
             return View();
         }
 
-        [Route("Template/Register/{tv?}")]
-        public async Task<PartialViewResult> Register(string tv = "ttin")
+        [Route("Register/{tv?}")]
+        public PartialViewResult Register(string tv = "ttin")
         {
-            var selections = await _uw.Selections.GetSelections(new string[] { "TenantType" });
-            var vmTenant = new TenantRegisterViewModel(selections);
-            vmTenant.Type = tv;
-            return PartialView("_Register",vmTenant);
+            ViewBag.Type = tv;
+            return PartialView("_Register");
         }
         
 

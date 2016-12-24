@@ -36,6 +36,9 @@ namespace Sunrise.Client.Domains.ViewModels
         {
             get
             {
+                if(_selections == null)
+                    return String.Empty;
+
                 var fullType = _selections.SingleOrDefault(t => t.Code == Type);
                 return fullType.Description;
             }
@@ -46,11 +49,14 @@ namespace Sunrise.Client.Domains.ViewModels
             get
             {
                 var tenantTypes = new List<SelectListItem>();
-
-                foreach (var selection in _selections)
+                if (_selections != null)
                 {
-                    tenantTypes.Add(new SelectListItem() { Text = selection.Description, Value = selection.Code});
+                    foreach (var selection in _selections)
+                    {
+                        tenantTypes.Add(new SelectListItem() {Text = selection.Description, Value = selection.Code});
+                    }
                 }
+
                 return tenantTypes;
             }
         }
@@ -82,12 +88,10 @@ namespace Sunrise.Client.Domains.ViewModels
         [Required]
         public string City { get; set; }
 
-
         public IndividualViewModel Individual { get; set; }
+
         public CompanyViewModel Company { get; set; }
 
-       
-        
     }
 
     public class IndividualViewModel   
@@ -117,7 +121,7 @@ namespace Sunrise.Client.Domains.ViewModels
         public IEnumerable<SelectListItem> Genders
         {
             get
-            {
+            {   
                 return new List<SelectListItem>
                 {
                     new SelectListItem() { Text = "Male", Value= GenderEnum.Male.ToString() ,Selected = true},

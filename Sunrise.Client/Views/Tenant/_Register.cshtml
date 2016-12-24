@@ -1,78 +1,86 @@
-﻿@model Sunrise.Client.Domains.ViewModels.TenantRegisterViewModel
-<div>
+﻿<div>
     <div class="form-group">
-        @Html.LabelFor(m => m.Type, new {@class="col-md-3 text-right"})
+        <label class="col-md-3 text-right">Type:</label>
         <div class="col-md-9">
-            @Html.DropDownListFor(m => m.Type, Model.TenantTypes, new { @class = "form-control", ng_model="tenant.type", ng_change="changeType()", })
+            <select ng-model="tenant.type" ng-change="$ctrl.changeTenantType()" class="form-control">
+                <option ng-repeat="type in tenant.tenantTypes" value="{{type.value}}">{{type.text}}</option>
+            </select>
         </div>
     </div>
-
-    @if (Model.Type == "ttin")
+    @if (ViewBag.Type == "ttin")
     {
         <div class="form-group">
-            <label for="name" class="col-md-3 text-right">Full Name</label>
+            <label for="name" class="col-md-3 text-right">Full Name:</label>
             <div class="col-md-9">
-                @Html.TextBoxFor(m => m.Name, new { @class = "form-control", ng_model = "tenant.name" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(m => m.Individual.Gender, new { @class = "col-md-3 text-right" })
-            <div class="col-md-9">
-                @Html.DropDownListFor(m => m.Individual.Gender, Model.Individual.Genders, new { @class = "form-control", ng_model = "tenant.individual.gender" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(m => m.Individual.QatarId, new { @class = "col-md-3 text-right" })
-            <div class="col-md-9">
-                @Html.TextBoxFor(m => m.Individual.QatarId, new { @class = "form-control", ng_model = "tenant.individual.qatarId" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(m => m.Individual.Birthday, new { @class = "col-md-3 text-right" })
-            <div class="col-md-9">
-                @Html.TextBoxFor(m => m.Individual.Birthday, new { @class = "form-control", ng_model = "tenant.individual.birthday", type = "date", date = "MM/dd/yyyy" })
+                <input type="text" id="name" name="name" ng-model="tenant.name" class="form-control" />
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.Individual.Company, new { @class = "col-md-3 text-right" })
+            <label for="gender" class="col-md-3 text-right">Gender:</label>
             <div class="col-md-9">
-                @Html.TextBoxFor(m => m.Individual.Company, new { @class = "form-control", ng_model = "tenant.individual.company" })
+                <select ng-model="tenant.gender" class="form-control">
+                    <option ng-repeat="gender in tenant.individual.genders" value="{{gender.value}}">{{gender.text}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="qatarId" class="col-md-3 text-right">Qatar Id</label>
+            <div class="col-md-9">
+                <input type="text" id="qatarId" name="qatarId"
+                       ng-model="tenant.individual.qatarId"
+                       class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="birthday" class="col-md-3 text-right">Birthday</label>
+            <div class="col-md-9">
+                <input type="date"
+                       ng-model="tenant.individual.birthday"
+                       class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="company" class="col-md-3 text-right">Company:</label>
+            <div class="col-md-9">
+                <input type="text" name="company" , id="company"
+                       ng-model="tenant.inidividual.company"
+                       class="form-control" />
             </div>
         </div>
     }
     else
     {
         <div class="form-group">
-            <label for="name" class="col-md-3">Business Name:</label>
+            <label for="businessName" class="col-md-3">Business Name:</label>
             <div class="col-md-9">
-                @Html.TextBoxFor(m => m.Name, new { @class = "form-control", ng_model = "tenant.name" })
+                <input type="text" name="businessName" id="businessName"
+                       ng-model="tenant.name"
+                       class="form-control" />
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.Company.BusinessType,new { @class = "col-md-3 text-right" })
+            <label for="businessType" class="col-md-3 text-right">Business Type:</label>
             <div class="col-md-9">
-                @Html.TextBoxFor(m => m.Company.BusinessType, new { @class = "form-control", ng_model = "tenant.company.businessType" })
+                <input type="text" name="businessType" id="businessType" class="form-control"
+                       ng-model="tenant.company.businessType"/>
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.Company.CrNo, new { @class = "col-md-3 text-right" })
+            <label class="col-md-3 text-right">CR No</label>
             <div class="col-md-9">
-                @Html.TextBoxFor(m => m.Company.CrNo, new { @class = "form-control", ng_model = "tenant.company.crNo" })
+                <input type="text" class="form-control" ng-model="tenant.company.crNo"/>
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.Company.ValidityDate, new { @class = "col-md-3 text-right" })
+            <label class="col-md-3 text-right">Validity Date:</label>
             <div class="col-md-9">
-                @Html.TextBoxFor(m => m.Company.ValidityDate, new { @class = "form-control", ng_model = "tenant.company.validityDate", type = "date" })
+                <input type="date" ng-model="tenant.company.validityDate" class="form-control"/>
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.Company.Representative, new { @class = "col-md-3 text-right" })
+            <label class="col-md-3 text-right">Representative:</label>
             <div class="col-md-9">
-                @Html.TextBoxFor(m => m.Company.Representative, new { @class = "form-control", ng_model = "tenant.company.representative" })
+                <input type="text" class="form-control" ng-model="tenant.company.representative"/>
             </div>
         </div>
     }
@@ -81,45 +89,51 @@
         <strong>Contact Details</strong>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.EmailAddress, new { @class = "col-md-3 text-right" })
+        <label class="col-md-3 text-right">Email Address:</label>
         <div class="col-md-9">
-            @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control", ng_model = "tenant.emailAddress" })
+            <input type="email" class="form-control" ng-model="tenant.emailAddress"/>
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.TelNo, new { @class = "col-md-3 text-right" })
+        <label class="col-md-3 text-right">Tel No:</label>
         <div class="col-md-9">
-            @Html.TextBoxFor(m => m.TelNo, new { @class = "form-control", ng_model = "tenant.telNo" })
+            <input type="tel" ng-model="tenant.telNo" class="form-control"/>
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.MobileNo, new { @class = "col-md-3 text-right" })
-        <div class="col-md-9">@Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control", ng_model = "tenant.mobileNo" })</div>
+        <label class="col-md-3 text-right">Mobile No:</label>
+        <div class="col-md-9">
+            <input type="tel" class="form-control" ng-model="tenant.mobileNo"/>
+        </div>
     </div>
-
     <div class="page-header">
         <strong>Company Address</strong>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => m.Address1, new { @class = "col-md-3 text-right" })
-        <div class="col-md-9">@Html.TextBoxFor(m => m.Address1, new { @class = "form-control", ng_model = "tenant.address1" })</div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Address2, new { @class = "col-md-3 text-right" })
-        <div class="col-md-9">@Html.TextBoxFor(m => m.Address2, new { @class = "form-control", ng_model = "tenant.address2" })</div>
+        <label class="col-md-3 text-right">Address 1:</label>
+        <div class="col-md-9">
+            <input type="text" class="form-control" ng-model="tenant.address1"/>
+        </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => m.City, new { @class = "col-md-3 text-right" })
+        <label class="col-md-3 text-right">Address 2:</label>
         <div class="col-md-9">
-            @Html.TextBoxFor(m => m.City, new { @class = "form-control", ng_model = "tenant.city" })
+            <input type="text" class="form-control" ng-model="tenant.address2" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-3 text-right">City</label>
+        <div class="col-md-9">
+            <input type="text" ng-model="tenant.city" class="form-control"/>
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.PostalCode, new { @class = "col-md-3 text-right" })
+        <label class="col-md-3 text-right">Postal Code</label>
         <div class="col-md-9">
-            @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control", ng_model = "tenant.postalCode" })
+            <input type="text" ng-model="tenant.postalCode" class="form-control"/>
         </div>
     </div>
 

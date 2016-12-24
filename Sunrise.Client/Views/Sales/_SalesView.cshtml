@@ -1,6 +1,9 @@
-﻿<div class="form-group">
-    <label class="col-md-4">Rental Type:</label>
-    <div class="col-md-8"><select class="form-control"></select></div>
+﻿@model Sunrise.Client.Domains.ViewModels.SalesViewModel
+    
+
+<div class="form-group">
+    @Html.LabelFor(m => m.RentalType)
+    @Html.DropDownListFor(m => m.RentalType, Model.RentalTypes)
 </div>
 <div class="form-group">
     <label class="col-md-4">Contract Status:</label>

@@ -1,48 +1,84 @@
-﻿@model Sunrise.Client.Domains.ViewModels.SalesViewModel
-@{
+﻿@{
     ViewBag.Title = "Checkout";
-
 }
 
 <div class="page-header">
     <h1>Checkout Villa</h1>
 </div>
-<form class="form-horizontal">
+<form class="form-horizontal" method="post" ng-controller="salesTransactionController as $ctrl" ng-init="$ctrl.init(@ViewBag.Id)">
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading">New Tenant</div>
                 <div class="panel-body">
                     <!-- angular -->
-                    <tenant-register template='register'></tenant-register>
+                    <div ng-include="template"></div>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    Villa Information
-                </div>
+                <div class="panel-heading">Villa Information</div>
                 <div class="panel-body">
                     <div class="thumbnail">
                         <img src="~/Content/imgs/villa-spalletti-1.jpg" />
                     </div>
-                    <p>Villa No: @Model.Villa.VillaNo</p>
-                    <p>Descripton: @Model.Villa.Description</p>
+                    <p><strong>Villa No: {{sales.villa.villaNo}}</strong></p>
+                    <p>Descripton: {{sales.villa.description}}</p>
                 </div>
             </div>
             <hr />
             <div class="panel panel-default">
                 <div class="panel-heading">Details</div>
                 <div class="panel-body">
-                    @Html.Partial("_SalesView")
+                    <div class="form-group">
+                        <label class="col-md-4 text-right">Rental Type:</label>
+                        <div class="col-md-8">
+                            <select ng-model="sales.rentalType" class="form-control">
+                                <option ng-repeat="type in sales.rentalTypes" value="{{type.value}}">{{type.text}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 text-right">Contract Status:</label>
+                        <div class="col-md-8">
+                            <select ng-model="sales.contractStatus" class="form-control">
+                                <option ng-repeat="status in sales.contractStatuses" value="{{status.value}}">{{status.text}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="page-header">
+                        <strong>Period</strong>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 text-right">Start:</label>
+                        <div class="col-md-8">
+                            <input type="date" ng-model="sales.periodStart" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 text-right">End:</label>
+                        <div class="col-md-8">
+                            <input type="date" ng-model="sales.periodEnd" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 text-right">Amount</label>
+                        <div class="col-md-8">
+                            <input type="text" ng-model="sales.amount" class="form-control" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <div>
+        <button class="btn btn-primary" ng-click="$ctrl.save()">Checkout</button>
+    </div>
 </form>
 
 @section scripts
-{
+{   
     <script src="~/Scripts/app/controller/checkoutController.js"></script>
+    
 }

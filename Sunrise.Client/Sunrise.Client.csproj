@@ -232,6 +232,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\BillingController.cs" />
+    <Compile Include="Controllers\Api\SalesController.cs" />
     <Compile Include="Controllers\Api\TenantController.cs" />
     <Compile Include="Controllers\Api\VillaController.cs" />
     <Compile Include="Controllers\BillingController.cs" />
@@ -271,10 +272,12 @@
     <Compile Include="Domains\ViewModels\SalesViewModel.cs" />
     <Compile Include="Domains\ViewModels\ShopViewModel.cs" />
     <Compile Include="Domains\ViewModels\TenantRegisterViewModel.cs" />
+    <Compile Include="Domains\ViewModels\TransactionViewModel.cs" />
     <Compile Include="Domains\ViewModels\VillaViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Extension\AngularBootstrap.cs" />
     <Compile Include="Migrations\201612211757171_Initial.cs" />
     <Compile Include="Migrations\201612211757171_Initial.Designer.cs">
       <DependentUpon>201612211757171_Initial.cs</DependentUpon>
