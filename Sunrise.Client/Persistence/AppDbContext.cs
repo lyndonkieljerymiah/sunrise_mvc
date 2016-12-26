@@ -18,7 +18,8 @@ namespace Sunrise.Client.Persistence
         public AppDbContext()
             : base("DbConnection", throwIfV1Schema: false)
         {
-
+            this.Configuration.ProxyCreationEnabled = false;
+            this.Configuration.LazyLoadingEnabled = false;
         }
 
         public static AppDbContext Create()

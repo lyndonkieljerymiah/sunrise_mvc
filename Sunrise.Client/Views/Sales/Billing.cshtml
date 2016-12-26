@@ -1,26 +1,28 @@
-﻿@model Sunrise.Client.Domains.ViewModels.BillingViewModel
-
-<div class="row">
+﻿<div class="row" ng-controller="billingController as $ctrl" ng-init="$ctrl.init('@ViewBag.Id')">
     <div class="col-md-9">
         <div class="panel panel-default">
             <div class="panel-heading">Tenant Information</div>
             <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-2">Tenant Code:</div>
-                    <div class="col-md-10">@Model.Code</div>
-                    <div class="col-md-2">Name :</div>
-                    <div class="col-md-10">@Model.Name</div>
+                <div>
+                    <div class="row">
+                        <div class="col-md-2">Tenant Code:</div>
+                        <div class="col-md-10">{{tenant.code}}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2">Name:</div>
+                        <div class="col-md-10">{{tenant.name}}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2">Address:</div>
+                        <div class="col-md-10">{{tenant.fullAddress}}</div>
+                    </div>
                 </div>
             </div>
         </div>
         <!-- Villa Sales Component-->
-        <div class="panel panel-default" ng-controller="salesSummaryController as $ctrl">
-            <!-- spinner -->
-            <spinner show="loading" register="false" img-src="@Url.Content("~/Content/imgs/spin.gif")">
-                <div class="overlay"></div>
-            </spinner>
-            <!-- end spinner -->
-
+        <div class="panel panel-default">
             <div class="panel-heading">Selected Villa</div>
             <div class="panel-body">
                 <table class="table">
@@ -32,10 +34,10 @@
                         <th>Period End</th>
                         <th>Amount</th>
                     </tr>
-                    <tr ng-repeat="sale in data.sales">
-                        <td>{{sale.villaNo}}</td>
+                    <tr ng-repeat="sale in sales">
+                        <td>{{sale.villa.villaNo}}</td>
                         <td>{{sale.rentalType}}</td>
-                        <td>{{sale.electricNo}}</td>
+                        <td>{{sale.villa.electricNo}}</td>
                         <td>{{sale.periodStart | date: "MM/dd/yyyy"}}</td>
                         <td>{{sale.periodEnd | date: "MM/dd/yyyy"}}</td>
                         <td>{{sale.amount | currency : symbol}}</td>
@@ -43,19 +45,18 @@
                 </table>
 
                 <div>
-                    <h3 class="text-warning">Total Amount: 0.00 QR</h3>
+                    <h3 class="text-warning">Total Amount: {{totalAmount}} QR</h3>
                 </div>
             </div>
         </div>
         <!-- end sales component-->
     </div>
-
     <div class="col-md-3">
         <!-- status component -->
         <div class="panel panel-danger">
             <div class="panel-heading"></div>
             <div class="panel-body">
-                <strong class="text-danger text-center">Status: Waiting</strong>
+                <strong class="text-danger text-center">Status: {{sales[0].status}}</strong>
             </div>
         </div>
         <!--end component-->
@@ -85,10 +86,11 @@
         </div>
     </div>
 </div>
-<!-- payment details component -->
 
+<!-- payment details component -->
 @section scripts {
-    <script src="@Url.Content("~/Scripts/app/service/salesService.js")"></script>
-    <script src="@Url.Content("~/Scripts/app/controller/salesSummaryController.js")"></script>
+    <script src="@Url.Content("~/Scripts/app/controller/billingController.js")"></script>
 }
+
+
 

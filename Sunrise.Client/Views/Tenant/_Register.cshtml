@@ -2,7 +2,7 @@
     <div class="form-group">
         <label class="col-md-3 text-right">Type:</label>
         <div class="col-md-9">
-            <select ng-model="tenant.type" ng-change="$ctrl.changeTenantType()" class="form-control">
+            <select ng-model="tenant.tenantType" ng-change="$ctrl.changeTenantType()" class="form-control">
                 <option ng-repeat="type in tenant.tenantTypes" value="{{type.value}}">{{type.text}}</option>
             </select>
         </div>

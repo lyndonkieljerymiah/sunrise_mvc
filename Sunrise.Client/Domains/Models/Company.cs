@@ -4,7 +4,6 @@ namespace Sunrise.Client.Domains.Models
 {
     public class Company
     {
-
         public Company(string crNo,string businessType, DateTime validityDate, string representative)
         {
             this.CrNo = crNo;
@@ -12,6 +11,7 @@ namespace Sunrise.Client.Domains.Models
             this.BusinessType = businessType;
             this.Representative = representative;
         }
+
         public int TenantId { get; set; }
 
         public string BusinessType { get; set; }

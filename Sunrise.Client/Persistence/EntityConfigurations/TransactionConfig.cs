@@ -13,8 +13,12 @@ namespace Sunrise.Client.Persistence.EntityConfigurations
     {
         public TransactionConfig()
         {
+            this.HasKey(t => t.Id);
+
             this.HasMany(t => t.Payments)
-                .WithRequired(p => p.SalesTransaction);
+                .WithRequired(p => p.SalesTransaction)
+                .HasForeignKey(p => p.SalesTransactionId);
+
 
             this.HasRequired(t => t.Tenant).WithMany();
             this.HasRequired(t => t.Villa).WithMany();

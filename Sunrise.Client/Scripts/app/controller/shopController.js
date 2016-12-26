@@ -1,20 +1,25 @@
-﻿mainApp.controller("shopController", function($scope,villaService,salesService) {
+﻿mainApp.controller("shopController", function ($window,$scope, $http) {
 
     $scope.villas = [];
 
-    /*
-     * Initial display all villas 
-     */
-    villaService.getVillas(function(data) {
-        $scope.villas = data;
-    });
-
+    function init()
+    {
+        $http.get("/api/sales/list")
+            .then(function (response) {
+                $scope.villas = response.data;
+            });
+    }
 
     /*
      * When button click select Id and proceed to checkout
      *****************************************************/
-    $scope.select = function (villaId) {
-        //select id and proceed to checkout
-        salesService.checkout(villaId);
+    function select(villaId)
+    {
+        $window.location = "/sales/checkout/" + villaId;
     }
+
+    return {
+        init: init,
+        select: select
+    };
 })

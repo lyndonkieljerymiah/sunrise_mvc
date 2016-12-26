@@ -2,5 +2,9 @@
   {
     "outputFile": "Content/default.css",
     "inputFile": "Content/default.less"
+  },
+  {
+    "outputFile": "Content/login.css",
+    "inputFile": "Content/login.less"
   }
 ]

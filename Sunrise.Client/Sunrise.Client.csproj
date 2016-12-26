@@ -235,7 +235,6 @@
     <Compile Include="Controllers\Api\SalesController.cs" />
     <Compile Include="Controllers\Api\TenantController.cs" />
     <Compile Include="Controllers\Api\VillaController.cs" />
-    <Compile Include="Controllers\BillingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SalesController.cs" />
@@ -250,7 +249,6 @@
     <Compile Include="Domains\Models\Selection.cs" />
     <Compile Include="Domains\Models\Tenant.cs" />
     <Compile Include="Domains\Models\Villa.cs" />
-    <Compile Include="Domains\ViewModels\BillingViewModel.cs" />
     <Compile Include="Domains\ViewModels\Identity\ForgotPasswordViewModel.cs" />
     <Compile Include="Domains\ViewModels\Identity\ForgotViewModel.cs" />
     <Compile Include="Domains\ViewModels\Identity\ExternalLoginConfirmationViewModel.cs" />
@@ -278,18 +276,19 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Extension\AngularBootstrap.cs" />
-    <Compile Include="Migrations\201612211757171_Initial.cs" />
-    <Compile Include="Migrations\201612211757171_Initial.Designer.cs">
-      <DependentUpon>201612211757171_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201612250927447_Initial.cs" />
+    <Compile Include="Migrations\201612250927447_Initial.Designer.cs">
+      <DependentUpon>201612250927447_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201612221332365_AddBusinessType.cs" />
-    <Compile Include="Migrations\201612221332365_AddBusinessType.Designer.cs">
-      <DependentUpon>201612221332365_AddBusinessType.cs</DependentUpon>
+    <Compile Include="Migrations\201612250933100_ChangesInFkPayment.cs" />
+    <Compile Include="Migrations\201612250933100_ChangesInFkPayment.Designer.cs">
+      <DependentUpon>201612250933100_ChangesInFkPayment.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Persistence\Abstract\IBaseRepository.cs" />
     <Compile Include="Persistence\Abstract\ISelectionRepository.cs" />
     <Compile Include="Persistence\Abstract\ITenantRepository.cs" />
+    <Compile Include="Persistence\Abstract\ITransactionRepository.cs" />
     <Compile Include="Persistence\Abstract\IUnitOfWork.cs" />
     <Compile Include="Persistence\Abstract\IVillaRepository.cs" />
     <Compile Include="Persistence\AppDbContext.cs" />
@@ -299,9 +298,12 @@
     <Compile Include="Persistence\EntityConfigurations\TenantConfig.cs" />
     <Compile Include="Persistence\EntityConfigurations\TransactionConfig.cs" />
     <Compile Include="Persistence\EntityConfigurations\VillaConfig.cs" />
+    <Compile Include="Persistence\Manager\SalesDataManager.cs" />
+    <Compile Include="Persistence\Manager\VillaDataManager.cs" />
     <Compile Include="Persistence\Repositories\BaseRepository.cs" />
     <Compile Include="Persistence\Repositories\SelectionRepository.cs" />
     <Compile Include="Persistence\Repositories\TenantRepository.cs" />
+    <Compile Include="Persistence\Repositories\TransactionRepository.cs" />
     <Compile Include="Persistence\Repositories\UnitOfWork.cs" />
     <Compile Include="Persistence\Repositories\VillaRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -319,11 +321,18 @@
     <Content Include="Content\imgs\notavailable.png" />
     <Content Include="Content\imgs\spin.gif" />
     <Content Include="Content\imgs\villa-spalletti-1.jpg" />
+    <Content Include="Content\login.css">
+      <DependentUpon>login.less</DependentUpon>
+    </Content>
+    <Content Include="Content\login.min.css">
+      <DependentUpon>login.css</DependentUpon>
+    </Content>
     <Content Include="Content\ui-bootstrap-csp.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\app\controller\checkoutController.js" />
+    <Content Include="Scripts\app\controller\billingController.js" />
     <Content Include="Scripts\app\controller\shopController.js" />
     <Content Include="Scripts\app\controller\tenantsController.js" />
     <Content Include="Scripts\app\service\villaService.js" />
@@ -359,7 +368,7 @@
     <Content Include="Scripts\libs\angular.js" />
     <Content Include="Scripts\libs\angular.min.js" />
     <Content Include="Scripts\app\app-bootstrap.js" />
-    <Content Include="Scripts\app\controller\salesSummaryController.js" />
+    <Content Include="Scripts\app\controller\salesController.js" />
     <Content Include="Scripts\app\controller\tenantRegisterController.js" />
     <Content Include="Scripts\app\directive\app-directives.js" />
     <Content Include="Scripts\app\service\salesService.js" />
@@ -387,6 +396,8 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
+    <Content Include="Content\parts\login.less" />
+    <Content Include="Content\login.less" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\i18n\angular-locale_af-na.js" />
     <Content Include="Scripts\i18n\angular-locale_af-za.js" />
@@ -1169,16 +1180,16 @@
     <Content Include="Views\Tenant\TenantView.cshtml" />
     <Content Include="Views\Tenant\SalesView.cshtml" />
     <Content Include="Views\Tenant\ProfileView.cshtml" />
-    <Content Include="Views\Billing\ViewBill.cshtml" />
-    <Content Include="Views\Billing\PaymentView.cshtml" />
     <Content Include="Views\Tenant\Index.cshtml" />
     <Content Include="Views\Sales\Transaction.cshtml" />
     <Content Include="Views\Sales\Index.cshtml" />
     <Content Include="Views\Sales\Checkout.cshtml" />
     <Content Include="Views\Sales\_SalesView.cshtml" />
+    <Content Include="Views\Sales\Billing.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Domains\DTO\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -1190,11 +1201,11 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201612211757171_Initial.resx">
-      <DependentUpon>201612211757171_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201612250927447_Initial.resx">
+      <DependentUpon>201612250927447_Initial.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612221332365_AddBusinessType.resx">
-      <DependentUpon>201612221332365_AddBusinessType.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201612250933100_ChangesInFkPayment.resx">
+      <DependentUpon>201612250933100_ChangesInFkPayment.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

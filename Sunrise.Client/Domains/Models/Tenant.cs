@@ -57,14 +57,30 @@ namespace Sunrise.Client.Domains.Models
         public virtual Company Company { get; private set; }
         public virtual Address Address { get; private set; }
         
-
         public virtual ICollection<SalesTransaction> SalesTransactions { get; private set; }
+
         public void AddSalesTransaction(int villaId,string rentalType, string contractStatus,
-            DateTime periodStart, DateTime periodEnd, decimal amount)
+            DateTime periodStart, DateTime periodEnd, decimal amount,string userId)
         {
-            var sales = SalesTransaction.CreateTransaction(villaId, rentalType, contractStatus, periodStart, periodEnd, amount);
+
+
+            var sales = SalesTransaction.CreateTransaction(villaId, rentalType, contractStatus, periodStart, periodEnd, amount,userId);
             SalesTransactions.Add(sales);
+            //notification
+
         }
+
+
+        public SalesTransaction AddAndReturnTransaction(int villaId, string rentalType, string contractStatus,
+            DateTime periodStart, DateTime periodEnd, decimal amount, string userId)
+        {
+            var sales = SalesTransaction.CreateTransaction(villaId, rentalType, contractStatus, periodStart, periodEnd, amount, userId);
+            SalesTransactions.Add(sales);
+            return sales;
+        }
+
+
+
         public void AddIndividual(DateTime bday,GenderEnum gender,string qatarId,string company)
         {
 

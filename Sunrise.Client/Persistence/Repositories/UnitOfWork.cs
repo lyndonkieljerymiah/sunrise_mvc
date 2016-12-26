@@ -13,6 +13,8 @@ namespace Sunrise.Client.Persistence.Repositories
         private ITenantRepository _tenantRepo;
         private ISelectionRepository _selRepo;
         private IVillaRepository _villaRepo;
+        private ITransactionRepository _transactionRepo;
+
 
         public UnitOfWork()
         {
@@ -33,6 +35,14 @@ namespace Sunrise.Client.Persistence.Repositories
             get
             {
                 return _villaRepo ?? (_villaRepo = new VillaRepository(_context));
+            }
+        }
+
+        public ITransactionRepository Transactions
+        {
+            get
+            {
+                return _transactionRepo ?? (_transactionRepo = new TransactionRepository(_context));
             }
         }
 

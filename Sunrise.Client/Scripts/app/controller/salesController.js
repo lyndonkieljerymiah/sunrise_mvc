@@ -1,7 +1,4 @@
-﻿
-
-
-mainApp.controller("salesSummaryController",
+﻿mainApp.controller("salesController",
     function(salesService,$scope) {
 
         $scope.data = 

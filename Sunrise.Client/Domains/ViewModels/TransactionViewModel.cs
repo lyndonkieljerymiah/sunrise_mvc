@@ -9,29 +9,31 @@ namespace Sunrise.Client.Domains.ViewModels
 {
     public class TransactionViewModel
     {
-
-        public TransactionViewModel(IEnumerable<Selection> selections,VillaViewModel villa)
-        {
-            
-            //get for tenant
-            var tenantSelections = selections.Where(s => s.Type == "TenantType");
-            this.Tenant = new TenantRegisterViewModel(tenantSelections);
-
-            //get for sales
-            var salesSelections = selections.Where(s => s.Type.Contains("RentalType") || s.Type.Contains("ContractStatus"));
-            this.Sales = SalesViewModel.Create(villa,salesSelections);
-        }
-
+        
         public TransactionViewModel()
         {
-                
+            //get for tenant
+            this.Tenant = TenantRegisterViewModel.CreateDefault();
+            this.Sales = new SalesViewModel();
         }
 
-
         public TenantRegisterViewModel Tenant { get; set; }
-        public SalesViewModel Sales { get; set; }   
+        public SalesViewModel Sales { get; set; }
+
         public string Template { get; set; }
 
+
+        public void SetSelections(IEnumerable<Selection> selections)
+        {
+            Tenant.SetTenantTypes(selections);
+            Sales.SetRentalTypes(selections);
+            Sales.SetContractStatuses(selections);
+        }
+
+        public void AddVillaToSales(VillaViewModel villa)
+        {
+            this.Sales.Villa = villa;
+        }
         
     }
 }

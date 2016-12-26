@@ -23,22 +23,7 @@ namespace Sunrise.Client.Controllers.Api
         }
 
 
-        /// <summary>
-        /// Create new Tenant Register Form API
-        /// url: /api/tenant/create
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("create")]
-        public async Task<IHttpActionResult> Create()
-        {
-            var strKeys = new string[] { "TenantType" };
-            var selections = await _uw.Selections.GetSelections(strKeys);
-            var newTenant = new TenantRegisterViewModel(selections);
-
-            return Ok(newTenant);
-        }
-
+       
         
         /// <summary>
         /// 
@@ -61,35 +46,7 @@ namespace Sunrise.Client.Controllers.Api
             return tenants;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="vm"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("update")]
-        public IHttpActionResult Update(TenantRegisterViewModel vm)
-        {
-
-            if (!ModelState.IsValid)
-                return BadRequest();
-
-            //create tenant
-            var tenant = Tenant.Create(vm.Type, vm.Code, vm.Name, vm.EmailAddress,
-                vm.TelNo, vm.MobileNo, vm.FaxNo, vm.Address1, vm.Address2, vm.City, vm.PostalCode);
-
-            if (vm.Type == "ttin")
-            {
-                tenant.AddIndividual(vm.Individual.Birthday,vm.Individual.Gender,vm.Individual.QatarId,vm.Individual.Company);
-            }
-            else
-            {
-                tenant.AddCompany(vm.Company.CrNo,vm.Company.BusinessType,vm.Company.ValidityDate,vm.Company.Representative);
-            }
-
-            return Ok(vm);
-        }
-
+      
 
         
 

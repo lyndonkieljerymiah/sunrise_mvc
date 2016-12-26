@@ -12,24 +12,24 @@ namespace Sunrise.Client.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        SalesTransactionId = c.Int(nullable: false),
-                        Term = c.Int(nullable: false),
+                        SalesTransactionId = c.String(maxLength: 128),
+                        Term = c.String(),
                         ChequeNo = c.String(),
                         PaymentDate = c.DateTime(nullable: false),
                         Amount = c.Decimal(nullable: false, precision: 18, scale: 2),
                         Status = c.String(),
-                        StatusDate = c.DateTime(nullable: false),
+                        StatusDate = c.DateTime(),
                         Remarks = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.SalesTransactions", t => t.SalesTransactionId, cascadeDelete: true)
+                .ForeignKey("dbo.SalesTransactions", t => t.SalesTransactionId)
                 .Index(t => t.SalesTransactionId);
             
             CreateTable(
                 "dbo.SalesTransactions",
                 c => new
                     {
-                        Id = c.Int(nullable: false, identity: true),
+                        Id = c.String(nullable: false, maxLength: 128),
                         DateCreated = c.DateTime(nullable: false),
                         RentalType = c.String(),
                         ContractStatus = c.String(),
@@ -73,6 +73,7 @@ namespace Sunrise.Client.Migrations
                 c => new
                     {
                         TenantId = c.Int(nullable: false),
+                        BusinessType = c.String(),
                         CrNo = c.String(),
                         ValidityDate = c.DateTime(nullable: false),
                         Representative = c.String(),

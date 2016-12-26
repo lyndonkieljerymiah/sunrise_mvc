@@ -21,14 +21,9 @@ namespace Sunrise.Client.Controllers
 
         // GET: Sales
         //shop
-        public async Task<ActionResult> Index()
-        {
-            var villas = await _unitOfWork.Villas.GetAllVilla();
-            var shop = new ShopViewModel
-            {
-                Villas = VillaViewModel.CreateRange(villas)
-            };
-            return View(shop);
+        public ActionResult Index()
+        {  
+            return View();
         }
         
         [Route("checkout/{villaId?}")]
@@ -37,6 +32,15 @@ namespace Sunrise.Client.Controllers
             ViewBag.Id = villaId;
             return View();
         }
+
+        [Route("billing/{transactionId?}")]
+        public ViewResult Billing(string transactionId)
+        {
+            ViewBag.Id = transactionId;
+
+            return View();
+        }
+
 
         
     }

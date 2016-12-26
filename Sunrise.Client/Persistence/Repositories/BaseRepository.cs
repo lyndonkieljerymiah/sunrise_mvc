@@ -23,12 +23,10 @@ namespace Sunrise.Client.Persistence.Repositories
         {
             _set.Add(entity);
         }
-
         public async Task<T> FindAsync(object id)
         {
             return await _set.FindAsync(id);
         }
-
         public void Remove(T entity)
         {
             _set.Remove(entity);

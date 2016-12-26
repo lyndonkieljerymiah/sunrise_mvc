@@ -33,6 +33,9 @@ namespace Sunrise.Client
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/default.css"));
+
+            bundles.Add(new StyleBundle("~/Content/login").Include(
+                      "~/Content/login.css"));
         }
     }
 }

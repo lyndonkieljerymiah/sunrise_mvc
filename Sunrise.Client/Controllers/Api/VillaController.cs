@@ -18,17 +18,7 @@ namespace Sunrise.Client.Controllers.Api
         {
             _uw = uw;
         }
-
-        [HttpGet]
-        [Route("{villaNo?}")]
-        public async Task<IHttpActionResult> Availability(string villaNo)
-        {   
-            var villa = await _uw.Villas.GetVilla(villaNo);
-            if (villa == null)
-                return BadRequest("Not available");
-
-            return Ok(VillaViewModel.Create(villa));
-        }
+        
 
         [HttpGet]
         [Route("")]
