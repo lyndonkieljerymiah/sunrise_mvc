@@ -10,16 +10,15 @@
             },
             replace: true,
             link: function (scope) {
-                console.log(scope);
                 scope.getTemplate = function () {
                     return scope.template;
                 }
             },
             template: "<div ng-include='getTemplate()'></div>",
             controller: function ($scope) {
-                $scope.changeType = function () {
-                    console.log($scope);
-                    $scope.template = "register/" + $scope.tenant.type;
+                $scope.changeType = function ()
+                {
+                    $scope.template = "register/" + $scope.sales.register.type;
                 }
             }
         }
@@ -35,18 +34,20 @@ mainApp.controller("salesTransactionController",
         {
             $http.get("/api/sales/create/" + villaId)
                 .then(function(response) {
-                    $scope.tenant = response.data.tenant;
-                    $scope.sales = response.data.sales;
-                    $scope.template = templatePath + $scope.tenant.tenantType;
+                    $scope.sales = response.data;
+                    $scope.sales.amount = response.data.villa.ratePerMonth;
+                    $scope.template = templatePath + $scope.sales.register.tenantType;
                 });
         }
 
         function changeTenantType() {
-            $scope.template = templatePath + $scope.tenant.tenantType;
+            $scope.template = templatePath + $scope.sales.register.tenantType;
         }
 
-        function save() {
-            $http.post("/api/sales/create", { tenant: $scope.tenant, sales: $scope.sales })
+        function save()
+        {
+            
+            $http.post("/api/sales/create", $scope.sales)
                 .then(function (response)
                 {
                     //route data

@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Results;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
+using Sunrise.Client.Domains.Enum;
 using Sunrise.Client.Domains.Models;
 using Sunrise.Client.Domains.ViewModels;
 using Sunrise.Client.Persistence.Manager;
-using Sunrise.Client.Persistence.Repositories;
 
 namespace Sunrise.Client.Controllers.Api
 {
@@ -18,30 +15,32 @@ namespace Sunrise.Client.Controllers.Api
     public class SalesController : ApiController
     {
         private readonly SalesDataManager _salesManager;
+        private readonly SelectionDataManager _selectionDataManager;
+        private readonly TenantDataManager _tenantDataManager;
         private readonly VillaDataManager _villaDataManager;
-        private readonly UnitOfWork _unitOfWork;
 
         public SalesController(
-            SalesDataManager salesManager, 
+            SalesDataManager salesManager,
             VillaDataManager villaDataManager,
-            UnitOfWork unitOfWork)
+            SelectionDataManager selectionDataManager,
+            TenantDataManager tenantDataManager)
         {
             _salesManager = salesManager;
             _villaDataManager = villaDataManager;
-            _unitOfWork = unitOfWork;
-
+            _selectionDataManager = selectionDataManager;
+            _tenantDataManager = tenantDataManager;
         }
 
         [HttpGet]
         [Route("list")]
         public async Task<IHttpActionResult> List()
-        {   
-            var shop = await  _villaDataManager.GetVillas();
+        {
+            var shop = await _villaDataManager.GetVillas();
             return Ok(shop);
         }
 
         /// <summary>
-        /// 
+        ///     Todo: Create Register and pass to browser
         /// </summary>
         /// <param name="villaId"></param>
         /// <returns></returns>
@@ -49,70 +48,45 @@ namespace Sunrise.Client.Controllers.Api
         [Route("create/{villaId?}")]
         public async Task<IHttpActionResult> Create(int villaId)
         {
-
             var villa = await _villaDataManager.GetVilla(villaId);
-            var selections = await _unitOfWork.Selections.GetSelections(new string[] { "TenantType", "RentalType", "ContractStatus" });
+            var selections = await _selectionDataManager.GetLookup(new[] {"TenantType", "RentalType", "ContractStatus"});
 
-            var vmTransaction = new TransactionViewModel();
-            
-            vmTransaction.SetSelections(selections);
-            vmTransaction.AddVillaToSales(villa);
+            var vmRegister = TenantRegisterViewModel.CreateDefault();
+            vmRegister.SetTenantTypes(selections);
+
+            var vmTransaction = SalesRegisterViewModel.CreateWithVilla(villa);
+            vmTransaction.Register = vmRegister;
+            vmTransaction.SetContractStatuses(selections);
+            vmTransaction.SetRentalTypes(selections);
 
             return Ok(vmTransaction);
         }
 
         /// <summary>
-        /// create tenant and save transaction
-        /// 
+        ///     create tenant and save transaction
+        ///     TODO: Take register and save
         /// </summary>
         /// <param name="vm"></param>
         /// <returns>Id</returns>
         [HttpPost]
         [Route("create")]
-        public async Task<IHttpActionResult> Create(TransactionViewModel vm)
-        {   
-
+        public async Task<IHttpActionResult> Create(SalesRegisterViewModel vm)
+        {
             try
             {
                 if (ModelState.IsValid)
                     return BadRequest();
 
-                var vmTenant = vm.Tenant;
-                var vmSales = vm.Sales;
-                vmTenant.Code = vm.Sales.VillaNo;
-
-                //register tenant
-                var tenant = Tenant.Create(
-                    vmTenant.TenantType, vmTenant.Code, vmTenant.Name,
-                    vmTenant.EmailAddress, vmTenant.TelNo, vmTenant.
-                        MobileNo, vmTenant.FaxNo, vmTenant.Address1, vmTenant.Address2,
-                    vmTenant.City, vmTenant.PostalCode);
-
-                if (vmTenant.TenantType == "ttin")
+                vm.UserId = User.Identity.GetUserId();
+                var result = await _tenantDataManager.CreateAsync(vm.Register, vm);
+                if (result.Success)
                 {
-                    tenant.AddIndividual(vmTenant.Individual.Birthday, vmTenant.Individual.Gender,
-                        vmTenant.Individual.QatarId, vmTenant.Individual.Company);
+                    //update villa status
+                    await _villaDataManager.UpdateVillaStatus(vm.Villa.Id, VillaStatusEnum.Reserved);
+                    var sv = new SalesViewModel {Id = (string) result.ReturnObject};
+                    return Ok(sv);
                 }
-                else
-                {
-                    tenant.AddCompany(vmTenant.Company.CrNo, vmTenant.Company.BusinessType,
-                        vmTenant.Company.ValidityDate, vmTenant.Company.Representative);
-                }
-
-                //get user id
-                var userId = User.Identity.GetUserId();
-
-                //add sales
-                SalesTransaction sales = tenant.AddAndReturnTransaction(vm.Sales.Villa.Id, vmSales.RentalType,
-                    vmSales.ContractStatus,
-                    vmSales.PeriodStart,
-                    vmSales.PeriodEnd, vmSales.Amount, userId);
-
-                _unitOfWork.Tenants.Add(tenant);
-                await _unitOfWork.SaveChangesAsync();
-
-                SalesViewModel sv = Mapper.Map<SalesViewModel>(sales);
-                return Ok(sv);
+                return Ok(result);
             }
             catch (Exception e)
             {
@@ -120,15 +94,56 @@ namespace Sunrise.Client.Controllers.Api
             }
         }
 
-
+        /// <summary>
+        ///     TODO: Show bill
+        /// </summary>
+        /// <param name="transactionId"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("billing/{transactionId?}")]
         public async Task<IHttpActionResult> Billing(string transactionId)
         {
             var transaction = await _salesManager.GetSalesAsync(transactionId);
-
             return Ok(transaction);
-
         }
+
+
+        /// <summary>
+        ///     TODO: Show Payment
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("payment")]
+        public async Task<IHttpActionResult> Payment()
+        {
+
+            var payment = new PaymentViewModel();
+            var selections = await _selectionDataManager.GetLookup(new[] {"PaymentTerm", "PaymentMode"});
+
+            payment.SetTerms(selections);
+            payment.SetMode(selections);
+            payment.Term = "ptcq";
+            payment.PaymentMode = "pmp";
+
+            return Ok(payment);
+        }
+
+        /// <summary>
+        ///     TODO: Save Payment
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("payment")]
+        public async Task<IHttpActionResult> Payment(PaymentViewModel vm)
+        {
+            var result = await _salesManager.AddPaymentAsync(vm);
+            if (result.Success)
+            {
+                await _villaDataManager.UpdateVillaStatus(vm.VillaId, VillaStatusEnum.NotAvailable);
+            }
+            return Ok(result);
+        }
+
     }
 }

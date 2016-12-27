@@ -39,14 +39,12 @@ namespace Sunrise.Client.Domains.Models
         
         public string Id { get; private set; }
         public DateTime DateCreated { get; private set; }
-
         public string RentalType { get; set; }
         public string ContractStatus { get; set; }
         public DateTime PeriodStart { get; set; }
         public DateTime PeriodEnd { get; set; }
         public Decimal Amount { get; set; }
         public string Status { get; set; }
-
         public int VillaId { get; set; }
         public int TenantId { get; set; }
         public string UserId { get; set; }
@@ -55,6 +53,7 @@ namespace Sunrise.Client.Domains.Models
         public virtual Tenant Tenant { get; set; }
 
         public virtual ICollection<Payment> Payments { get; set; }
+        
 
     }
 }

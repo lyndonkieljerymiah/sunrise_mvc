@@ -12,6 +12,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Sunrise.Client.Domains.Models.Identity;
 using Sunrise.Client.Persistence;
+using Sunrise.Client.Persistence.Context;
 
 namespace Sunrise.Client
 {

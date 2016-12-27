@@ -7,6 +7,7 @@ using Microsoft.Owin.Security.Google;
 using Owin;
 using Sunrise.Client.Domains.Models.Identity;
 using Sunrise.Client.Persistence;
+using Sunrise.Client.Persistence.Context;
 
 namespace Sunrise.Client
 {

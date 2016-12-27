@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Sunrise.Client.Domains.Models;
+using Sunrise.Client.Persistence.Context;
 
 namespace Sunrise.Client.Migrations
 {
@@ -8,14 +9,14 @@ namespace Sunrise.Client.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Sunrise.Client.Persistence.AppDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<AppDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(Sunrise.Client.Persistence.AppDbContext context)
+        protected override void Seed(AppDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 
@@ -65,7 +66,6 @@ namespace Sunrise.Client.Migrations
                         ElecNo = "E12344",
                         WaterNo = "W123",
                         QtelNo = "Q1234",
-                        Status = "available",
                         Capacity = 9,
                         Description = "3 Rooms and 2 Toilets full furnished"
                     },
@@ -75,7 +75,6 @@ namespace Sunrise.Client.Migrations
                         ElecNo = "E32344",
                         WaterNo = "W223",
                         QtelNo = "Q2234",
-                        Status = "available",
                         Capacity = 10,
                         Description = "3 Rooms and 5 Toilets full furnished"
                     }

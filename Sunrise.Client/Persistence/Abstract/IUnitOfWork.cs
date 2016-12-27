@@ -13,6 +13,8 @@ namespace Sunrise.Client.Persistence.Abstract
         ISelectionRepository Selections { get; }
         IVillaRepository Villas { get; }
         ITransactionRepository Transactions { get; }
+        IPaymentRepository Payments { get; }
+
 
         void SaveChanges();
 

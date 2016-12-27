@@ -3,7 +3,7 @@
 }
 
 <div class="page-header">
-    <h1>Checkout Villa</h1>
+    <h1>Villa Rent Contract</h1>
 </div>
 <form class="form-horizontal" method="post" ng-controller="salesTransactionController as $ctrl" ng-init="$ctrl.init(@ViewBag.Id)">
     <div class="row">
@@ -25,6 +25,12 @@
                     </div>
                     <p><strong>Villa No: {{sales.villa.villaNo}}</strong></p>
                     <p>Descripton: {{sales.villa.description}}</p>
+                    <p>
+                        <ul>
+                            <li>Capacity: {{sales.villa.capacity}}</li>
+                            <li>Rate per Month: {{sales.villa.ratePerMonth}}</li>
+                        </ul>
+                    </p>
                 </div>
             </div>
             <hr />
@@ -63,7 +69,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-4 text-right">Amount</label>
+                        <label class="col-md-4 text-right">Rate/Month</label>
                         <div class="col-md-8">
                             <input type="text" ng-model="sales.amount" class="form-control" />
                         </div>

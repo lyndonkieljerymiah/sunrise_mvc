@@ -4,7 +4,7 @@ using Sunrise.Client.Domains.Models;
 using Sunrise.Client.Domains.Models.Identity;
 using Sunrise.Client.Persistence.EntityConfigurations;
 
-namespace Sunrise.Client.Persistence
+namespace Sunrise.Client.Persistence.Context
 {
     public class AppDbContext : IdentityDbContext<User>
     {
@@ -47,6 +47,7 @@ namespace Sunrise.Client.Persistence
             modelBuilder.Configurations.Add(new TenantConfig());
             modelBuilder.Configurations.Add(new VillaConfig());
             modelBuilder.Configurations.Add(new SelectionConfig());
+
 
         }
     }

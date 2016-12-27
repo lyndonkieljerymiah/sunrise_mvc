@@ -18,7 +18,7 @@ namespace AppUnitTest.Model
             Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<Villa, VillaViewModel>().ReverseMap();
-                cfg.CreateMap<SalesTransaction, SalesViewModel>().ReverseMap();
+                cfg.CreateMap<SalesTransaction, SalesRegisterViewModel>().ReverseMap();
                 cfg.CreateMap<Individual, IndividualViewModel>().ReverseMap();
                 cfg.CreateMap<Company, CompanyViewModel>().ReverseMap();
                 cfg.CreateMap<Tenant, TenantRegisterViewModel>()

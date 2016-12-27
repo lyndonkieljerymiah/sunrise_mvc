@@ -1,31 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using Sunrise.Client.Domains.ViewModels;
-using Sunrise.Client.Persistence.Abstract;
+﻿using System.Web.Mvc;
 
 namespace Sunrise.Client.Controllers
 {
-    [RoutePrefix("Sales")]
+    [RoutePrefix("sales")]
     public class SalesController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-        
-        public SalesController(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
-
-        // GET: Sales
+        // GET: SalesRegister
         //shop
         public ActionResult Index()
-        {  
+        {
             return View();
         }
-        
+
         [Route("checkout/{villaId?}")]
         public ViewResult Checkout(int villaId)
         {
@@ -37,11 +23,7 @@ namespace Sunrise.Client.Controllers
         public ViewResult Billing(string transactionId)
         {
             ViewBag.Id = transactionId;
-
             return View();
         }
-
-
-        
     }
 }

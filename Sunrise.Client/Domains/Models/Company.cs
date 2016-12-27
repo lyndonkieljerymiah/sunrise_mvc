@@ -12,6 +12,11 @@ namespace Sunrise.Client.Domains.Models
             this.Representative = representative;
         }
 
+        public Company()
+        {
+            
+        }
+
         public int TenantId { get; set; }
 
         public string BusinessType { get; set; }

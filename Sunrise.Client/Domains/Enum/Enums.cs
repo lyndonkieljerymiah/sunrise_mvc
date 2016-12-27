@@ -13,4 +13,21 @@ namespace Sunrise.Client.Domains.Enum
     }
 
 
+    public enum VillaStatusEnum
+    {
+        Available,
+        NotAvailable,
+        Reserved
+    }
+
+    public struct Result
+    {
+        public bool Success;
+        public List<string> Errors;
+        public object ReturnObject;
+        public IEnumerable<object> ReturnObjects;
+    }
+
+    
+
 }

@@ -14,11 +14,11 @@ namespace Sunrise.Client.Domains.ViewModels
         {
             //get for tenant
             this.Tenant = TenantRegisterViewModel.CreateDefault();
-            this.Sales = new SalesViewModel();
+            this.SalesRegister = new SalesRegisterViewModel();
         }
 
         public TenantRegisterViewModel Tenant { get; set; }
-        public SalesViewModel Sales { get; set; }
+        public SalesRegisterViewModel SalesRegister { get; set; }
 
         public string Template { get; set; }
 
@@ -26,13 +26,13 @@ namespace Sunrise.Client.Domains.ViewModels
         public void SetSelections(IEnumerable<Selection> selections)
         {
             Tenant.SetTenantTypes(selections);
-            Sales.SetRentalTypes(selections);
-            Sales.SetContractStatuses(selections);
+            SalesRegister.SetRentalTypes(selections);
+            SalesRegister.SetContractStatuses(selections);
         }
 
         public void AddVillaToSales(VillaViewModel villa)
         {
-            this.Sales.Villa = villa;
+            this.SalesRegister.Villa = villa;
         }
         
     }

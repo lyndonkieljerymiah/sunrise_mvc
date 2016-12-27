@@ -70,6 +70,8 @@ namespace Sunrise.Client.App_Start
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
             kernel.Bind<SalesDataManager>().To<SalesDataManager>();
             kernel.Bind<VillaDataManager>().To<VillaDataManager>();
+            kernel.Bind<SelectionDataManager>().To<SelectionDataManager>();
+            kernel.Bind<TenantDataManager>().To<TenantDataManager>();
         }        
     }
 }

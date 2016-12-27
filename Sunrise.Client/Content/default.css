@@ -1,4 +1,55 @@
-﻿html {
+﻿@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+.nb-card {
+  font-family: 'Open Sans', sans-serif;
+  height: 230px;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+}
+.nb-card .nb-header {
+  padding: 5px 10px;
+  border-bottom: 1px solid #eee;
+  font-weight: bold;
+  position: relative;
+}
+.nb-card .nb-header .nb-blink {
+  background-color: #6D2133;
+  font-size: 12px;
+  color: whitesmoke;
+  padding: 3px;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.nb-card .nb-image {
+  position: relative;
+  overflow: hidden;
+  min-height: 150px;
+}
+.nb-card .nb-image .card__image {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  position: absolute;
+}
+.nb-card .nb-footer {
+  padding: 10px;
+  margin-top: 10px;
+  border-top: 1px solid #eee;
+}
+.nb-card .nb-footer .btn {
+  border: none;
+  background: transparent;
+  float: right;
+  outline: none;
+}
+.nb-card .nb-footer .btn:hover {
+  cursor: pointer;
+}
+.nb-card .nb-footer:after {
+  clear: both;
+  display: table;
+}
+html {
   height: 100%;
 }
 body {

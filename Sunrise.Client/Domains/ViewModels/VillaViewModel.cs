@@ -41,13 +41,19 @@ namespace Sunrise.Client.Domains.ViewModels
 
         public string Status { get; set; }
 
+        public string VillaStatus { get; set; }
+
         public string Type { get; set; }
+
+        public string VillaType { get; set; }
 
         public int Capacity { get; set; }
 
         public string Description { get; set; }
 
-        public string Label { get { return this.VillaNo + " - " + this.Status; } }
+        public decimal RatePerMonth { get; set; }
+
+        public string Label { get { return this.VillaNo + " - " + this.VillaStatus; } }
 
         
 

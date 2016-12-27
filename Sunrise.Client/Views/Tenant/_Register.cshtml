@@ -2,8 +2,8 @@
     <div class="form-group">
         <label class="col-md-3 text-right">Type:</label>
         <div class="col-md-9">
-            <select ng-model="tenant.tenantType" ng-change="$ctrl.changeTenantType()" class="form-control">
-                <option ng-repeat="type in tenant.tenantTypes" value="{{type.value}}">{{type.text}}</option>
+            <select ng-model="sales.register.tenantType" ng-change="$ctrl.changeTenantType()" class="form-control">
+                <option ng-repeat="type in sales.register.tenantTypes" value="{{type.value}}">{{type.text}}</option>
             </select>
         </div>
     </div>
@@ -12,14 +12,14 @@
         <div class="form-group">
             <label for="name" class="col-md-3 text-right">Full Name:</label>
             <div class="col-md-9">
-                <input type="text" id="name" name="name" ng-model="tenant.name" class="form-control" />
+                <input type="text" id="name" name="name" ng-model="sales.register.name" class="form-control" />
             </div>
         </div>
         <div class="form-group">
             <label for="gender" class="col-md-3 text-right">Gender:</label>
             <div class="col-md-9">
-                <select ng-model="tenant.gender" class="form-control">
-                    <option ng-repeat="gender in tenant.individual.genders" value="{{gender.value}}">{{gender.text}}</option>
+                <select ng-model="sales.register.gender" class="form-control">
+                    <option ng-repeat="gender in sales.register.individual.genders" value="{{gender.value}}">{{gender.text}}</option>
                 </select>
             </div>
         </div>
@@ -27,7 +27,7 @@
             <label for="qatarId" class="col-md-3 text-right">Qatar Id</label>
             <div class="col-md-9">
                 <input type="text" id="qatarId" name="qatarId"
-                       ng-model="tenant.individual.qatarId"
+                       ng-model="sales.register.individual.qatarId"
                        class="form-control" />
             </div>
         </div>
@@ -35,7 +35,7 @@
             <label for="birthday" class="col-md-3 text-right">Birthday</label>
             <div class="col-md-9">
                 <input type="date"
-                       ng-model="tenant.individual.birthday"
+                       ng-model="sales.register.individual.birthday"
                        class="form-control" />
             </div>
         </div>
@@ -43,7 +43,7 @@
             <label for="company" class="col-md-3 text-right">Company:</label>
             <div class="col-md-9">
                 <input type="text" name="company" , id="company"
-                       ng-model="tenant.inidividual.company"
+                       ng-model="sales.register.inidividual.company"
                        class="form-control" />
             </div>
         </div>
@@ -54,7 +54,7 @@
             <label for="businessName" class="col-md-3">Business Name:</label>
             <div class="col-md-9">
                 <input type="text" name="businessName" id="businessName"
-                       ng-model="tenant.name"
+                       ng-model="sales.register.name"
                        class="form-control" />
             </div>
         </div>
@@ -62,25 +62,25 @@
             <label for="businessType" class="col-md-3 text-right">Business Type:</label>
             <div class="col-md-9">
                 <input type="text" name="businessType" id="businessType" class="form-control"
-                       ng-model="tenant.company.businessType"/>
+                       ng-model="sales.register.company.businessType"/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-md-3 text-right">CR No</label>
             <div class="col-md-9">
-                <input type="text" class="form-control" ng-model="tenant.company.crNo"/>
+                <input type="text" class="form-control" ng-model="sales.register.company.crNo"/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-md-3 text-right">Validity Date:</label>
             <div class="col-md-9">
-                <input type="date" ng-model="tenant.company.validityDate" class="form-control"/>
+                <input type="date" ng-model="sales.register.company.validityDate" class="form-control"/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-md-3 text-right">Representative:</label>
             <div class="col-md-9">
-                <input type="text" class="form-control" ng-model="tenant.company.representative"/>
+                <input type="text" class="form-control" ng-model="sales.register.company.representative"/>
             </div>
         </div>
     }
@@ -91,19 +91,19 @@
     <div class="form-group">
         <label class="col-md-3 text-right">Email Address:</label>
         <div class="col-md-9">
-            <input type="email" class="form-control" ng-model="tenant.emailAddress"/>
+            <input type="email" class="form-control" ng-model="sales.register.emailAddress"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-md-3 text-right">Tel No:</label>
         <div class="col-md-9">
-            <input type="tel" ng-model="tenant.telNo" class="form-control"/>
+            <input type="tel" ng-model="sales.register.telNo" class="form-control"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-md-3 text-right">Mobile No:</label>
         <div class="col-md-9">
-            <input type="tel" class="form-control" ng-model="tenant.mobileNo"/>
+            <input type="tel" class="form-control" ng-model="sales.register.mobileNo"/>
         </div>
     </div>
     <div class="page-header">
@@ -113,27 +113,27 @@
     <div class="form-group">
         <label class="col-md-3 text-right">Address 1:</label>
         <div class="col-md-9">
-            <input type="text" class="form-control" ng-model="tenant.address1"/>
+            <input type="text" class="form-control" ng-model="sales.register.address1"/>
         </div>
     </div>
 
     <div class="form-group">
         <label class="col-md-3 text-right">Address 2:</label>
         <div class="col-md-9">
-            <input type="text" class="form-control" ng-model="tenant.address2" />
+            <input type="text" class="form-control" ng-model="sales.register.address2" />
         </div>
     </div>
 
     <div class="form-group">
         <label class="col-md-3 text-right">City</label>
         <div class="col-md-9">
-            <input type="text" ng-model="tenant.city" class="form-control"/>
+            <input type="text" ng-model="sales.register.city" class="form-control"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-md-3 text-right">Postal Code</label>
         <div class="col-md-9">
-            <input type="text" ng-model="tenant.postalCode" class="form-control"/>
+            <input type="text" ng-model="sales.register.postalCode" class="form-control"/>
         </div>
     </div>
 

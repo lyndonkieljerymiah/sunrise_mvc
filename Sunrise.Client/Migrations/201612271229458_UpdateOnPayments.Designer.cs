@@ -7,13 +7,13 @@ namespace Sunrise.Client.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class ChangesInFkPayment : IMigrationMetadata
+    public sealed partial class UpdateOnPayments : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ChangesInFkPayment));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(UpdateOnPayments));
         
         string IMigrationMetadata.Id
         {
-            get { return "201612250933100_ChangesInFkPayment"; }
+            get { return "201612271229458_UpdateOnPayments"; }
         }
         
         string IMigrationMetadata.Source

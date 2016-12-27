@@ -6,12 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Sunrise.Client.Domains.Models;
 using Sunrise.Client.Persistence.Abstract;
+using Sunrise.Client.Persistence.Context;
 
 namespace Sunrise.Client.Persistence.Repositories
 {
     public class TenantRepository : BaseRepository<Tenant>, ITenantRepository
     {
-        public TenantRepository(AppDbContext context) : base(context)
+        public TenantRepository(AppDbContext context, ReferenceDbContext referenceDb) : base(context, referenceDb)
         {
             
         }

@@ -10,6 +10,7 @@ namespace Sunrise.Client.Persistence.Abstract
     public interface IBaseRepository<T> where T : class
     {
         void Add(T entity);
+        void Update(T entity);
         void Remove(T entity);
 
         Task<T> FindAsync(object Id);

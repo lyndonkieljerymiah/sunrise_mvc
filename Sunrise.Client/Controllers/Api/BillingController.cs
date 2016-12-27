@@ -13,11 +13,11 @@ namespace Sunrise.Client.Controllers.Api
     {
 
         [Route("sales/{id?}")]
-        public ICollection<SalesViewModel> GetSalesSummary(int id)
+        public ICollection<SalesRegisterViewModel> GetSalesSummary(int id)
         {
-            var sales = new List<SalesViewModel>
+            var sales = new List<SalesRegisterViewModel>
             {
-                new SalesViewModel
+                new SalesRegisterViewModel
                 {
                     VillaNo = "V1000",
                     PeriodStart = Convert.ToDateTime("01/01/2017"),

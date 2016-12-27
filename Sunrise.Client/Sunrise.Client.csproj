@@ -239,7 +239,12 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SalesController.cs" />
     <Compile Include="Controllers\TenantController.cs" />
+    <Compile Include="Domains\DTO\PaymentDTO.cs" />
+    <Compile Include="Domains\DTO\SalesTransactionDTO.cs" />
+    <Compile Include="Domains\DTO\TenantDTO.cs" />
+    <Compile Include="Domains\DTO\VillaDTO.cs" />
     <Compile Include="Domains\Enum\Enums.cs" />
+    <Compile Include="Domains\Enum\Selection.cs" />
     <Compile Include="Domains\Models\Address.cs" />
     <Compile Include="Domains\Models\Company.cs" />
     <Compile Include="Domains\Models\Identity\User.cs" />
@@ -267,7 +272,7 @@
     <Compile Include="Domains\ViewModels\Manage\SetPasswordViewModel.cs" />
     <Compile Include="Domains\ViewModels\Manage\VerifyPhoneNumberViewModel.cs" />
     <Compile Include="Domains\ViewModels\PaymentViewModel.cs" />
-    <Compile Include="Domains\ViewModels\SalesViewModel.cs" />
+    <Compile Include="Domains\ViewModels\SalesRegisterViewModel.cs" />
     <Compile Include="Domains\ViewModels\ShopViewModel.cs" />
     <Compile Include="Domains\ViewModels\TenantRegisterViewModel.cs" />
     <Compile Include="Domains\ViewModels\TransactionViewModel.cs" />
@@ -280,18 +285,32 @@
     <Compile Include="Migrations\201612250927447_Initial.Designer.cs">
       <DependentUpon>201612250927447_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201612250933100_ChangesInFkPayment.cs" />
-    <Compile Include="Migrations\201612250933100_ChangesInFkPayment.Designer.cs">
-      <DependentUpon>201612250933100_ChangesInFkPayment.cs</DependentUpon>
+    <Compile Include="Migrations\201612261831276_UpdateVillaRatePerMoth.cs" />
+    <Compile Include="Migrations\201612261831276_UpdateVillaRatePerMoth.Designer.cs">
+      <DependentUpon>201612261831276_UpdateVillaRatePerMoth.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612271229458_UpdateOnPayments.cs" />
+    <Compile Include="Migrations\201612271229458_UpdateOnPayments.Designer.cs">
+      <DependentUpon>201612271229458_UpdateOnPayments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612271237586_UpdatePaymentDescription.cs" />
+    <Compile Include="Migrations\201612271237586_UpdatePaymentDescription.Designer.cs">
+      <DependentUpon>201612271237586_UpdatePaymentDescription.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612271307593_UpdatePaymentCoveredPeriod.cs" />
+    <Compile Include="Migrations\201612271307593_UpdatePaymentCoveredPeriod.Designer.cs">
+      <DependentUpon>201612271307593_UpdatePaymentCoveredPeriod.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Persistence\Abstract\IBaseRepository.cs" />
+    <Compile Include="Persistence\Abstract\IPaymentRepository.cs" />
     <Compile Include="Persistence\Abstract\ISelectionRepository.cs" />
     <Compile Include="Persistence\Abstract\ITenantRepository.cs" />
     <Compile Include="Persistence\Abstract\ITransactionRepository.cs" />
     <Compile Include="Persistence\Abstract\IUnitOfWork.cs" />
     <Compile Include="Persistence\Abstract\IVillaRepository.cs" />
-    <Compile Include="Persistence\AppDbContext.cs" />
+    <Compile Include="Persistence\Context\AppDbContext.cs" />
+    <Compile Include="Persistence\Context\ReferenceDbContext.cs" />
     <Compile Include="Persistence\EntityConfigurations\CompanyConfig.cs" />
     <Compile Include="Persistence\EntityConfigurations\IndividualConfig.cs" />
     <Compile Include="Persistence\EntityConfigurations\SelectionConfig.cs" />
@@ -299,8 +318,11 @@
     <Compile Include="Persistence\EntityConfigurations\TransactionConfig.cs" />
     <Compile Include="Persistence\EntityConfigurations\VillaConfig.cs" />
     <Compile Include="Persistence\Manager\SalesDataManager.cs" />
+    <Compile Include="Persistence\Manager\SelectionDataManager.cs" />
+    <Compile Include="Persistence\Manager\TenantDataManager.cs" />
     <Compile Include="Persistence\Manager\VillaDataManager.cs" />
     <Compile Include="Persistence\Repositories\BaseRepository.cs" />
+    <Compile Include="Persistence\Repositories\PaymentRepository.cs" />
     <Compile Include="Persistence\Repositories\SelectionRepository.cs" />
     <Compile Include="Persistence\Repositories\TenantRepository.cs" />
     <Compile Include="Persistence\Repositories\TransactionRepository.cs" />
@@ -398,6 +420,7 @@
     </None>
     <Content Include="Content\parts\login.less" />
     <Content Include="Content\login.less" />
+    <Content Include="Content\parts\box.less" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\i18n\angular-locale_af-na.js" />
     <Content Include="Scripts\i18n\angular-locale_af-za.js" />
@@ -1189,7 +1212,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Domains\DTO\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -1204,8 +1226,17 @@
     <EmbeddedResource Include="Migrations\201612250927447_Initial.resx">
       <DependentUpon>201612250927447_Initial.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612250933100_ChangesInFkPayment.resx">
-      <DependentUpon>201612250933100_ChangesInFkPayment.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201612261831276_UpdateVillaRatePerMoth.resx">
+      <DependentUpon>201612261831276_UpdateVillaRatePerMoth.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612271229458_UpdateOnPayments.resx">
+      <DependentUpon>201612271229458_UpdateOnPayments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612271237586_UpdatePaymentDescription.resx">
+      <DependentUpon>201612271237586_UpdatePaymentDescription.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612271307593_UpdatePaymentCoveredPeriod.resx">
+      <DependentUpon>201612271307593_UpdatePaymentCoveredPeriod.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
