@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 using Sunrise.Client.Domains.Models;
+using Sunrise.Client.Helpers.Validations;
 
 namespace Sunrise.Client.Domains.ViewModels
 {
@@ -45,18 +46,33 @@ namespace Sunrise.Client.Domains.ViewModels
         {
             this.RentalTypes = new List<SelectListItem>();
             this.ContractStatuses = new List<SelectListItem>();
+            this.PeriodStart = DateTime.Today;
+            this.PeriodEnd = DateTime.Today.AddMonths(1);
+            
         }
 
         public string Id { get; set; }
-        public string VillaNo { get; set; }
+
+        [Required]
         public string RentalType { get; set; }
         public string RentalTypeDescription { get; set; }
+
+        [Required]
         public string ContractStatus { get; set; }
         public string ContractStatusDescription { get; set; }
+
+        [Required]
         public DateTime PeriodStart { get; set; }
+
+        [Required]
         public DateTime PeriodEnd { get; set; }
+
+        [Required]
+        [CustomCurrencyValue]
         public Decimal Amount { get; set; }
+
         public string Status { get; set; }
+
         public string UserId { get; set; }
 
         public VillaViewModel Villa { get; set; }
@@ -64,7 +80,7 @@ namespace Sunrise.Client.Domains.ViewModels
         
         public IEnumerable<SelectListItem> RentalTypes { get; private set; }
         public IEnumerable<SelectListItem> ContractStatuses { get; private set; }
-
+        
         public void SetContractStatuses(IEnumerable<Selection> selections)
         {
             this.ContractStatuses = selections
@@ -80,7 +96,12 @@ namespace Sunrise.Client.Domains.ViewModels
             this.RentalTypes = types;
         }
 
+      
+       
     }
+
+
+    
 
 
     

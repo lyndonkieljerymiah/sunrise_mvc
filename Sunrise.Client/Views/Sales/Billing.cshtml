@@ -101,11 +101,13 @@
                                             <option ng-repeat="term in $ctrl.payment.terms" value="{{term.value}}">{{term.text}}</option>
                                         </select>
                                     </div>
-                                    <label class="col-md-2 text-right">Mode:</label>
-                                    <div class="col-md-4">
-                                        <select class="form-control" ng-model="$ctrl.payment.paymentMode">
-                                            <option ng-repeat="mode in $ctrl.payment.modes" value="{{mode.value}}">{{mode.text}}</option>
-                                        </select>
+                                    <div ng-hide="$ctrl.payment.chequeFieldDisabled">
+                                        <label class="col-md-2 text-right">Mode:</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control" ng-model="$ctrl.payment.paymentMode">
+                                                <option ng-repeat="mode in $ctrl.payment.modes" value="{{mode.value}}">{{mode.text}}</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -120,9 +122,13 @@
                                         <input type="text" ng-disabled="$ctrl.payment.chequeFieldDisabled" name="chequeNo" id="chequeNo" class="form-control" ng-model="$ctrl.payment.chequeNo" />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" ng-hide="$ctrl.payment.chequeFieldDisabled">
                                     <label class="col-md-2 text-right">Bank:</label>
                                     <div class="col-md-10">
+                                        <select ng-model="$ctrl.payment.bank">
+                                            <option>Doha Bank</option>
+                                            <option>QNB</option>
+                                        </select>
                                         <input type="text" name="bank" id="bank" class="form-control" ng-model="$ctrl.payment.bank" />
                                     </div>
                                 </div>

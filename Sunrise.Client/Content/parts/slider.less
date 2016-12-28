@@ -1,0 +1,114 @@
+﻿
+.shadow() {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+.radius() {
+    -webkit-border-radius: 40%;
+    -moz-border-radius: 40%;
+    border-radius: 40%;
+}
+
+.transition() {
+    -webkit-transition: background-color 0.25s, border-color 0.25s;
+    -moz-transition: background-color 0.25s, border-color 0.25s;
+    transition: background-color 0.25s, border-color 0.25s;
+}
+
+.nb-slide {
+    width: 100%;
+    height: 200px;
+    position: relative;
+
+    .nb-image-container {
+        float: left;
+        img {
+            width: 100%;
+            height: 200px;
+        }
+    }
+
+    &::after, &::before {
+        display: table;
+        clear: both;
+        content: '';
+    }
+
+    .arrow {
+        
+        position: absolute;
+        z-index: 10;
+        display: block;
+        top: 60%;
+        margin-top: -35px;
+        width: 36px;
+        height: 71px;
+        outline: none;
+        cursor: pointer;
+        color: white;
+    }
+
+    .prev {
+        left: 20px;
+        transition: 0.2s linear all;
+    }
+
+    .next {
+        right: 20px;
+        transition: 0.2s linear all;
+    }
+
+    .nb-bulletin {
+        position: absolute;
+        bottom: 5%;
+        left: 0;
+
+        ul {
+            list-style: none;
+            margin: 0;
+            width: 100%;
+            z-index: 10;
+
+            li {
+                float: left;
+                padding: 5px 10px;
+
+                a {
+                    display: inline-block;
+                    zoom: 1;
+                    text-indent: 100%;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    background: #fff;
+                    border: 1px solid transparent;
+                    outline: none;
+                    .shadow();
+                    .radius();
+                    .transition();
+                    padding: 5px;
+
+                    &:hover {
+                        background: #ccc;
+                        .transition();
+                    }
+
+                     &.active {
+                    border-color: #FFF;
+                    background-color: transparent;
+                     .transition();
+                }   
+                }
+
+               
+            }
+
+            &:after {
+                clear: both;
+                display: table;
+                content: "";
+            }
+        }
+    }
+}

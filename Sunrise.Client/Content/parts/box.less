@@ -1,25 +1,30 @@
 ﻿
 
 .z-1() { box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37); }
-
+.radius(@value: 5px) {
+    border-radius: @value;
+    -webkit-border-radius: @value;
+}
 .nb-card {
   font-family: 'Open Sans', sans-serif;
-  height: 230px;
+ 
   .z-1();  
   .nb-header {
-    padding: 5px 10px;
+    padding: 10px 10px;
+    min-height: 30px;
     border-bottom: 1px solid #eee;
     font-weight: bold;
     position:relative;
     .nb-blink {
         background-color:#6D2133;
-        font-size: 12px;
+        font-size: 10px;
         color: whitesmoke;
         padding: 3px;
         .z-1();
         position: absolute;
-        top: 10px;
-        right: 10px;
+        top: 3px;
+        right: 3px;
+        .radius();
     }
   }
   .nb-image {
@@ -37,14 +42,13 @@
   .nb-footer {
     padding: 10px;
     margin-top: 10px;
-    border-top: 1px solid #eee;
-    
-    .btn {
+    border-top: 1px solid rgba(0,0,0,0.2);
+    .nb-btn {
       border: none;
       background: transparent;
       float:right;
       outline:none;
-      
+      color:#808080;
       &:hover {
         cursor:pointer;
       }
@@ -52,9 +56,10 @@
     
     
     
-    &:after {
+    &:after, &:before {
       clear: both;
       display:table;
+      content:"";
     }
   }
 }

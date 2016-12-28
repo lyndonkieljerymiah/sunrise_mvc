@@ -45,19 +45,23 @@ namespace Sunrise.Client.Controllers.Api
         /// <param name="villaId"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("create/{villaId?}")]
-        public async Task<IHttpActionResult> Create(int villaId)
+        [Route("create/{villaId?}/{tenantType?}")]
+        public async Task<IHttpActionResult> Create(int villaId,string tenantType="ttin")
         {
             var villa = await _villaDataManager.GetVilla(villaId);
-            var selections = await _selectionDataManager.GetLookup(new[] {"TenantType", "RentalType", "ContractStatus"});
 
-            var vmRegister = TenantRegisterViewModel.CreateDefault();
+            villa.AddImage(new ViewImages(1,Url.Content("~/Content/imgs/sample_1.jpg"),""));
+            villa.AddImage(new ViewImages(2, Url.Content("~/Content/imgs/sample_2.jpg"), ""));
+            villa.AddImage(new ViewImages(3, Url.Content("~/Content/imgs/sample_3.jpg"), ""));
+
+            var selections = await _selectionDataManager.GetLookup(new[] { "TenantType", "RentalType", "ContractStatus" });
+            var vmRegister = TenantRegisterViewModel.CreateDefault(tenantType);
             vmRegister.SetTenantTypes(selections);
-
             var vmTransaction = SalesRegisterViewModel.CreateWithVilla(villa);
             vmTransaction.Register = vmRegister;
             vmTransaction.SetContractStatuses(selections);
             vmTransaction.SetRentalTypes(selections);
+            vmTransaction.Amount = villa.RatePerMonth;
 
             return Ok(vmTransaction);
         }
@@ -72,25 +76,35 @@ namespace Sunrise.Client.Controllers.Api
         [Route("create")]
         public async Task<IHttpActionResult> Create(SalesRegisterViewModel vm)
         {
-            try
+            if (vm == null)
             {
-                if (ModelState.IsValid)
-                    return BadRequest();
-
-                vm.UserId = User.Identity.GetUserId();
-                var result = await _tenantDataManager.CreateAsync(vm.Register, vm);
-                if (result.Success)
-                {
-                    //update villa status
-                    await _villaDataManager.UpdateVillaStatus(vm.Villa.Id, VillaStatusEnum.Reserved);
-                    var sv = new SalesViewModel {Id = (string) result.ReturnObject};
-                    return Ok(sv);
-                }
-                return Ok(result);
+                ModelState.AddModelError("", "Model cannot be empty");
             }
-            catch (Exception e)
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            vm.UserId = User.Identity.GetUserId();
+            var result = await _tenantDataManager.CreateAsync(vm.Register, vm);
+
+            if (!result.Success)
             {
-                return BadRequest(e.Message);
+                AddResult(result);
+                return BadRequest(ModelState);
+            }
+
+            //update villa status
+            await _villaDataManager.UpdateVillaStatus(vm.Villa.Id, VillaStatusEnum.Reserved);
+            var sv = new SalesViewModel { Id = (string)result.ReturnObject };
+            return Ok(sv);
+
+        }
+
+        private void AddResult(CustomResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
             }
         }
 
@@ -118,7 +132,7 @@ namespace Sunrise.Client.Controllers.Api
         {
 
             var payment = new PaymentViewModel();
-            var selections = await _selectionDataManager.GetLookup(new[] {"PaymentTerm", "PaymentMode"});
+            var selections = await _selectionDataManager.GetLookup(new[] { "PaymentTerm", "PaymentMode" });
 
             payment.SetTerms(selections);
             payment.SetMode(selections);

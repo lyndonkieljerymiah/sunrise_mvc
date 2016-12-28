@@ -11,12 +11,14 @@ namespace Sunrise.Client.Domains.ViewModels
     public class PaymentViewModel
     {
 
+
         public PaymentViewModel()
         {
             PaymentDate = DateTime.Today;
             CoveredPeriodFrom = DateTime.Today;
             CoveredPeriodTo = DateTime.Today;
         }
+
         public int Id { get; set; }
         public string SalesTransactionId { get; set; }
         public int VillaId { get; set; }

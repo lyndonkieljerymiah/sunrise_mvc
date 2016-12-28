@@ -8,13 +8,15 @@
     </div>
     <div class="row">
         <div class="col-md-2" ng-repeat="villa in villas track by villa.id" ng-show="villas">
-            <div class="thumbnail">
-                <img src="~/Content/imgs/villa-spalletti-1.jpg"/>
-                <div class="caption">
-                    <div>Villa No: {{villa.villaNo}}</div>
-                    <p>Description:</p>
-                    <small>{{villa.description}}</small>
-                    <button class="btn btn-primary btn-block" ng-click="$ctrl.select(villa.id)">Select</button>
+            <div class="nb-card">
+                <div class="nb-header">
+                    <span class="nb-blink">{{villa.villaStatus}}</span>
+                </div>
+                <div class="nb-image">
+                    <div class="card__image" style="background-image:url('@Url.Content("~/Content/imgs/villa-spalletti-1.jpg")')"></div>
+                </div>
+                <div class="nb-footer">
+                    <button class="nb-btn" ng-click="$ctrl.select(villa.id)">Select</button>
                 </div>
             </div>
         </div>

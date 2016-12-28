@@ -25,7 +25,8 @@ namespace Sunrise.Client
 
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
                       "~/Scripts/libs/angular.js",
-                      "~/Scripts/libs/angular-route.js"));
+                      "~/Scripts/libs/angular-route.js",
+                      "~/Scripts/libs/angular-animate.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
                       "~/Scripts/app/app-bootstrap.js"));

@@ -20,7 +20,7 @@ namespace Sunrise.Client.Domains.Enum
         Reserved
     }
 
-    public struct Result
+    public struct CustomResult
     {
         public bool Success;
         public List<string> Errors;
@@ -28,6 +28,20 @@ namespace Sunrise.Client.Domains.Enum
         public IEnumerable<object> ReturnObjects;
     }
 
-    
+
+    public struct ViewImages
+    {
+        public int Index { get; private set; }
+        public string ImageUrl { get; private set; }
+        public string Title { get; private set; }
+
+        public ViewImages(int index, string imageUrl, string title)
+        {
+            this.Index = index;
+            this.ImageUrl = imageUrl;
+            this.Title = title;
+        }
+    }
+
 
 }

@@ -49,9 +49,9 @@ namespace Sunrise.Client.Persistence.Manager
             }
         }
 
-        public async Task<Result> AddPaymentAsync(PaymentViewModel value)
+        public async Task<CustomResult> AddPaymentAsync(PaymentViewModel value)
         {
-            var result = new Result();
+            var result = new CustomResult();
             try
             {   
 

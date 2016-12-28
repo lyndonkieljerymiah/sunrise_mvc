@@ -6,6 +6,7 @@
     <h1>Villa Rent Contract</h1>
 </div>
 <form class="form-horizontal" method="post" ng-controller="salesTransactionController as $ctrl" ng-init="$ctrl.init(@ViewBag.Id)">
+    <spinner show-loading="loading"></spinner>
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
@@ -21,16 +22,30 @@
                 <div class="panel-heading">Villa Information</div>
                 <div class="panel-body">
                     <div class="thumbnail">
-                        <img src="~/Content/imgs/villa-spalletti-1.jpg" />
+                        <slider>
+                            <div ng-repeat="slide in sales.villa.images" class="nb-image-container" ng-show="nbSlides.isCurrentSlide($index)">
+                                <img src="{{slide.imageUrl}}" />
+                            </div>
+                            <a class="arrow prev" href="#" ng-click="nbSlides.prev(sales.villa.images.length)">Prev</a>
+                            <a class="arrow next" href="#" ng-click="nbSlides.next(sales.villa.images.length)">Next</a>
+                            <nav class="nb-bulletin">
+                                <ul>
+                                    <li ng-repeat="slide in sales.villa.images">
+                                        <a href="#" ng-class="{active:nbSlides.isCurrentSlide($index)}" ng-click="nbSlides.setCurrentSlide($index)"></a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            </slider>
+                            <p><strong>Villa No: {{sales.villa.villaNo}}</strong></p>
+                            <p>Descripton: {{sales.villa.description}}</p>
+                            <p>
+                                <ul>
+                                    <li>Capacity: {{sales.villa.capacity}}</li>
+                                    <li>Rate per Month: {{sales.villa.ratePerMonth}}</li>
+                                </ul>
+                            </p>
                     </div>
-                    <p><strong>Villa No: {{sales.villa.villaNo}}</strong></p>
-                    <p>Descripton: {{sales.villa.description}}</p>
-                    <p>
-                        <ul>
-                            <li>Capacity: {{sales.villa.capacity}}</li>
-                            <li>Rate per Month: {{sales.villa.ratePerMonth}}</li>
-                        </ul>
-                    </p>
+
                 </div>
             </div>
             <hr />
@@ -43,6 +58,7 @@
                             <select ng-model="sales.rentalType" class="form-control">
                                 <option ng-repeat="type in sales.rentalTypes" value="{{type.value}}">{{type.text}}</option>
                             </select>
+                            <span ng-show="errorState['vm.rentaltype']">{{errorState['vm.rentaltype']}}</span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -51,6 +67,7 @@
                             <select ng-model="sales.contractStatus" class="form-control">
                                 <option ng-repeat="status in sales.contractStatuses" value="{{status.value}}">{{status.text}}</option>
                             </select>
+                            <span ng-show="errorState['vm.contractstatus']">{{errorState['vm.contractstatus']}}</span>
                         </div>
                     </div>
                     <div class="page-header">
@@ -59,19 +76,22 @@
                     <div class="form-group">
                         <label class="col-md-4 text-right">Start:</label>
                         <div class="col-md-8">
-                            <input type="date" ng-model="sales.periodStart" class="form-control"/>
+                            <input type="date" ng-model="sales.periodStart" class="form-control" />
+                            <span ng-show="errorState['vm.periodstart']">{{errorState['vm.periodstart']}}</span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-4 text-right">End:</label>
                         <div class="col-md-8">
-                            <input type="date" ng-model="sales.periodEnd" class="form-control"/>
+                            <input type="date" ng-model="sales.periodEnd" class="form-control" />
+                            <span ng-show="errorState['vm.periodend']">{{errorState['vm.periodend']}}</span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-4 text-right">Rate/Month</label>
                         <div class="col-md-8">
                             <input type="text" ng-model="sales.amount" class="form-control" />
+                            <span ng-show="errorState['vm.amount']">{{errorState['vm.amount']}}</span>
                         </div>
                     </div>
                 </div>

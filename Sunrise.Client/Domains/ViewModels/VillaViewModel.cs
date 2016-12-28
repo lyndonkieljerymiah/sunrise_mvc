@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Sunrise.Client.Domains.Enum;
 using Sunrise.Client.Domains.Models;
 
 namespace Sunrise.Client.Domains.ViewModels
@@ -21,11 +22,12 @@ namespace Sunrise.Client.Domains.ViewModels
         public static VillaViewModel Create(Villa villa)
         {
             return Mapper.Map<VillaViewModel>(villa);
+
         }
 
         public VillaViewModel()
         {
-            
+            this.Images = new HashSet<ViewImages>();
         }
         public int Id { get; set; }
 
@@ -55,7 +57,11 @@ namespace Sunrise.Client.Domains.ViewModels
 
         public string Label { get { return this.VillaNo + " - " + this.VillaStatus; } }
 
-        
+        public ICollection<ViewImages> Images { get; private set; }
 
+        public void AddImage(ViewImages viewImage)
+        {
+            Images.Add(viewImage);
+        }
     }
 }

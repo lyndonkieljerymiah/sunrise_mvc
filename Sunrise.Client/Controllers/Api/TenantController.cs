@@ -33,7 +33,6 @@ namespace Sunrise.Client.Controllers.Api
         [Route("list")]
         public ICollection<TenantRegisterViewModel> List()
         {
-
             var tenants = new List<TenantRegisterViewModel>()
             {
                 new TenantRegisterViewModel
@@ -45,8 +44,6 @@ namespace Sunrise.Client.Controllers.Api
 
             return tenants;
         }
-
-      
 
         
 

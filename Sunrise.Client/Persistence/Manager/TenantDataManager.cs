@@ -20,9 +20,9 @@ namespace Sunrise.Client.Persistence.Manager
         }
 
 
-        public async Task<Result> CreateAsync(TenantRegisterViewModel vmTenant,SalesRegisterViewModel salesViewModel)
+        public async Task<CustomResult> CreateAsync(TenantRegisterViewModel vmTenant,SalesRegisterViewModel salesViewModel)
         {
-            var result = new Result();
+            var result = new CustomResult();
             try
             {
                 //register tenant

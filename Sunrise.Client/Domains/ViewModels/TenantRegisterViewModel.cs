@@ -8,23 +8,24 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Sunrise.Client.Domains.Enum;
 using Sunrise.Client.Domains.Models;
+using Sunrise.Client.Helpers.Validations;
 
 namespace Sunrise.Client.Domains.ViewModels
 {
     public class TenantRegisterViewModel
     {
 
-        public static TenantRegisterViewModel CreateDefault()
+        public static TenantRegisterViewModel CreateDefault(string tenantType = "ttin")
         {
             var tenant = new TenantRegisterViewModel();
-            tenant.TenantType = "ttin";
+            tenant.TenantType = tenantType;
+            tenant.CreateTenantType();
             return tenant;
         }
 
         public TenantRegisterViewModel()
-        {
-            this.Individual = new IndividualViewModel();
-            this.Company = new CompanyViewModel();
+        {  
+
             this.TenantTypes = new List<SelectListItem>();
         }
 
@@ -34,17 +35,19 @@ namespace Sunrise.Client.Domains.ViewModels
         public string TenantType { get; set; }
         public string FullType { get; private set; }
         public IEnumerable<SelectListItem> TenantTypes { get; private set; }
-
-        [Required]
+        
         public string Code { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
         [Display(Name = "Email Address")]
         public string EmailAddress { get; set; }
-        [Required]
+
+        
         [Display(Name = "Tel. No.")]
         public string TelNo { get; set; }
+
+        [Required]
         [Display(Name = "Mobile No.")]
         public string MobileNo { get; set; }
         [Display(Name = "Fax No.")]
@@ -77,6 +80,18 @@ namespace Sunrise.Client.Domains.ViewModels
             this.TenantTypes = tenantTypes;
         }
 
+        public void CreateTenantType()
+        {
+            if (this.TenantType == "ttin")
+            {
+                this.Individual = new IndividualViewModel();
+            }
+            else
+            {
+                this.Company = new CompanyViewModel();
+            }
+        }
+
 
     }
 
@@ -87,13 +102,16 @@ namespace Sunrise.Client.Domains.ViewModels
         {
             this.Birthday = DateTime.Today;
         }
+
         [Required]
         public GenderEnum Gender { get; set; }
-        [Required]
+        
         [Display(Name="Qatar Id")]
         public string QatarId { get; set; }
+
         [Required]
         public DateTime Birthday { get; set; }
+
         [Required]
         public string Company { get; set; }
 
@@ -122,15 +140,18 @@ namespace Sunrise.Client.Domains.ViewModels
         {
             this.ValidityDate = DateTime.Today;
         }
-        [Required]
+
         [Display(Name = "Business Type")]
         public string BusinessType { get; set; }
+
         [Required]
         [Display(Name = "CR No")]
         public string CrNo { get; set; }
+
         [Required]
         [Display(Name = "Validity Date")]
         public DateTime ValidityDate { get; set; }
+
         [Required]
         public string Representative { get; set; }  
     }

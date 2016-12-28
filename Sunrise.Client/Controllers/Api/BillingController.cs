@@ -19,7 +19,6 @@ namespace Sunrise.Client.Controllers.Api
             {
                 new SalesRegisterViewModel
                 {
-                    VillaNo = "V1000",
                     PeriodStart = Convert.ToDateTime("01/01/2017"),
                     PeriodEnd = Convert.ToDateTime("01/01/2019"),
                     Amount = 450000m

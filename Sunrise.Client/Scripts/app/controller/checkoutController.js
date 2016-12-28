@@ -1,61 +1,76 @@
 ﻿mainApp.directive("tenantRegister",
     function ($http) {
-
         return {
             restrict: "EA",
-            scope: {
-                load: "@?",
-                tmp: "=",
-                tenant: "="
-            },
             replace: true,
             link: function (scope) {
                 scope.getTemplate = function () {
                     return scope.template;
                 }
             },
-            template: "<div ng-include='getTemplate()'></div>",
-            controller: function ($scope) {
-                $scope.changeType = function ()
-                {
-                    $scope.template = "register/" + $scope.sales.register.type;
-                }
-            }
+            template: "<div ng-include='getTemplate()'></div>"
         }
     });
 
 
 
+
 mainApp.controller("salesTransactionController",
-    function ($scope, $http,$window) {
+
+    function ($scope, $http, $window, modelStateValidation) {
         var templatePath = "/tenant/register/";
 
-        function init(villaId)
-        {
+        $scope.sales = {};
+        $scope.loading = true;
+
+        function restart() {
+            $scope.errorState = {};
+            $scope.loading = false;
+        }
+
+        function init(villaId) {
+
+            $scope.loading = true;
             $http.get("/api/sales/create/" + villaId)
-                .then(function(response) {
+                .then(function (response) {
                     $scope.sales = response.data;
-                    $scope.sales.amount = response.data.villa.ratePerMonth;
+                    $scope.sales.periodStart = new Date($scope.sales.periodStart);
+                    $scope.sales.periodEnd = new Date($scope.sales.periodEnd);
                     $scope.template = templatePath + $scope.sales.register.tenantType;
+                    restart();
                 });
         }
 
         function changeTenantType() {
-            $scope.template = templatePath + $scope.sales.register.tenantType;
+
+            $scope.loading = true;
+            $http.get("/api/sales/create/" + $scope.sales.villa.id + "/" + $scope.sales.register.tenantType)
+                .then(function (response) {
+                    $scope.sales = response.data;
+                    $scope.sales.periodStart = new Date($scope.sales.periodStart);
+                    $scope.sales.periodEnd = new Date($scope.sales.periodEnd);
+                    $scope.template = templatePath + $scope.sales.register.tenantType;
+                    restart();
+                });
+
         }
 
-        function save()
-        {
-            
+        function save() {
+            $scope.loading = true;
             $http.post("/api/sales/create", $scope.sales)
-                .then(function (response)
-                {
+                .then(
+                function (response) {
                     //route data
                     var id = response.data.id;
                     $window.location = "/sales/billing/" + id;
+                    restart();
+                },
+                function errorCallback(response) {
+                    restart();
+                    $scope.errorState = modelStateValidation.parseError(response.data);
+                    $scope.loading = false;
                 });
         }
-
         return {
             init: init,
             changeTenantType: changeTenantType,

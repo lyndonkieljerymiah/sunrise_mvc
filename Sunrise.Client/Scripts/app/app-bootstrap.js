@@ -1,198 +1,65 @@
 ﻿
-/**
- * Extension Prototype
- *****************************/
-var spinnerApp = angular.module("spinnerApp", []);
 
-spinnerApp.factory("spinnerService",
-    function () {
-        var spinners = {};
-        return {
-            _register: function (data) {
-                if (!data.hasOwnProperty('name')) {
-                    throw new Error("Spinner must specify a name when registering with the spinner service.");
-                }
-                if (spinners.hasOwnProperty(data.name)) {
-                    throw new Error("A spinner with the name '" + data.name + "' has already been registered.");
-                }
-                spinners[data.name] = data;
-            },
-            // unused private method for unregistering a directive,
-            // for convenience just in case.
-            _unregister: function (name) {
-                if (spinners.hasOwnProperty(name)) {
-                    delete spinners[name];
-                }
-            },
-            _unregisterGroup: function (group) {
-                for (var name in spinners) {
-                    if (spinners[name].group === group) {
-                        delete spinners[name];
-                    }
-                }
-            },
-            _unregisterAll: function () {
-                for (var name in spinners) {
-                    delete spinners[name];
-                }
-            },
-            show: function (name) {
-                var spinner = spinners[name];
-                if (!spinner) {
-                    throw new Error("No spinner named '" + name + "' is registered.");
-                }
-                spinner.show();
-            },
-            hide: function (name) {
-                var spinner = spinners[name];
-                if (!spinner) {
-                    throw new Error("No spinner named '" + name + "' is registered.");
-                }
-                spinner.hide();
-            },
-            showGroup: function (group) {
-                var groupExists = false;
-                for (var name in spinners) {
-                    var spinner = spinners[name];
-                    if (spinner.group === group) {
-                        spinner.show();
-                        groupExists = true;
-                    }
-                }
-                if (!groupExists) {
-                    throw new Error("No spinners found with group '" + group + "'.")
-                }
-            },
-            hideGroup: function (group) {
-                var groupExists = false;
-                for (var name in spinners) {
-                    var spinner = spinners[name];
-                    if (spinner.group === group) {
-                        spinner.hide();
-                        groupExists = true;
-                    }
-                }
-                if (!groupExists) {
-                    throw new Error("No spinners found with group '" + group + "'.")
-                }
-            },
-            showAll: function () {
-                for (var name in spinners) {
-                    spinners[name].show();
-                }
-            },
-            hideAll: function () {
-                for (var name in spinners) {
-                    spinners[name].hide();
-                }
-            }
-        }
-    });
+var mainApp = angular.module("mainApp", ["ngRoute","ui.bootstrap","ngAnimate"]);
 
 
-
-spinnerApp.directive("spinner",
+mainApp.directive('spinner',
     function () {
         return {
             restrict: "EA",
             replace: true,
-            transclude: true,
             scope: {
-                name: '@?',
-                group: '@?',
-                show: '=',
-                imgSrc: '@?',
-                register: '@?',
-                onLoaded: '&?',
-                onShow: '&?',
-                onHide: '&?'
+                showLoading: "="
             },
-            template: [
-                '<span ng-show="{{show}}" class="spinner">',
-                '  <img ng-show="imgSrc" ng-src="{{imgSrc}}" />',
-                '  <span ng-transclude></span>',
-                '</span>'
-            ].join(''),
-            controller: function ($scope, spinnerService) {
-
-                // register should be true by default if not specified.
-                if (!$scope.hasOwnProperty('register')) {
-                    $scope.register = true;
-                } else {
-                    $scope.register = !!$scope.register;
-                }
-
-                // Declare a mini-API to hand off to our service so the 
-                // service doesn't have a direct reference to this
-                // directive's scope.
-                var api = {
-                    name: $scope.name,
-                    group: $scope.group,
-                    show: function () {
-                        $scope.show = true;
-                    },
-                    hide: function () {
-                        $scope.show = false;
-                    },
-                    toggle: function () {
-                        $scope.show = !$scope.show;
-                    }
-                };
-
-
-                // Register this spinner with the spinner service.
-                if ($scope.register === true) {
-                    spinnerService._register(api);
-                }
-
-                // If an onShow or onHide expression was provided,
-                // register a watcher that will fire the relevant
-                // expression when show's value changes.
-                if ($scope.onShow || $scope.onHide) {
-                    $scope.$watch('show', function (show) {
-                        if (show && $scope.onShow) {
-                            $scope.onShow({
-                                spinnerService: spinnerService,
-                                spinnerApi: api
-                            });
-                        }
-                        else if (!show && $scope.onHide) {
-                            $scope.onHide({
-                                spinnerService: spinnerService,
-                                spinnerApi: api
-                            });
-                        }
-                    });
-                }
-
-                // This spinner is good to go.
-                // Fire the onLoaded expression if provided.
-                if ($scope.onLoaded) {
-                    $scope.onLoaded({
-                        spinnerService: spinnerService,
-                        spinnerApi: api
-                    });
-                }
-            }
-
-        };
+            template: "<div class='spinner' ng-show='showLoading'><div class='icon'></div><div class='overlay'></div></div>"
+        }
     });
 
-
-var mainApp = angular.module("mainApp", ["ngRoute","spinnerApp","ui.bootstrap"]);
-
-mainApp.directive('convertToNumber', function () {
+mainApp.directive("slider", function () {
     return {
-        require: 'ngModel',
-        link: function (scope, element, attrs, ngModel) {
-            ngModel.$parsers.push(function (val) {
-                return val != null ? parseInt(val, 10) : null;
-            });
-            ngModel.$formatters.push(function (val) {
-                return val != null ? '' + val : null;
-            });
+        strict: "EA",
+        transclude: true,
+        template: "<div class='nb-slide'><ng-transclude></ng-transclude></div>",
+        controller: function ($scope) {
+            $scope.nbSlides = {
+                interval: 5000,
+                currentIndex: 0,
+                setCurrentSlide: function (index) {
+                    $scope.nbSlides.currentIndex = index;
+                },
+                isCurrentSlide: function (index) {
+                    return $scope.nbSlides.currentIndex === index;
+                },
+                prev: function (length) {
+                    $scope.nbSlides.currentIndex--;
+                    if ($scope.nbSlides.currentIndex < 0)
+                        $scope.nbSlides.currentIndex = length - 1;
+                },
+                next: function (length) {
+                    $scope.nbSlides.currentIndex++;
+                    if ($scope.nbSlides.currentIndex > length - 1)
+                        $scope.nbSlides.currentIndex = 0;
+                }
+            }
         }
-    };
+    }
 });
 
+mainApp.factory('modelStateValidation',
+    function() {
+        
+        function parseError(response) {
+            var error = {};
+
+            for (var key in response.modelState) {
+                error[key.toLowerCase()] = response.modelState[key][0];
+            }
+            return error;
+        }
+
+        return {
+            parseError: parseError
+        }
+
+    });
 
