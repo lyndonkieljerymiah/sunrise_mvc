@@ -16,6 +16,7 @@ namespace Sunrise.Client.Persistence.Repositories
     {
         public TransactionRepository(AppDbContext context, ReferenceDbContext referenceDb) : base(context, referenceDb)
         {
+
             _referenceDbContext.Configuration.ProxyCreationEnabled = false;
         }
 
@@ -26,9 +27,12 @@ namespace Sunrise.Client.Persistence.Repositories
         /// <returns></returns>
         public async Task<SalesTransactionDTO> GetSalesById(string id)
         {
+            
             var sales = await _referenceDbContext.SalesTransactionDtos
                 .Include(s => s.Villa)
                 .Include(s => s.Tenant)
+                .Include(s => s.Tenant.Individual)
+                .Include(s => s.Tenant.Company)
                 .Include(s => s.Payments)
                 .SingleOrDefaultAsync(s => s.Id == id);
 

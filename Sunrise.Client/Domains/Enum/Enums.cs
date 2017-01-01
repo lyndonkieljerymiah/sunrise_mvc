@@ -8,8 +8,8 @@ namespace Sunrise.Client.Domains.Enum
 {
     public enum GenderEnum
     {
-        Male,
-        Female
+        Male = 0,
+        Female = 1
     }
 
 

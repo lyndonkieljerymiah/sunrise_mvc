@@ -22,26 +22,23 @@
     <div class="login-container">
         <section class="login">
             <header>
+                <h1>SunRise Web Portal</h1>
                 <h4>Use a local account to log in.</h4>
             </header>
-            @using (Html.BeginForm("Login", "Account", new {ReturnUrl = ViewBag.ReturnUrl}, FormMethod.Post, new {@class = "login-form", role = "form"}))
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                @Html.TextBoxFor(m => m.Email, new {@class = "login-input", placeholder = "User", required = "required", autofocus = "autofocus"})
-                @Html.ValidationMessageFor(m => m.Email, "", new {@class = "text-danger"})
+                @Html.TextBoxFor(m => m.Email, new { @class = "login-input", placeholder = "User", required = "required", autofocus = "autofocus" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
 
-                @Html.PasswordFor(m => m.Password, new {@class = "login-input", placeholder = "Password", required = "required"})
-                @Html.ValidationMessageFor(m => m.Password, "", new {@class = "text-danger"})
+                @Html.PasswordFor(m => m.Password, new { @class = "login-input", placeholder = "Password", required = "required" })
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                 <div class="submit-container">
                     <button class="login-button">Log in</button>
                 </div>
             }
         </section>
     </div>
+    @Scripts.Render("~/bundles/jqueryval")
 </body>
 </html>
-
-@section LoginScripts
-{
-    @Scripts.Render("~/bundles/jqueryval")
-}

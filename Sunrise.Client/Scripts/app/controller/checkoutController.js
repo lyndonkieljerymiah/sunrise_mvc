@@ -12,63 +12,60 @@
         }
     });
 
-
-
-
 mainApp.controller("salesTransactionController",
+    function ($scope, salesDataManager) {
 
-    function ($scope, $http, $window, modelStateValidation) {
         var templatePath = "/tenant/register/";
-
+        var isPageLoad = false;
         $scope.sales = {};
-        $scope.loading = true;
-
+        function start() {
+            $scope._spinnerLoading = true;
+        }
+        function stop() {
+            $scope._spinnerLoading = false;
+        }
         function restart() {
             $scope.errorState = {};
-            $scope.loading = false;
+            isPageLoad = false;
+            stop();
+        }
+
+        function create(villaId, tenantType) {
+            $scope._spinnerLoading = true;
+            isPageLoad = true;
+            salesDataManager.createCheckout(villaId, tenantType,
+                function (data) {
+                    $scope.sales = data;
+                    $scope.nbSlides.images = data.images;
+                    $scope.template = templatePath + data.register.tenantType;
+                    restart();
+                });
         }
 
         function init(villaId) {
-
-            $scope.loading = true;
-            $http.get("/api/sales/create/" + villaId)
-                .then(function (response) {
-                    $scope.sales = response.data;
-                    $scope.sales.periodStart = new Date($scope.sales.periodStart);
-                    $scope.sales.periodEnd = new Date($scope.sales.periodEnd);
-                    $scope.template = templatePath + $scope.sales.register.tenantType;
-                    restart();
-                });
+            create(villaId, null);
         }
 
         function changeTenantType() {
-
-            $scope.loading = true;
-            $http.get("/api/sales/create/" + $scope.sales.villa.id + "/" + $scope.sales.register.tenantType)
-                .then(function (response) {
-                    $scope.sales = response.data;
-                    $scope.sales.periodStart = new Date($scope.sales.periodStart);
-                    $scope.sales.periodEnd = new Date($scope.sales.periodEnd);
-                    $scope.template = templatePath + $scope.sales.register.tenantType;
-                    restart();
-                });
+            if (!isPageLoad) {
+                create($scope.sales.villa.id, $scope.sales.register.tenantType);
+            }
 
         }
 
         function save() {
-            $scope.loading = true;
-            $http.post("/api/sales/create", $scope.sales)
-                .then(
-                function (response) {
-                    //route data
-                    var id = response.data.id;
-                    $window.location = "/sales/billing/" + id;
+            start();
+            //reverse
+            $scope.sales.register.gender = parseInt($scope.sales.register.gender);
+            salesDataManager.save($scope.sales,
+                function(data) {
+                    var id = data.id;
+                    salesDataManager.proceedToBilling(id);
                     restart();
                 },
-                function errorCallback(response) {
-                    restart();
-                    $scope.errorState = modelStateValidation.parseError(response.data);
-                    $scope.loading = false;
+                function (data) {
+                    $scope.errorState  = data;
+                    stop();
                 });
         }
         return {

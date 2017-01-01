@@ -1,22 +1,33 @@
 ﻿
-
 .z-1() { box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37); }
+
 .radius(@value: 5px) {
     border-radius: @value;
     -webkit-border-radius: @value;
 }
-.nb-card {
+
+.transition() {
+    transition: all 0.5s ease;
+    -webkit-transition: all 0.5s ease;
+}
+
+.nb-card 
+{
+  
   font-family: 'Open Sans', sans-serif;
- 
-  .z-1();  
+  position:relative;
+  background-color: #fff;
+  .z-1();
+
   .nb-header {
     padding: 10px 10px;
     min-height: 30px;
     border-bottom: 1px solid #eee;
     font-weight: bold;
     position:relative;
+
     .nb-blink {
-        background-color:#6D2133;
+        background-color:#292F36;
         font-size: 10px;
         color: whitesmoke;
         padding: 3px;
@@ -27,39 +38,78 @@
         .radius();
     }
   }
+  
   .nb-image {
     position:relative;
+    
     .card__image {
       width:100%;
       height:100%;
       background-size:cover;
       position:absolute;
+      z-index: 5;
     }
+
+    .nb-title {
+        position:absolute;
+        background-color: rgba(0,0,0,0.5);
+        color: white;
+        padding: 3px;
+        .radius(5px);
+        z-index: 6;
+        top: 45%;
+        left: 40%;
+        .z-1();
+    }
+    
     overflow:hidden;
-    min-height: 150px;
+    min-height: 80px;
   }
-  
+  .nb-detail {
+      min-height: 30px;
+      font-size: 10px;
+      border-top: 1px solid rgba(0,0,0,0.2);
+      padding: 5px;
+      ul {
+          list-style:none;
+          margin: 0;
+          padding: 0;
+      }
+  }
   .nb-footer {
     padding: 10px;
     margin-top: 10px;
     border-top: 1px solid rgba(0,0,0,0.2);
+    text-align:center;
     .nb-btn {
       border: none;
       background: transparent;
-      float:right;
+      font-weight: bold;
       outline:none;
-      color:#808080;
-      &:hover {
+       transition: all 0.5s ease;
+      
+       &:hover {
+          background-color: #808080;
+          .radius(15px);
         cursor:pointer;
+        transition: all 0.5s ease;
       }
     }
-    
-    
-    
+
+    .nb-mute {
+        border: none;
+        background: transparent;
+    }
+
+    .nb-view {
+
+    }
     &:after, &:before {
       clear: both;
       display:table;
       content:"";
     }
   }
+ 
+  
 }

@@ -9,11 +9,28 @@ namespace Sunrise.Client.Domains.Models
     public class Payment
     {
         
-        public Payment(string term,string chequeNo,decimal amount) : this()
+        public static Payment Create(string term, string chequeNo, string bank,
+            string paymentMode, decimal amount,
+            string remarks, DateTime coveredPeriodFrom, DateTime coveredPeriodTo)
         {
+            var payment = new Payment(term,chequeNo,bank,paymentMode,amount,remarks,coveredPeriodFrom,coveredPeriodTo);
+            return payment;
+        }
+        
+        public Payment(
+            string term,string chequeNo,string bank,
+            string paymentMode,decimal amount,
+            string remarks,DateTime coveredPeriodFrom,DateTime coveredPeriodTo) : this()
+        {
+            
             this.Term = term;
             this.ChequeNo = chequeNo;
+            this.Bank = bank;
+            this.PaymentMode = paymentMode;
             this.Amount = amount;
+            this.Remarks = remarks;
+            this.CoveredPeriodFrom = coveredPeriodFrom;
+            this.CoveredPeriodTo = coveredPeriodTo;
         }
 
         internal Payment()

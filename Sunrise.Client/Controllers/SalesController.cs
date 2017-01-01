@@ -2,7 +2,9 @@
 
 namespace Sunrise.Client.Controllers
 {
+    
     [RoutePrefix("sales")]
+    [Authorize]
     public class SalesController : Controller
     {
         // GET: SalesRegister

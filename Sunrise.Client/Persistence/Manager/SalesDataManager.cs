@@ -53,10 +53,16 @@ namespace Sunrise.Client.Persistence.Manager
         {
             var result = new CustomResult();
             try
-            {   
+            {
+                var sales = await _uow.Transactions.FindAsync(value.SalesTransactionId);
 
-                var payment = Mapper.Map<Payment>(value);
-                _uow.Payments.Add(payment);
+                sales.AddPayment(value.Term, value.ChequeNo,
+                            value.Bank, value.PaymentMode,
+                            value.Amount, value.Remarks,
+                            value.CoveredPeriodFrom, value.CoveredPeriodTo);
+
+                _uow.Transactions.Update(sales);
+
                 await _uow.SaveChangesAsync();
                 result.Success = true;
             }
@@ -74,6 +80,7 @@ namespace Sunrise.Client.Persistence.Manager
             try
             {
                 var sales = await  _uow.Transactions.GetSalesById(transactionId);
+                
                 var vmSales = Mapper.Map<SalesViewModel>(sales);
 
                 return vmSales;

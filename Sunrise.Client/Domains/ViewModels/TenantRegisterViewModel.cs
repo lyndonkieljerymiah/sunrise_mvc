@@ -27,6 +27,7 @@ namespace Sunrise.Client.Domains.ViewModels
         {  
 
             this.TenantTypes = new List<SelectListItem>();
+            
         }
 
         public int Id { get; set; }
@@ -97,10 +98,10 @@ namespace Sunrise.Client.Domains.ViewModels
 
     public class IndividualViewModel   
     {
-
         public IndividualViewModel()
         {
             this.Birthday = DateTime.Today;
+            this.Gender = GenderEnum.Male;
         }
 
         [Required]
@@ -125,10 +126,11 @@ namespace Sunrise.Client.Domains.ViewModels
         {
             get
             {   
+                
                 return new List<SelectListItem>
                 {
-                    new SelectListItem() { Text = "Male", Value= GenderEnum.Male.ToString() ,Selected = true},
-                    new SelectListItem() { Text = "Female", Value= GenderEnum.Male.ToString()}
+                    new SelectListItem() { Text = "Male", Value=  Convert.ToString(GenderEnum.Male.GetHashCode()),Selected = true},
+                    new SelectListItem() { Text = "Female", Value=  Convert.ToString(GenderEnum.Female.GetHashCode())}
                 };
             }
         }

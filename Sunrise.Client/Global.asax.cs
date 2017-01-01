@@ -33,7 +33,6 @@ namespace Sunrise.Client
 
                 cfg.CreateMap<Individual, IndividualViewModel>().ReverseMap();
                 cfg.CreateMap<Company, CompanyViewModel>().ReverseMap();
-
                 cfg.CreateMap<Tenant, TenantRegisterViewModel>()
                     .ForMember(dest => dest.Address1, opts => opts.MapFrom(src => src.Address.Address1))
                     .ForMember(dest => dest.Address2, opts => opts.MapFrom(src => src.Address.Address2))

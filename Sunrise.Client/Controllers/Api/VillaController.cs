@@ -10,6 +10,7 @@ using Sunrise.Client.Persistence.Manager;
 
 namespace Sunrise.Client.Controllers.Api
 {
+    [Authorize]
     [RoutePrefix("api/villa")]
     public class VillaController : ApiController
     {

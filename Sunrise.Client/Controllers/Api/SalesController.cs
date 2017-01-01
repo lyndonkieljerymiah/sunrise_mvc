@@ -50,18 +50,20 @@ namespace Sunrise.Client.Controllers.Api
         {
             var villa = await _villaDataManager.GetVilla(villaId);
 
-            villa.AddImage(new ViewImages(1,Url.Content("~/Content/imgs/sample_1.jpg"),""));
-            villa.AddImage(new ViewImages(2, Url.Content("~/Content/imgs/sample_2.jpg"), ""));
-            villa.AddImage(new ViewImages(3, Url.Content("~/Content/imgs/sample_3.jpg"), ""));
+            villa.AddImage(new ViewImages(1,Url.Content("~/Content/imgs/villa_0.jpg"),""));
+            villa.AddImage(new ViewImages(2, Url.Content("~/Content/imgs/villa_1.jpg"), ""));
+            villa.AddImage(new ViewImages(3, Url.Content("~/Content/imgs/villa_2.jpg"), ""));
+            villa.AddImage(new ViewImages(4, Url.Content("~/Content/imgs/villa_3.jpg"), ""));
 
             var selections = await _selectionDataManager.GetLookup(new[] { "TenantType", "RentalType", "ContractStatus" });
             var vmRegister = TenantRegisterViewModel.CreateDefault(tenantType);
             vmRegister.SetTenantTypes(selections);
+
             var vmTransaction = SalesRegisterViewModel.CreateWithVilla(villa);
             vmTransaction.Register = vmRegister;
             vmTransaction.SetContractStatuses(selections);
             vmTransaction.SetRentalTypes(selections);
-            vmTransaction.Amount = villa.RatePerMonth;
+            vmTransaction.ComputeTotalAmount();
 
             return Ok(vmTransaction);
         }
@@ -86,7 +88,6 @@ namespace Sunrise.Client.Controllers.Api
 
             vm.UserId = User.Identity.GetUserId();
             var result = await _tenantDataManager.CreateAsync(vm.Register, vm);
-
             if (!result.Success)
             {
                 AddResult(result);
@@ -96,6 +97,8 @@ namespace Sunrise.Client.Controllers.Api
             //update villa status
             await _villaDataManager.UpdateVillaStatus(vm.Villa.Id, VillaStatusEnum.Reserved);
             var sv = new SalesViewModel { Id = (string)result.ReturnObject };
+
+
             return Ok(sv);
 
         }
@@ -132,13 +135,11 @@ namespace Sunrise.Client.Controllers.Api
         {
 
             var payment = new PaymentViewModel();
-            var selections = await _selectionDataManager.GetLookup(new[] { "PaymentTerm", "PaymentMode" });
-
+            var selections = await _selectionDataManager.GetLookup(new[] {"Bank", "PaymentTerm", "PaymentMode" });
             payment.SetTerms(selections);
             payment.SetMode(selections);
-            payment.Term = "ptcq";
-            payment.PaymentMode = "pmp";
-
+            payment.SetBank(selections);
+          
             return Ok(payment);
         }
 
@@ -151,6 +152,9 @@ namespace Sunrise.Client.Controllers.Api
         [Route("payment")]
         public async Task<IHttpActionResult> Payment(PaymentViewModel vm)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var result = await _salesManager.AddPaymentAsync(vm);
             if (result.Success)
             {

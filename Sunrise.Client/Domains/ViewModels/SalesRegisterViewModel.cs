@@ -47,7 +47,7 @@ namespace Sunrise.Client.Domains.ViewModels
             this.RentalTypes = new List<SelectListItem>();
             this.ContractStatuses = new List<SelectListItem>();
             this.PeriodStart = DateTime.Today;
-            this.PeriodEnd = DateTime.Today.AddMonths(1);
+            this.PeriodEnd = DateTime.Today.AddYears(1);
             
         }
 
@@ -62,12 +62,15 @@ namespace Sunrise.Client.Domains.ViewModels
         public string ContractStatusDescription { get; set; }
 
         [Required]
+        [CustomDateEndStartValidation("PeriodEnd", ValueComparison.IsLessThan,ErrorMessage = "Start must be earlier than end date")]
+        [CustomDateCurrentValidation(ErrorMessage = "Start date must be current or later date")]
         public DateTime PeriodStart { get; set; }
 
         [Required]
+        [CustomDateEndStartValidation("PeriodStart", ValueComparison.IsGreaterThan, ErrorMessage = "End must be later than start date")]
         public DateTime PeriodEnd { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Cannot Be null")]
         [CustomCurrencyValue]
         public Decimal Amount { get; set; }
 
@@ -96,6 +99,13 @@ namespace Sunrise.Client.Domains.ViewModels
             this.RentalTypes = types;
         }
 
+        public void ComputeTotalAmount()
+        {
+            var totalDays = (this.PeriodEnd.Date - this.PeriodStart.Date).TotalDays;
+            var totalMonth = Convert.ToInt16(totalDays)/30;
+            var totalAmountPerDay = this.Villa.RatePerMonth* (totalMonth);
+            this.Amount = totalAmountPerDay;
+        }
       
        
     }

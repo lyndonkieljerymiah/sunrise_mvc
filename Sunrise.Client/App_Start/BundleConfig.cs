@@ -9,29 +9,31 @@ namespace Sunrise.Client
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+                        "~/Scripts/libs/jquery/jquery-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
+                        "~/Scripts/libs/jquery/jquery.validate*"));
+
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
+                        "~/Scripts/libs/other/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/ui-bootstrap").Include(
-                      "~/Scripts/angular-ui/ui-bootstrap-tpls.js",
-                      "~/Scripts/respond.js"));
+                      "~/Scripts/libs/angular-ui/ui-bootstrap-tpls.js",
+                      "~/Scripts/libs/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
-                      "~/Scripts/libs/angular.js",
-                      "~/Scripts/libs/angular-route.js",
-                      "~/Scripts/libs/angular-animate.js"));
+                      "~/Scripts/libs/angularjs/angular.js",
+                      "~/Scripts/libs/angularjs/angular-route.js",
+                      "~/Scripts/libs/angularjs/angular-animate.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
-                      "~/Scripts/app/app-bootstrap.js"));
+                "~/Scripts/app/app-bootstrap.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
+                      "~/Content/font-awesome.css",
                       "~/Content/bootstrap.css",
                       "~/Content/default.css"));
 

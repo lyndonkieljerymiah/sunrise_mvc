@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Sunrise.Client.Domains.Enum;
 using Sunrise.Client.Domains.Models;
 using Sunrise.Client.Domains.ViewModels;
@@ -18,7 +20,6 @@ namespace Sunrise.Client.Persistence.Manager
         {
             _unitOfWork = unitOfWork;
         }
-
 
         public async Task<CustomResult> CreateAsync(TenantRegisterViewModel vmTenant,SalesRegisterViewModel salesViewModel)
         {
@@ -48,7 +49,9 @@ namespace Sunrise.Client.Persistence.Manager
                     salesViewModel.RentalType,
                     salesViewModel.ContractStatus,
                     salesViewModel.PeriodStart,
-                    salesViewModel.PeriodEnd, salesViewModel.Amount, salesViewModel.UserId);
+                    salesViewModel.PeriodEnd, 
+                    salesViewModel.Amount, 
+                    salesViewModel.UserId);
 
                 _unitOfWork.Tenants.Add(tenant);
                 await _unitOfWork.SaveChangesAsync();
@@ -64,6 +67,12 @@ namespace Sunrise.Client.Persistence.Manager
             }
 
             return result;
+        }
+
+        public async Task<TenantRegisterViewModel> GetTenantByItsCode(string code)
+        {   
+            var tenant = await _unitOfWork.Tenants.GetTenantByItsAttribute(e => e.Individual.QatarId == code || e.Company.CrNo == code);
+            return Mapper.Map<TenantRegisterViewModel>(tenant);
         }
     }
 }

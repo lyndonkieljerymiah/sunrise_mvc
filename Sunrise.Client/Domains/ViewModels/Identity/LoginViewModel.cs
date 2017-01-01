@@ -6,7 +6,6 @@ namespace Sunrise.Client.Domains.ViewModels.Identity
     {
         [Required]
         [Display(Name = "Email")]
-        [EmailAddress]
         public string Email { get; set; }
 
         [Required]

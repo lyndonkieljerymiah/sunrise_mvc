@@ -1,4 +1,5 @@
 ﻿<div ng-controller="billingController as $ctrl" ng-init="$ctrl.init('@ViewBag.Id')">
+    <spinner show-loading="loading"></spinner>
     <div class="page-header">
         <h2>Billing</h2>
     </div>
@@ -10,40 +11,25 @@
                     <div class="col-md-9">
                         <div class="body-content">
                             <div class="row">
-                                <div class="col-md-2">Tenant Code:</div>
-                                <div class="col-md-10">{{sales.register.code}}</div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-2">Name:</div>
                                 <div class="col-md-10">{{sales.register.name}}</div>
+                            </div>
+                            <div class="row" ng-show="sales.register.individual">
+                                <div class="col-md-2">Qatar Id:</div>
+                                <div class="col-md-10">{{sales.register.individual.qatarId}}</div>
+                            </div>
+                            <div class="row" ng-show="sales.register.company">
+                                <div class="col-md-2">CR No:</div>
+                                <div class="col-md-4">{{sales.register.company.crNo}}</div>
+                                <div class="col-md-2">Validity Date:</div>
+                                <div class="col-md-4">{{sales.register.company.validityDate | date : 'MM/dd/yyyy'}}</div>
                             </div>
                             <div class="row">
                                 <div class="col-md-2">Address:</div>
                                 <div class="col-md-10">{{sales.register.fullAddress}}</div>
                             </div>
                         </div>
-                        <div class="body-content">
-                            <table class="table">
-                                <tr>
-                                    <th>Villa No</th>
-                                    <th>Rental Type</th>
-                                    <th>Period Start</th>
-                                    <th>Period End</th>
-                                    <th>Monthly</th>
-                                    <th>Status</th>
-                                </tr>
-                                <tr>
-                                    <td>{{sales.villa.villaNo}}</td>
-                                    <td>{{sales.rentalType}}</td>
-                                    <td>{{sales.periodStart | date: "MM/dd/yyyy"}}</td>
-                                    <td>{{sales.periodEnd | date: "MM/dd/yyyy"}}</td>
-                                    <td>{{sales.amount | currency : symbol}}</td>
-                                    <td ng-bind="sales.villa.villaStatus"></td>
-                                </tr>
-                            </table>
-                        </div>
                     </div>
-
                     <!-- status component -->
                     <div class="panel panel-danger col-md-3">
                         <div class="panel-body">
@@ -51,6 +37,29 @@
                         </div>
                     </div>
                     <!--end component-->
+                    
+                    <div class="col-md-12">
+                        <table class="table">
+                            <tr>
+                                <th>Villa No</th>
+                                <th>Rental Type</th>
+                                <th>Period Start</th>
+                                <th>Period End</th>
+                                <th>Amount</th>
+                                <th>Monthly Payable</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>{{sales.villa.villaNo}}</td>
+                                <td>{{sales.fullRentalType}}</td>
+                                <td>{{sales.periodStart | date: "MM/dd/yyyy"}}</td>
+                                <td>{{sales.periodEnd | date: "MM/dd/yyyy"}}</td>
+                                <td>{{sales.amount | currency :"QR "}}</td>
+                                <td>{{sales.villa.ratePerMonth | currency :"QR "}}</td>
+                                <td>{{sales.villa.villaStatus}}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -66,7 +75,6 @@
                         <tr>
                             <th>Date</th>
                             <th>Cheque No</th>
-                            <th>Description</th>
                             <th>Covered Period</th>
                             <th>Amount</th>
                             <th>Status</th>
@@ -74,19 +82,19 @@
                             <th>Remarks</th>
                         </tr>
                         <tr ng-repeat="payment in sales.payments">
-                            <td ng-bind="payment.paymentDate"></td>
-                            <td ng-bind="payment.chequeNo"></td>
-                            <td ng-bind="payment.description"></td>
-                            <td ng-bind="payment.coveredPeriod"></td>
-                            <td ng-bind="payment.amount"></td>
-                            <td ng-bind="payment.paymentStatus"></td>
-                            <td ng-bind="payment.statusDate"></td>
-                            <td ng-bind="payment.remarks"></td>
+                            <td>{{payment.paymentDate | date: 'mm/dd/yyyy'}}</td>
+                            <td>{{payment.chequeNo}}</td>
+                            <td>{{payment.coveredPeriod}}</td>
+                            <td>{{payment.amount | currency:"QR "}}</td>
+                            <td>{{payment.paymentStatus}}</td>
+                            <td>{{payment.statusDate}}</td>
+                            <td>{{payment.remarks}}</td>
                         </tr>
                     </table>
                 </div>
                 <div class="panel-footer">
-                    <button class="btn btn-primary" ng-click="$ctrl.openPaymentDialog()">Add Payment</button>
+                    <button class="btn btn-primary pull-right" ng-click="$ctrl.openPaymentDialog()">Add Payment</button>
+                    <div style="clear:both"></div>
                     <!-- template -->
                     <script type="text/ng-template" id="myModalContent.html">
                         <form id="paymentForm" class="form-horizontal">
@@ -97,9 +105,11 @@
                                 <div class="form-group">
                                     <label class="col-md-2 text-right">Type:</label>
                                     <div class="col-md-4">
+
                                         <select class="form-control" placheholder="Term" ng-model="$ctrl.payment.term" ng-change="$ctrl.changeBehaviourWhenSelectingTerm()">
                                             <option ng-repeat="term in $ctrl.payment.terms" value="{{term.value}}">{{term.text}}</option>
                                         </select>
+
                                     </div>
                                     <div ng-hide="$ctrl.payment.chequeFieldDisabled">
                                         <label class="col-md-2 text-right">Mode:</label>
@@ -114,28 +124,24 @@
                                     <label class="col-md-2 text-right">Date:</label>
                                     <div class="col-md-10">
                                         <input type="date" name="paymentDate" id="paymentDate" class="form-control" placeholder="Payment Date" ng-model="$ctrl.payment.paymentDate" />
+                                        <span ng-show="errorState['vm.paymentdate']">{{errorState['vm.paymentdate']}}</span>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-2 text-right">Cheque No:</label>
                                     <div class="col-md-10">
                                         <input type="text" ng-disabled="$ctrl.payment.chequeFieldDisabled" name="chequeNo" id="chequeNo" class="form-control" ng-model="$ctrl.payment.chequeNo" />
+                                        <span ng-show="errorState['vm.chequeno']">{{errorState['vm.chequeno']}}</span>
                                     </div>
                                 </div>
                                 <div class="form-group" ng-hide="$ctrl.payment.chequeFieldDisabled">
                                     <label class="col-md-2 text-right">Bank:</label>
                                     <div class="col-md-10">
-                                        <select ng-model="$ctrl.payment.bank">
-                                            <option>Doha Bank</option>
-                                            <option>QNB</option>
+                                        <select ng-model="$ctrl.payment.bank" class="form-control">
+                                            <option value="">--Select Bank--</option>
+                                            <option ng-repeat="bank in $ctrl.payment.banks" value="{{bank.value}}">{{bank.text}}</option>
                                         </select>
-                                        <input type="text" name="bank" id="bank" class="form-control" ng-model="$ctrl.payment.bank" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-2 text-right">Description:</label>
-                                    <div class="col-md-10">
-                                        <textarea name="chequeNo" id="chequeNo" class="form-control" ng-model="$ctrl.payment.description"></textarea>
+                                        <span ng-show="errorState['vm.bank']">{{errorState['vm.bank']}}</span>
                                     </div>
                                 </div>
                                 <div class="page-header">
@@ -145,16 +151,25 @@
                                     <label class="col-md-2 text-right">Start:</label>
                                     <div class="col-md-4">
                                         <input type="date" name="coveredPeriodStart" id="coveredPeriodStart" class="form-control" ng-model="$ctrl.payment.coveredPeriodFrom" />
+                                        <span ng-show="errorState['vm.coveredperiodfrom']">{{errorState['vm.coveredperiodfrom']}}</span>
                                     </div>
                                     <label class="col-md-2 text-right">End:</label>
                                     <div class="col-md-4">
-                                        <input type="date" name="chequeNocoveredPeriodEnd" id="chequeNocoveredPeriodEnd" class="form-control" ng-model="$ctrl.payment.coveredPeriodTo"/>
+                                        <input type="date" name="chequeNocoveredPeriodEnd" id="chequeNocoveredPeriodEnd" class="form-control" ng-model="$ctrl.payment.coveredPeriodTo" />
+                                        <span ng-show="errorState['vm.coveredperiodto']">{{errorState['vm.coveredperiodto']}}</span>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-2 text-right">Amount:</label>
-                                    <div  class="col-md-10">
+                                    <div class="col-md-10">
                                         <input type="text" name="amount" id="amount" class="form-control text-right" placeholder="Amount" ng-model="$ctrl.payment.amount" />
+                                        <span ng-show="errorState['vm.amount']">{{errorState['vm.amount']}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 text-right">Remarks:</label>
+                                    <div class="col-md-10">
+                                        <textarea name="remarks" id="remarks" class="form-control" ng-model="$ctrl.payment.remarks"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -163,6 +178,7 @@
                                 <button class="btn btn-danger" ng-click="$ctrl.cancel()">Cancel</button>
                             </div>
                         </form>
+                    
                     </script>
                     <!-- end -->
 
@@ -179,6 +195,7 @@
 
 <!-- payment details component -->
 @section scripts {
+    <script src="@Url.Content("~/Scripts/app/data/payment-manager.data.js")"></script>
     <script src="@Url.Content("~/Scripts/app/controller/billingController.js")"></script>
 }
 

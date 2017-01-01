@@ -4,12 +4,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Sunrise Web Portal</title>
+
     @Styles.Render("~/Content/css")
+    <style>
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: none !important;
+        }
+    </style>
     @Scripts.Render("~/bundles/modernizr")
 
 </head>
-<body ng-app="mainApp">
-    <div class="navbar navbar-inverse navbar-fixed-top">
+<body ng-app="mainApp" ng-cloak>
+    <div class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -17,7 +23,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Sunrise Web Portal", "Index", "Sales", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 @Html.Partial("_LoginPartial")
@@ -28,7 +34,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>Sunrise Web Portal ver 1.0 - &copy; @DateTime.Now.Year</p>
         </footer>
     </div>
 
@@ -36,6 +42,8 @@
     @Scripts.Render("~/bundles/angular")
     @Scripts.Render("~/bundles/ui-bootstrap")
     @Scripts.Render("~/bundles/app")
+    <!--CDN link for  TweenMax-->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

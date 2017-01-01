@@ -9,6 +9,7 @@ using Sunrise.Client.Persistence.Abstract;
 
 namespace Sunrise.Client.Controllers
 {
+    [Authorize]
     [RoutePrefix("Tenant")]
     public class TenantController : Controller
     {
@@ -33,7 +34,9 @@ namespace Sunrise.Client.Controllers
             ViewBag.Type = tv;
             return PartialView("_Register");
         }
-        
+
+
+      
 
     }
 }

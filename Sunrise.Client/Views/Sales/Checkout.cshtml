@@ -22,28 +22,31 @@
                 <div class="panel-heading">Villa Information</div>
                 <div class="panel-body">
                     <div class="thumbnail">
+                        <!--slider-->
                         <slider>
-                            <div ng-repeat="slide in sales.villa.images" class="nb-image-container" ng-show="nbSlides.isCurrentSlide($index)">
-                                <img src="{{slide.imageUrl}}" />
+                            <div ng-repeat="slide in nbSlides.images" class="nb-image-container slide-animation" ng-show="slide.visible">
+                                <img src="{{slide.imageUrl}}"/>
                             </div>
-                            <a class="arrow prev" href="#" ng-click="nbSlides.prev(sales.villa.images.length)">Prev</a>
-                            <a class="arrow next" href="#" ng-click="nbSlides.next(sales.villa.images.length)">Next</a>
+                            <a class="arrow prev" href="#" ng-click="nbSlides.prev()"><i class="fa fa-2x fa-chevron-left"></i></a>
+                            <a class="arrow next" href="#" ng-click="nbSlides.next();"><i class="fa fa-2x fa-chevron-right"></i></a>
                             <nav class="nb-bulletin">
                                 <ul>
-                                    <li ng-repeat="slide in sales.villa.images">
-                                        <a href="#" ng-class="{active:nbSlides.isCurrentSlide($index)}" ng-click="nbSlides.setCurrentSlide($index)"></a>
+                                    <li ng-repeat="slide in nbSlides.images">
+                                        <a href="#" ng-class="{active:nbSlides.currentIndex == $index}" ng-click="nbSlides.chooseIndex($index)"></a>
                                     </li>
                                 </ul>
                             </nav>
-                            </slider>
-                            <p><strong>Villa No: {{sales.villa.villaNo}}</strong></p>
-                            <p>Descripton: {{sales.villa.description}}</p>
-                            <p>
-                                <ul>
-                                    <li>Capacity: {{sales.villa.capacity}}</li>
-                                    <li>Rate per Month: {{sales.villa.ratePerMonth}}</li>
-                                </ul>
-                            </p>
+                        </slider>
+                        <!--end slider-->
+                        <p><strong>Villa No: {{sales.villa.villaNo}}</strong>
+                        </p>
+                        <p>Descripton: {{sales.villa.description}}</p>
+                        <p>
+                            <ul>
+                                <li>Capacity: {{sales.villa.capacity}}</li>
+                                <li>Rate per Month: {{sales.villa.ratePerMonth | currency : "QR "}}</li>
+                            </ul>
+                        </p>
                     </div>
 
                 </div>
@@ -88,7 +91,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-4 text-right">Rate/Month</label>
+                        <label class="col-md-4 text-right">Amount:</label>
                         <div class="col-md-8">
                             <input type="text" ng-model="sales.amount" class="form-control" />
                             <span ng-show="errorState['vm.amount']">{{errorState['vm.amount']}}</span>
@@ -99,12 +102,13 @@
         </div>
     </div>
     <div>
-        <button class="btn btn-primary" ng-click="$ctrl.save()">Checkout</button>
+        <button class="btn btn-primary" ng-click="$ctrl.save()"><i class="fa fa-save"></i> Checkout</button>
     </div>
 </form>
 
 @section scripts
-{   
+{
+    <script src="~/Scripts/app/data/sales-manager.data.js"></script>
     <script src="~/Scripts/app/controller/checkoutController.js"></script>
-    
+
 }

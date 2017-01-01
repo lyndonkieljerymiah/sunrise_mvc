@@ -16,16 +16,11 @@ namespace Sunrise.Client
             routes.MapMvcAttributeRoutes();
 
 
-            routes.MapRoute(
-                name: "Tenant",
-                url: "Tenant/{action}/{tv}",
-                defaults:new {controller = "Tenant", action="Index", tv= UrlParameter.Optional}
-            );
-
+        
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Sales", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

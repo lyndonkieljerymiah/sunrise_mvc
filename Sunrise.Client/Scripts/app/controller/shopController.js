@@ -1,25 +1,36 @@
-﻿mainApp.controller("shopController", function ($window,$scope, $http) {
+﻿mainApp.controller("shopController",function ($scope,villaDataManager,salesDataManager) {
 
+    var $ctrl = this;
     $scope.villas = [];
 
-    function init()
-    {
-        $http.get("/api/sales/list")
-            .then(function (response) {
-                $scope.villas = response.data;
+    /*
+     * TODO: Initialize
+     ***************************/
+    function init() {
+        $scope._spinnerLoading = true;
+        villaDataManager.getAllVillas(
+            function (data) {
+                $scope.villaGroups = data.villaGroups;
+                $scope._spinnerLoading = false;
             });
     }
 
     /*
-     * When button click select Id and proceed to checkout
+     * TODO: proceed to checkout
      *****************************************************/
-    function select(villaId)
-    {
-        $window.location = "/sales/checkout/" + villaId;
+    function select(villaId) {
+        salesDataManager.redirectToCheckout(villaId);
+    }
+
+    /*
+     * TODO: show detail
+     ***************************************************/
+    function showDetail(villaId) {
+        
     }
 
     return {
         init: init,
         select: select
     };
-})
+});

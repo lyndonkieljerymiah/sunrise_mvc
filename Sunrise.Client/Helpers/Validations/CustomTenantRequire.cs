@@ -11,7 +11,6 @@ namespace Sunrise.Client.Helpers.Validations
     {
         public string Exception { get; set; }
 
-
         public CustomTenantRequire(string exception)
         {
             Exception = exception;

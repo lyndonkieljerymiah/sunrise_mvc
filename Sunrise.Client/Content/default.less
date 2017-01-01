@@ -2,9 +2,6 @@
 
 
 
-
-
-
 html {
     height: 100%;
 }
@@ -12,7 +9,7 @@ html {
 body {
     font-family: 'Open Sans', sans-serif;
     padding-top: 50px;
-    background: #F1F1F1;
+    background: #F1F1F1 url('imgs/noise_lines.png') top repeat;
     height: 100%;
 }
 
@@ -21,6 +18,10 @@ body {
     padding: 15px;
 }
 
+.box-content {
+    padding-top: 10px ;
+    padding-bottom: 15px;
+}
 
 /*spinner*/
 .spinner {
@@ -51,7 +52,22 @@ body {
     }
 }
 
+/*error*/
+span[ng-show] {
+    font-size: 12px;
+    font-weight: bold;
+    color: #ff0000;
+}
+
+/* content */
+.box-container {
+
+}
+
 
 @import url("parts/box.less");
 
 @import url("parts/slider.less");
+
+
+/*override*/
