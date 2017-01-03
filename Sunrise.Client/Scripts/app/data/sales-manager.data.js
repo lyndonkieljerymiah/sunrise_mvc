@@ -7,12 +7,11 @@
             createCheckout: function (villaId, tenantType, success, failure) {
                 
                 var uriPath = (tenantType === null) ? "/api/sales/create/" + villaId : "/api/sales/create/" + villaId + "/" + tenantType;
-                console.log(uriPath);
                 $http.get(uriPath)
                   .then(
                       function (response) {
                           var data = response.data;
-                          
+                          console.log(data);
                           data.periodStart = new Date(data.periodStart);
                           data.periodEnd = new Date(data.periodEnd);
 

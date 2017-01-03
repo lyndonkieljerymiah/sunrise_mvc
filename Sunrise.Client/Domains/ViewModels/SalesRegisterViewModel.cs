@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
-using Sunrise.Client.Domains.Models;
 using Sunrise.Client.Helpers.Validations;
+using Sunrise.Maintenance.Model;
 
 namespace Sunrise.Client.Domains.ViewModels
 {
@@ -16,11 +16,11 @@ namespace Sunrise.Client.Domains.ViewModels
     {
         public string Id { get; set; }
 
-        public string FullRentalType { get; set; }
-        public string FullContractStatus { get; set; }
+        public string RentalType { get; set; }
+        public string ContractStatus { get; set; }
         public DateTime PeriodStart { get; set; }
         public DateTime PeriodEnd { get; set; }
-        public Decimal Amount { get; set; }
+        public Decimal AmountPayable { get; set; }
 
         public string Status { get; set; }
 
@@ -48,7 +48,7 @@ namespace Sunrise.Client.Domains.ViewModels
             this.ContractStatuses = new List<SelectListItem>();
             this.PeriodStart = DateTime.Today;
             this.PeriodEnd = DateTime.Today.AddYears(1);
-            
+
         }
 
         public string Id { get; set; }
@@ -72,7 +72,7 @@ namespace Sunrise.Client.Domains.ViewModels
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Cannot Be null")]
         [CustomCurrencyValue]
-        public Decimal Amount { get; set; }
+        public Decimal AmountPayable { get; set; }
 
         public string Status { get; set; }
 
@@ -104,7 +104,7 @@ namespace Sunrise.Client.Domains.ViewModels
             var totalDays = (this.PeriodEnd.Date - this.PeriodStart.Date).TotalDays;
             var totalMonth = Convert.ToInt16(totalDays)/30;
             var totalAmountPerDay = this.Villa.RatePerMonth* (totalMonth);
-            this.Amount = totalAmountPerDay;
+            this.AmountPayable = totalAmountPerDay;
         }
       
        

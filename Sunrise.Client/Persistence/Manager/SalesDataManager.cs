@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using AutoMapper;
-using Sunrise.Client.Domains.Enum;
-using Sunrise.Client.Domains.Models;
+﻿using AutoMapper;
 using Sunrise.Client.Domains.ViewModels;
-using Sunrise.Client.Persistence.Abstract;
+using System;
+using System.Threading.Tasks;
+using Sunrise.TransactionManagement.Abstract;
+using Sunrise.TransactionManagement.Model;
+using Utilities.Enum;
 
 namespace Sunrise.Client.Persistence.Manager
 {
 
-  
+
     public class SalesDataManager
     {
         private readonly IUnitOfWork _uow;
@@ -22,31 +19,28 @@ namespace Sunrise.Client.Persistence.Manager
             _uow = uow;
         }
 
-        public async Task CreateAsync(SalesTransaction transaction)
+        public async Task<CustomResult> CreateAsync(SalesRegisterViewModel vmTransaction)
         {
+            var result = new CustomResult();
             try
             {
+                var transaction = Transaction.Map(
+                    vmTransaction.RentalType,
+                    vmTransaction.ContractStatus, vmTransaction.PeriodStart,
+                    vmTransaction.PeriodEnd, vmTransaction.AmountPayable, vmTransaction.Villa.Id, vmTransaction.Register.Id,vmTransaction.UserId);
+
                 _uow.Transactions.Add(transaction);
-                await _uow.SaveChangesAsync();
+                await _uow.SaveChanges();
+
+                result.Success = true;
+                result.ReturnObject = transaction.Id;
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                result.Errors.Add(e.Message);
             }
-        }
 
-        public async Task UpdateAsync(SalesTransaction transaction)
-        {
-            try
-            {
-
-                _uow.Transactions.Update(transaction);
-                await _uow.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
+            return result;
         }
 
         public async Task<CustomResult> AddPaymentAsync(PaymentViewModel value)
@@ -54,37 +48,32 @@ namespace Sunrise.Client.Persistence.Manager
             var result = new CustomResult();
             try
             {
-                var sales = await _uow.Transactions.FindAsync(value.SalesTransactionId);
+                var sales = await _uow.Transactions.GetTransactionById(value.SalesTransactionId);
+                var success = sales.AddPayment(value.Term, value.PaymentMode, 
+                        value.ChequeNo, value.Bank, 
+                        value.CoveredPeriodFrom, 
+                        value.CoveredPeriodTo, 
+                        value.Amount, value.Remarks);
 
-                sales.AddPayment(value.Term, value.ChequeNo,
-                            value.Bank, value.PaymentMode,
-                            value.Amount, value.Remarks,
-                            value.CoveredPeriodFrom, value.CoveredPeriodTo);
+                if (success)
+                    await _uow.SaveChanges();
 
-                _uow.Transactions.Update(sales);
-
-                await _uow.SaveChangesAsync();
-                result.Success = true;
+                result.Success = success;
             }
             catch (Exception e)
             {
                 result.Errors.Add(e.Message);
             }
-            
             return result;
-
         }
 
         public async Task<SalesViewModel> GetSalesAsync(string transactionId)
         {
             try
             {
-                var sales = await  _uow.Transactions.GetSalesById(transactionId);
-                
+                var sales = await  _uow.Transactions.GetTransactionView(transactionId);
                 var vmSales = Mapper.Map<SalesViewModel>(sales);
-
                 return vmSales;
-
             }
             catch (Exception e)
             {

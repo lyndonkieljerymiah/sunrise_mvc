@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using Sunrise.Client.Domains.Models;
 using Sunrise.Client.Helpers.Validations;
+using Sunrise.Maintenance.Model;
 
 namespace Sunrise.Client.Domains.ViewModels
 {
@@ -29,8 +26,7 @@ namespace Sunrise.Client.Domains.ViewModels
         public int Id { get; set; }
 
         public string SalesTransactionId { get; set; }
-
-        public int VillaId { get; set; }
+        public string VillaId { get; set; }
 
         [Required]
         public string Term { get; set; }

@@ -18,37 +18,8 @@ namespace Sunrise.Client.Controllers.Api
         }
 
 
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("list")]
-        public ICollection<TenantRegisterViewModel> List()
-        {
-            var tenants = new List<TenantRegisterViewModel>
-            {
-                new TenantRegisterViewModel
-                {
-                    Name = "Arnold Mercado",
-                    EmailAddress = "arnold.mercado@hotmail.com"
-                }
-            };
-
-            return tenants;
-        }
-
-        [Route("{code?}")]
-        [HttpGet]
-        public async Task<IHttpActionResult> GetTenant(string code)
-        {
-            var tenant = await _tenantDataManager.GetTenantByItsCode(code);
-            if (tenant == null)
-            {
-                ModelState.AddModelError("error","Not Found");
-                return BadRequest(ModelState);
-            }
-            return Ok(tenant);
-        }
+      
+       
 
 
         protected override void Dispose(bool disposing)

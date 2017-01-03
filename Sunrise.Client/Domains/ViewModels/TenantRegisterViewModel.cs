@@ -2,40 +2,26 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using Sunrise.Client.Domains.Enum;
-using Sunrise.Client.Domains.Models;
-using Sunrise.Client.Helpers.Validations;
+using Utilities.Enum;
+using Sunrise.Maintenance.Model;
 
 namespace Sunrise.Client.Domains.ViewModels
 {
     public class TenantRegisterViewModel
     {
-
-        public static TenantRegisterViewModel CreateDefault(string tenantType = "ttin")
-        {
-            var tenant = new TenantRegisterViewModel();
-            tenant.TenantType = tenantType;
-            tenant.CreateTenantType();
-            return tenant;
-        }
-
+       
         public TenantRegisterViewModel()
         {  
-
             this.TenantTypes = new List<SelectListItem>();
-            
         }
 
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public string TenantType { get; set; }
         public string FullType { get; private set; }
-        public IEnumerable<SelectListItem> TenantTypes { get; private set; }
+        public IEnumerable<SelectListItem> TenantTypes { get; set; }
         
         public string Code { get; set; }
         [Required]
@@ -66,12 +52,9 @@ namespace Sunrise.Client.Domains.ViewModels
         [Required]
         public string City { get; set; }
         
-
         public IndividualViewModel Individual { get; set; }
-
         public CompanyViewModel Company { get; set; }
-
-
+        
         public void SetTenantTypes(IEnumerable<Selection> selections)
         {
             var tenantTypes = selections
@@ -80,7 +63,6 @@ namespace Sunrise.Client.Domains.ViewModels
 
             this.TenantTypes = tenantTypes;
         }
-
         public void CreateTenantType()
         {
             if (this.TenantType == "ttin")
@@ -92,8 +74,6 @@ namespace Sunrise.Client.Domains.ViewModels
                 this.Company = new CompanyViewModel();
             }
         }
-
-
     }
 
     public class IndividualViewModel   

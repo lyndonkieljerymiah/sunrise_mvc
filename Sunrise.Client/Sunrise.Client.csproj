@@ -238,21 +238,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SalesController.cs" />
     <Compile Include="Controllers\TenantController.cs" />
-    <Compile Include="Domains\DTO\PaymentDTO.cs" />
-    <Compile Include="Domains\DTO\SalesTransactionDTO.cs" />
-    <Compile Include="Domains\DTO\TenantDTO.cs" />
-    <Compile Include="Domains\DTO\VillaDTO.cs" />
-    <Compile Include="Domains\Enum\Enums.cs" />
-    <Compile Include="Domains\Enum\Selection.cs" />
-    <Compile Include="Domains\Models\Address.cs" />
-    <Compile Include="Domains\Models\Company.cs" />
     <Compile Include="Domains\Models\Identity\User.cs" />
-    <Compile Include="Domains\Models\Individual.cs" />
-    <Compile Include="Domains\Models\Payment.cs" />
-    <Compile Include="Domains\Models\SalesTransaction.cs" />
-    <Compile Include="Domains\Models\Selection.cs" />
-    <Compile Include="Domains\Models\Tenant.cs" />
-    <Compile Include="Domains\Models\Villa.cs" />
     <Compile Include="Domains\ViewModels\Identity\ForgotPasswordViewModel.cs" />
     <Compile Include="Domains\ViewModels\Identity\ForgotViewModel.cs" />
     <Compile Include="Domains\ViewModels\Identity\ExternalLoginConfirmationViewModel.cs" />
@@ -286,37 +272,16 @@
     <Compile Include="Helpers\Validations\CustomRequiredMatchToValidation.cs" />
     <Compile Include="Helpers\Validations\CustomTenantRequire.cs" />
     <Compile Include="Helpers\Validations\PropertyValidationAttribute.cs" />
-    <Compile Include="Migrations\201612310838069_Initial.cs" />
-    <Compile Include="Migrations\201612310838069_Initial.Designer.cs">
-      <DependentUpon>201612310838069_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201701031413553_Initial.cs" />
+    <Compile Include="Migrations\201701031413553_Initial.Designer.cs">
+      <DependentUpon>201701031413553_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Persistence\Abstract\IBaseRepository.cs" />
-    <Compile Include="Persistence\Abstract\IPaymentRepository.cs" />
-    <Compile Include="Persistence\Abstract\ISelectionRepository.cs" />
-    <Compile Include="Persistence\Abstract\ITenantRepository.cs" />
-    <Compile Include="Persistence\Abstract\ITransactionRepository.cs" />
-    <Compile Include="Persistence\Abstract\IUnitOfWork.cs" />
-    <Compile Include="Persistence\Abstract\IVillaRepository.cs" />
     <Compile Include="Persistence\Context\AppDbContext.cs" />
-    <Compile Include="Persistence\Context\ReferenceDbContext.cs" />
-    <Compile Include="Persistence\EntityConfigurations\CompanyConfig.cs" />
-    <Compile Include="Persistence\EntityConfigurations\IndividualConfig.cs" />
-    <Compile Include="Persistence\EntityConfigurations\SelectionConfig.cs" />
-    <Compile Include="Persistence\EntityConfigurations\TenantConfig.cs" />
-    <Compile Include="Persistence\EntityConfigurations\TransactionConfig.cs" />
-    <Compile Include="Persistence\EntityConfigurations\VillaConfig.cs" />
     <Compile Include="Persistence\Manager\SalesDataManager.cs" />
     <Compile Include="Persistence\Manager\SelectionDataManager.cs" />
     <Compile Include="Persistence\Manager\TenantDataManager.cs" />
     <Compile Include="Persistence\Manager\VillaDataManager.cs" />
-    <Compile Include="Persistence\Repositories\BaseRepository.cs" />
-    <Compile Include="Persistence\Repositories\PaymentRepository.cs" />
-    <Compile Include="Persistence\Repositories\SelectionRepository.cs" />
-    <Compile Include="Persistence\Repositories\TenantRepository.cs" />
-    <Compile Include="Persistence\Repositories\TransactionRepository.cs" />
-    <Compile Include="Persistence\Repositories\UnitOfWork.cs" />
-    <Compile Include="Persistence\Repositories\VillaRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -425,6 +390,7 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\parts\mixin.less" />
     <None Include="Scripts\libs\jquery\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\libs\angularjs\i18n\angular-locale_af-na.js" />
     <Content Include="Scripts\libs\angularjs\i18n\angular-locale_af-za.js" />
@@ -1228,8 +1194,30 @@
     <Content Include="Scripts\libs\jquery\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201612310838069_Initial.resx">
-      <DependentUpon>201612310838069_Initial.cs</DependentUpon>
+    <ProjectReference Include="..\Sunrise.Maintenance\Sunrise.Maintenance.csproj">
+      <Project>{01863cdc-763a-4d73-ab52-0568e0433dfb}</Project>
+      <Name>Sunrise.Maintenance</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sunrise.TenantManagement\Sunrise.TenantManagement.csproj">
+      <Project>{20d970e3-7a53-4ce0-90eb-e95693edaf09}</Project>
+      <Name>Sunrise.TenantManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sunrise.TransactionManagement\Sunrise.TransactionManagement.csproj">
+      <Project>{0acf1ef5-624b-4155-827a-66a009005fe0}</Project>
+      <Name>Sunrise.TransactionManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sunrise.VillaManagement\Sunrise.VillaManagement.csproj">
+      <Project>{6d53d740-10bb-4c1c-9cf4-14f82fded22b}</Project>
+      <Name>Sunrise.VillaManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{3afc0062-c563-4142-bc16-75263e51160d}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201701031413553_Initial.resx">
+      <DependentUpon>201701031413553_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

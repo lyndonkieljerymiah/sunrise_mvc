@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using Sunrise.Client.Domains.Enum;
-using Sunrise.Client.Domains.Models;
+﻿using AutoMapper;
 using Sunrise.Client.Domains.ViewModels;
-using Sunrise.Client.Persistence.Abstract;
+using System;
+using System.Threading.Tasks;
+using Sunrise.TenantManagement.Abstract;
+using Sunrise.TenantManagement.Model;
+using Utilities.Enum;
 
 namespace Sunrise.Client.Persistence.Manager
 {
@@ -21,44 +17,33 @@ namespace Sunrise.Client.Persistence.Manager
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<CustomResult> CreateAsync(TenantRegisterViewModel vmTenant,SalesRegisterViewModel salesViewModel)
+        public async Task<CustomResult> CreateAsync(TenantRegisterViewModel vmTenant)
         {
             var result = new CustomResult();
+
             try
             {
                 //register tenant
-                var tenant = Tenant.Create(
-                    vmTenant.TenantType, vmTenant.Code, vmTenant.Name,
-                    vmTenant.EmailAddress, vmTenant.TelNo, vmTenant.MobileNo, vmTenant.FaxNo, vmTenant.Address1,
-                    vmTenant.Address2,
-                    vmTenant.City, vmTenant.PostalCode);
-
-                if (vmTenant.TenantType == "ttin")
+                var newTenant = Tenant.Map(
+                    vmTenant.Name, vmTenant.EmailAddress, 
+                    vmTenant.TelNo, vmTenant.MobileNo, 
+                    vmTenant.FaxNo, vmTenant.Address1, 
+                    vmTenant.Address2, vmTenant.City, vmTenant.PostalCode);
+                if(vmTenant.Individual != null)
                 {
-                    tenant.AddIndividual(vmTenant.Individual.Birthday, vmTenant.Individual.Gender,
-                        vmTenant.Individual.QatarId, vmTenant.Individual.Company);
+                    var individual = vmTenant.Individual;
+                    newTenant.AddAttributeIndividual(individual.Birthday,individual.Gender, individual.QatarId, individual.Company);
                 }
                 else
                 {
-                    tenant.AddCompany(vmTenant.Company.CrNo, vmTenant.Company.BusinessType,
-                        vmTenant.Company.ValidityDate, vmTenant.Company.Representative);
+                    var company = vmTenant.Company;
+                    newTenant.AddAttributeCompany(company.CrNo, company.BusinessType, company.ValidityDate, company.Representative);
                 }
+                _unitOfWork.Tenants.Add(newTenant);
+                await _unitOfWork.SaveChanges();
 
-                //add sales
-                SalesTransaction sales = tenant.AddAndReturnTransaction(salesViewModel.Villa.Id,
-                    salesViewModel.RentalType,
-                    salesViewModel.ContractStatus,
-                    salesViewModel.PeriodStart,
-                    salesViewModel.PeriodEnd, 
-                    salesViewModel.Amount, 
-                    salesViewModel.UserId);
-
-                _unitOfWork.Tenants.Add(tenant);
-                await _unitOfWork.SaveChangesAsync();
-
-                result.ReturnObject = sales.Id;
+                result.ReturnObject = newTenant.Id;
                 result.Success = true;
-
             }
             catch (Exception e)
             {
@@ -69,10 +54,6 @@ namespace Sunrise.Client.Persistence.Manager
             return result;
         }
 
-        public async Task<TenantRegisterViewModel> GetTenantByItsCode(string code)
-        {   
-            var tenant = await _unitOfWork.Tenants.GetTenantByItsAttribute(e => e.Individual.QatarId == code || e.Company.CrNo == code);
-            return Mapper.Map<TenantRegisterViewModel>(tenant);
-        }
+       
     }
 }

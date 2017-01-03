@@ -5,8 +5,9 @@
 <div class="page-header">
     <h1>Villa Rent Contract</h1>
 </div>
-<form class="form-horizontal" method="post" ng-controller="salesTransactionController as $ctrl" ng-init="$ctrl.init(@ViewBag.Id)">
+<form class="form-horizontal" method="post" ng-controller="salesTransactionController as $ctrl" ng-init="$ctrl.init('@ViewBag.Id')">
     <spinner show-loading="loading"></spinner>
+
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
@@ -19,13 +20,15 @@
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading">Villa Information</div>
+                <div class="panel-heading">
+                    <strong>Villa No: {{sales.villa.villaNo}}</strong>
+                </div>
                 <div class="panel-body">
                     <div class="thumbnail">
                         <!--slider-->
                         <slider>
                             <div ng-repeat="slide in nbSlides.images" class="nb-image-container slide-animation" ng-show="slide.visible">
-                                <img src="{{slide.imageUrl}}"/>
+                                <img src="{{slide.imageUrl}}" />
                             </div>
                             <a class="arrow prev" href="#" ng-click="nbSlides.prev()"><i class="fa fa-2x fa-chevron-left"></i></a>
                             <a class="arrow next" href="#" ng-click="nbSlides.next();"><i class="fa fa-2x fa-chevron-right"></i></a>
@@ -38,7 +41,8 @@
                             </nav>
                         </slider>
                         <!--end slider-->
-                        <p><strong>Villa No: {{sales.villa.villaNo}}</strong>
+                        <p>
+                            
                         </p>
                         <p>Descripton: {{sales.villa.description}}</p>
                         <p>
@@ -48,7 +52,6 @@
                             </ul>
                         </p>
                     </div>
-
                 </div>
             </div>
             <hr />
@@ -93,8 +96,8 @@
                     <div class="form-group">
                         <label class="col-md-4 text-right">Amount:</label>
                         <div class="col-md-8">
-                            <input type="text" ng-model="sales.amount" class="form-control" />
-                            <span ng-show="errorState['vm.amount']">{{errorState['vm.amount']}}</span>
+                            <input type="text" ng-model="sales.amountPayable" class="form-control" />
+                            <span ng-show="errorState['vm.amountPayable']">{{errorState['vm.amountPayable']}}</span>
                         </div>
                     </div>
                 </div>
@@ -102,7 +105,7 @@
         </div>
     </div>
     <div>
-        <button class="btn btn-primary" ng-click="$ctrl.save()"><i class="fa fa-save"></i> Checkout</button>
+        <button class="btn btn-primary pull-right btn-lg" ng-click="$ctrl.save()"><i class="fa fa-save"></i> Checkout</button>
     </div>
 </form>
 

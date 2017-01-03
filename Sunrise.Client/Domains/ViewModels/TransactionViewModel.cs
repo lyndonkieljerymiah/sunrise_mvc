@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sunrise.Client.Domains.Models;
+﻿using System.Collections.Generic;
+using Sunrise.Maintenance.Model;
 
 namespace Sunrise.Client.Domains.ViewModels
 {
@@ -13,15 +9,14 @@ namespace Sunrise.Client.Domains.ViewModels
         public TransactionViewModel()
         {
             //get for tenant
-            this.Tenant = TenantRegisterViewModel.CreateDefault();
+            this.Tenant = new TenantRegisterViewModel();
             this.SalesRegister = new SalesRegisterViewModel();
         }
-
+        
         public TenantRegisterViewModel Tenant { get; set; }
         public SalesRegisterViewModel SalesRegister { get; set; }
 
         public string Template { get; set; }
-
 
         public void SetSelections(IEnumerable<Selection> selections)
         {

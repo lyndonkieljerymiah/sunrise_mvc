@@ -71,11 +71,9 @@ span[ng-show] {
   position: absolute;
   top: 3px;
   right: 3px;
-  border-radius: 5px;
   -webkit-border-radius: 5px;
-  -webkit-border-radius: 40%;
-  -moz-border-radius: 40%;
-  border-radius: 40%;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
 }
 .nb-card .nb-image {
   position: relative;
@@ -94,8 +92,9 @@ span[ng-show] {
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
   padding: 3px;
-  border-radius: 5px;
   -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   z-index: 6;
   top: 45%;
   left: 40%;
@@ -127,8 +126,9 @@ span[ng-show] {
 }
 .nb-card .nb-footer .nb-btn:hover {
   background-color: #808080;
-  border-radius: 15px;
   -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
   cursor: pointer;
   transition: all 0.5s ease;
 }
@@ -143,8 +143,8 @@ span[ng-show] {
   content: "";
 }
 .nb-slide {
-  width: 100%;
-  height: 200px;
+  width: 513px;
+  height: 342px;
   position: relative;
   overflow: hidden;
 }
@@ -154,10 +154,12 @@ span[ng-show] {
   left: 0;
   z-index: 1;
   overflow: hidden;
+  width: 513px;
+  height: 342px;
 }
 .nb-slide .nb-image-container img {
+  height: 100%;
   width: 100%;
-  height: 200px;
 }
 .nb-slide .arrow {
   position: absolute;
@@ -165,19 +167,15 @@ span[ng-show] {
   display: block;
   top: 60%;
   margin-top: -35px;
-  width: 36px;
-  height: 71px;
   outline: none;
   cursor: pointer;
   color: white;
 }
 .nb-slide .prev {
-  left: 20px;
-  transition: 0.2s linear all;
+  left: 5%;
 }
 .nb-slide .next {
-  right: 20px;
-  transition: 0.2s linear all;
+  right: 5%;
 }
 .nb-slide .nb-bulletin {
   position: absolute;
@@ -207,13 +205,9 @@ span[ng-show] {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  border-radius: 5px;
   -webkit-border-radius: 5px;
-  -webkit-border-radius: 40%;
-  -moz-border-radius: 40%;
-  border-radius: 40%;
-  transition: all 0.5s ease;
-  -webkit-transition: all 0.5s ease;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   -webkit-transition: background-color 0.25s, border-color 0.25s;
   -moz-transition: background-color 0.25s, border-color 0.25s;
   transition: background-color 0.25s, border-color 0.25s;
@@ -221,8 +215,6 @@ span[ng-show] {
 }
 .nb-slide .nb-bulletin ul li a:hover {
   background: #ccc;
-  transition: all 0.5s ease;
-  -webkit-transition: all 0.5s ease;
   -webkit-transition: background-color 0.25s, border-color 0.25s;
   -moz-transition: background-color 0.25s, border-color 0.25s;
   transition: background-color 0.25s, border-color 0.25s;
@@ -230,8 +222,6 @@ span[ng-show] {
 .nb-slide .nb-bulletin ul li a.active {
   border-color: #FFF;
   background-color: transparent;
-  transition: all 0.5s ease;
-  -webkit-transition: all 0.5s ease;
   -webkit-transition: background-color 0.25s, border-color 0.25s;
   -moz-transition: background-color 0.25s, border-color 0.25s;
   transition: background-color 0.25s, border-color 0.25s;

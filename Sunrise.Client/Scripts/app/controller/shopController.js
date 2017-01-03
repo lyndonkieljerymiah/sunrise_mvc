@@ -10,6 +10,7 @@
         $scope._spinnerLoading = true;
         villaDataManager.getAllVillas(
             function (data) {
+                console.log($scope);
                 $scope.villaGroups = data.villaGroups;
                 $scope._spinnerLoading = false;
             });

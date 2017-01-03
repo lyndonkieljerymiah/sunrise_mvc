@@ -15,7 +15,7 @@ namespace Sunrise.Client.Controllers
         }
 
         [Route("checkout/{villaId?}")]
-        public ViewResult Checkout(int villaId)
+        public ViewResult Checkout(string villaId)
         {
             ViewBag.Id = villaId;
             return View();

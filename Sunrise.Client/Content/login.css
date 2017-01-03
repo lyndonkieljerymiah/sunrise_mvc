@@ -1,4 +1,6 @@
-﻿/* Animation Keyframes */
+﻿@import url(http://fonts.googleapis.com/css?family=Exo:100,200,400);
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
+/* Animation Keyframes */
 @keyframes scale_header {
   0% {
     max-height: 0px;
@@ -58,7 +60,55 @@ body {
   align-items: center;
   position: relative;
   min-height: 100%;
-  background: #F1F1F1;
+  background: #F1F1F1 url('imgs/login-background.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+.transparent-login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 340px;
+  height: auto;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+}
+.transparent-login .input-group {
+  padding: 15px 0;
+}
+.transparent-login .input {
+  width: 250px;
+  height: 30px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 2px;
+  color: white;
+  font-family: 'Exo', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 4px;
+}
+.transparent-login .input:focus {
+  background-color: #fff;
+  color: #000;
+}
+.transparent-login .btn-login {
+  display: block;
+  padding: 10px;
+  background-color: #fefefe;
+  text-align: center;
+  width: 100%;
+  border: none;
+  margin: 10px 0;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  font-weight: bold;
+  color: #C62828;
+}
+.transparent-login .btn-login:hover {
+  cursor: pointer;
 }
 .login-container {
   display: flex;

@@ -1,6 +1,7 @@
 ﻿@using Sunrise.Client.Domains.ViewModels
 @using Sunrise.Client.Domains.ViewModels.Identity
 @model LoginViewModel
+
 @{
     ViewBag.Title = "Log in";
     Layout = null;
@@ -19,26 +20,30 @@
 </head>
 
 <body>
-    <div class="login-container">
+    <div class="transparent-login">
+
         <section class="login">
-            <header>
-                <h1>SunRise Web Portal</h1>
-                <h4>Use a local account to log in.</h4>
-            </header>
-            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form" }))
+            @using (Html.BeginForm("Login", "Account",
+                new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                @Html.TextBoxFor(m => m.Email, new { @class = "login-input", placeholder = "User", required = "required", autofocus = "autofocus" })
-                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-
-                @Html.PasswordFor(m => m.Password, new { @class = "login-input", placeholder = "Password", required = "required" })
-                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                <div class="submit-container">
-                    <button class="login-button">Log in</button>
+                <div class="input-group">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "input", placeholder = "User", required = "required", autofocus = "autofocus" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                 </div>
+
+                <div class="input-group">
+                    @Html.PasswordFor(m => m.Password, new { @class = "input", placeholder = "Password", required = "required" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
+
+                <button class="btn-login">Log in</button>
             }
         </section>
+
     </div>
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/angular")
+    @Scripts.Render("~/bundles/ui-bootstrap")
 </body>
 </html>

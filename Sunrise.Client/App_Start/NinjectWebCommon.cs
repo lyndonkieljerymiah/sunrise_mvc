@@ -1,8 +1,6 @@
 using System.Web.Http;
 using Ninject.Web.WebApi;
-using Sunrise.Client.Persistence.Abstract;
 using Sunrise.Client.Persistence.Manager;
-using Sunrise.Client.Persistence.Repositories;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Sunrise.Client.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(Sunrise.Client.App_Start.NinjectWebCommon), "Stop")]
@@ -67,7 +65,12 @@ namespace Sunrise.Client.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
+            kernel.Bind<Sunrise.VillaManagement.Abstract.IUnitOfWork>().To<Sunrise.VillaManagement.Persistence.Repository.UnitOfWork>();
+            kernel.Bind<Sunrise.TenantManagement.Abstract.IUnitOfWork>().To<Sunrise.TenantManagement.Persistence.Repository.UnitOfWork>();
+            kernel.Bind<Sunrise.Maintenance.Abstract.IUnitOfWork>().To<Sunrise.Maintenance.Persistence.Repository.UnitOfWork>();
+            kernel.Bind<Sunrise.TransactionManagement.Abstract.IUnitOfWork>().To<Sunrise.TransactionManagement.Persistence.Repository.UnitOfWork>();
+
+
             kernel.Bind<SalesDataManager>().To<SalesDataManager>();
             kernel.Bind<VillaDataManager>().To<VillaDataManager>();
             kernel.Bind<SelectionDataManager>().To<SelectionDataManager>();

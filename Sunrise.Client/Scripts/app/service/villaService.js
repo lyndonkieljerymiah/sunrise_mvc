@@ -7,6 +7,7 @@
         function getVilla(villaNo, action) {
             $http.get("/api/villa/" + villaNo)
                         .then(function (response) {
+                            
                             action(response.data);
                 });
         }

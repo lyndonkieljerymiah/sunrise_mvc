@@ -1,61 +1,44 @@
-﻿
-.shadow() {
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-}
-
-.radius() {
-    -webkit-border-radius: 40%;
-    -moz-border-radius: 40%;
-    border-radius: 40%;
-}
-
-.transition() {
-    -webkit-transition: background-color 0.25s, border-color 0.25s;
-    -moz-transition: background-color 0.25s, border-color 0.25s;
-    transition: background-color 0.25s, border-color 0.25s;
-}
+﻿@import url("mixin.less");
 
 .nb-slide {
-    width: 100%;
-    height: 200px;
+    width: 513px;
+    height: 342px;
     position: relative;
-    overflow:hidden;
+    overflow: hidden;
+
+
     .nb-image-container {
-        position:absolute;
-        top:0;
-        left:0;
+        position: absolute;
+        top: 0;
+        left: 0;
         z-index: 1;
-        overflow:hidden;
+        overflow: hidden;
+        width: 513px;
+        height: 342px;
+
         img {
+            height: 100%;
             width: 100%;
-            height: 200px;
         }
     }
 
     .arrow {
-        
         position: absolute;
         z-index: 10;
         display: block;
         top: 60%;
         margin-top: -35px;
-        width: 36px;
-        height: 71px;
         outline: none;
         cursor: pointer;
         color: white;
     }
 
     .prev {
-        left: 20px;
-        transition: 0.2s linear all;
+        left: 5%;
     }
 
     .next {
-        right: 20px;
-        transition: 0.2s linear all;
+        right: 5%;
     }
 
     .nb-bulletin {
@@ -63,6 +46,7 @@
         bottom: 5%;
         left: 0;
         z-index: 5;
+
         ul {
             list-style: none;
             margin: 0;
@@ -82,24 +66,22 @@
                     background: #fff;
                     border: 1px solid transparent;
                     outline: none;
-                    .shadow();
+                    .none-shadow();
                     .radius();
-                    .transition();
+                    .background-transition();
                     padding: 5px;
 
                     &:hover {
                         background: #ccc;
-                        .transition();
+                        .background-transition();
                     }
 
-                     &.active {
-                    border-color: #FFF;
-                    background-color: transparent;
-                     .transition();
-                }   
+                    &.active {
+                        border-color: #FFF;
+                        background-color: transparent;
+                        .background-transition();
+                    }
                 }
-
-               
             }
 
             &:after {

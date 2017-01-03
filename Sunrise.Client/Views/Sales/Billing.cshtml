@@ -1,5 +1,5 @@
 ﻿<div ng-controller="billingController as $ctrl" ng-init="$ctrl.init('@ViewBag.Id')">
-    <spinner show-loading="loading"></spinner>
+    <spinner></spinner>
     <div class="page-header">
         <h2>Billing</h2>
     </div>
@@ -14,11 +14,11 @@
                                 <div class="col-md-2">Name:</div>
                                 <div class="col-md-10">{{sales.register.name}}</div>
                             </div>
-                            <div class="row" ng-show="sales.register.individual">
+                            <div class="row" ng-show="sales.register.individual.qatarId">
                                 <div class="col-md-2">Qatar Id:</div>
                                 <div class="col-md-10">{{sales.register.individual.qatarId}}</div>
                             </div>
-                            <div class="row" ng-show="sales.register.company">
+                            <div class="row" ng-show="sales.register.company.crNo">
                                 <div class="col-md-2">CR No:</div>
                                 <div class="col-md-4">{{sales.register.company.crNo}}</div>
                                 <div class="col-md-2">Validity Date:</div>
@@ -51,12 +51,12 @@
                             </tr>
                             <tr>
                                 <td>{{sales.villa.villaNo}}</td>
-                                <td>{{sales.fullRentalType}}</td>
+                                <td>{{sales.rentalType}}</td>
                                 <td>{{sales.periodStart | date: "MM/dd/yyyy"}}</td>
                                 <td>{{sales.periodEnd | date: "MM/dd/yyyy"}}</td>
-                                <td>{{sales.amount | currency :"QR "}}</td>
+                                <td>{{sales.amountPayable | currency :"QR "}}</td>
                                 <td>{{sales.villa.ratePerMonth | currency :"QR "}}</td>
-                                <td>{{sales.villa.villaStatus}}</td>
+                                <td>{{sales.villa.status}}</td>
                             </tr>
                         </table>
                     </div>
@@ -71,7 +71,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Payment Details</div>
                 <div class="panel-body">
-                    <table class="table">
+                    <table class="table table-bordered table-condensed">
                         <tr>
                             <th>Date</th>
                             <th>Cheque No</th>
@@ -81,19 +81,21 @@
                             <th>Status Date</th>
                             <th>Remarks</th>
                         </tr>
-                        <tr ng-repeat="payment in sales.payments">
-                            <td>{{payment.paymentDate | date: 'mm/dd/yyyy'}}</td>
-                            <td>{{payment.chequeNo}}</td>
-                            <td>{{payment.coveredPeriod}}</td>
-                            <td>{{payment.amount | currency:"QR "}}</td>
-                            <td>{{payment.paymentStatus}}</td>
-                            <td>{{payment.statusDate}}</td>
-                            <td>{{payment.remarks}}</td>
-                        </tr>
+                        <tbody>
+                            <tr ng-repeat="payment in sales.payments">
+                                <td>{{payment.paymentDate | date: 'MM/dd/yyyy'}}</td>
+                                <td>{{payment.chequeNo}}</td>
+                                <td>{{payment.coveredPeriod}}</td>
+                                <td>{{payment.amount | currency:"QR "}}</td>
+                                <td>{{payment.status}}</td>
+                                <td>{{payment.statusDate | date: 'MM/dd/yyyy'}}</td>
+                                <td>{{payment.remarks}}</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
                 <div class="panel-footer">
-                    <button class="btn btn-primary pull-right" ng-click="$ctrl.openPaymentDialog()">Add Payment</button>
+                    <button class="btn btn-primary pull-right" ng-click="$ctrl.openPaymentDialog()"><i class="fa fa-credit-card"></i> Add Payment</button>
                     <div style="clear:both"></div>
                     <!-- template -->
                     <script type="text/ng-template" id="myModalContent.html">
@@ -174,8 +176,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-primary" ng-click="$ctrl.save()">Save</button>
-                                <button class="btn btn-danger" ng-click="$ctrl.cancel()">Cancel</button>
+                                <button class="btn btn-primary" ng-click="$ctrl.save()"><i class="fa fa-save"></i> Save</button>
+                                <button class="btn btn-danger" ng-click="$ctrl.cancel()"><i class="fa fa-undo"></i> Cancel</button>
                             </div>
                         </form>
                     

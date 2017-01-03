@@ -5,7 +5,8 @@
                
                 $http.get("/api/sales/list")
                    .then(
-                   function (response) {
+                   function (response)
+                   {
                        var data = response.data;
                        var counterRow = 0;
                        var virtVillas = [];
@@ -17,6 +18,12 @@
                                virtVillas.push(rows);
                                rows = [];
                            }
+                           else if (data.length < 3) {
+                               virtVillas.push(rows);
+                           }
+                       }
+                       if (rows.length > 0) {
+                           virtVillas.push(rows);
                        }
                        data.villaGroups = virtVillas;
                        

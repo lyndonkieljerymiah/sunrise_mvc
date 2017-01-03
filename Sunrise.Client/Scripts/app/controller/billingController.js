@@ -4,11 +4,11 @@
             var $ctrl = this;
 
             function start() {
-                $scope.spinnerLoading = true;
-            }
+                $scope._spinnerLoading = true;
+            }   
 
             function stop() {
-                $scope.spinnerLoading = false;
+                $scope._spinnerLoading = false;
             }
 
             function init(transactionId) {
@@ -21,10 +21,11 @@
             }
 
             function openPaymentDialog() {
-
+                start();
                 paymentDataManager.createPayment(function (data) {
                     data.salesTransactionId = $scope.sales.id;
                     data.villaId = $scope.sales.villa.id;
+                    data.amount = $scope.sales.villa.ratePerMonth;
 
                     var modalInstance = $uibModal
                         .open({
@@ -41,46 +42,11 @@
                     modalInstance.result.then(function (returnData) {
                         init(returnData);
                     });
+                    stop();
+
                 });
 
 
-                /*
-                $http.get("/api/sales/payment")
-                    .then(function (response) {
-        
-                        var payment = response.data;
-        
-                        payment.salesTransactionId = $scope.sales.id;
-                        payment.villaId = $scope.sales.villa.id;
-                        payment.paymentDate = new Date(payment.paymentDate);
-                        payment.coveredPeriodFrom = new Date(payment.coveredPeriodFrom);
-                        payment.coveredPeriodTo = new Date(payment.coveredPeriodTo);
-        
-                        var modalInstance = $uibModal
-                            .open({
-                                size: 'lg',
-                                backdrop: false,
-                                animation: true,
-                                templateUrl: "myModalContent.html",
-                                controller: "paymentController",
-                                controllerAs: "$ctrl"
-                            });
-        
-                        modalInstance.result.then(function () {
-                            $http.post("/api/sales/payment", payment)
-                            .then(
-                                    function (response) {
-                                        if (response.data.success) {
-                                            $ctrl.init(payment.salesTransactionId);
-                                        }
-                                    },
-                                    function (response) {
-                                        $scope.errorState = modelStateValidation.parseError(response.data);
-                                        console.log($scope.errorState);
-                                    }
-                            );
-                        });
-                    });*/
             }
 
             return {
@@ -102,14 +68,17 @@ mainApp.controller("paymentController",
         }
 
         this.save = function () {
+            $scope._spinnerLoading = true;
             paymentDataManager.save(this.payment,
                     function (response) {
                         if (response.success) {
                             $uibModalInstance.close($ctrl.payment.salesTransactionId);
+                            $scope._spinnerLoading = false;
                         }
                     },
                     function (response) {
                         $scope.errorState = response;
+                        $scope._spinnerLoading = false;
                     });
         }
 
@@ -123,6 +92,7 @@ mainApp.controller("paymentController",
                 payment.chequeNo = "";
                 payment.chequeFieldDisabled = false;
             }
+            $scope.errorState = null;
         }
 
 

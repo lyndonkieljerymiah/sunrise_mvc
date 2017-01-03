@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using Sunrise.Client.Domains.ViewModels;
-using Sunrise.Client.Persistence.Abstract;
+﻿using System.Web.Mvc;
 
 namespace Sunrise.Client.Controllers
 {
@@ -13,14 +6,7 @@ namespace Sunrise.Client.Controllers
     [RoutePrefix("Tenant")]
     public class TenantController : Controller
     {
-        private readonly IUnitOfWork _uw;
-
-
-        public TenantController(IUnitOfWork uw)
-        {
-            _uw = uw;
-        }
-
+        
         // GET: Tenant
         [Route("List")]
         public ActionResult Index()
@@ -35,8 +21,6 @@ namespace Sunrise.Client.Controllers
             return PartialView("_Register");
         }
 
-
-      
 
     }
 }

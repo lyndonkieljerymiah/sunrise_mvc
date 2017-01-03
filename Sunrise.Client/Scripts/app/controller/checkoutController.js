@@ -33,8 +33,10 @@ mainApp.controller("salesTransactionController",
         function create(villaId, tenantType) {
             $scope._spinnerLoading = true;
             isPageLoad = true;
+
             salesDataManager.createCheckout(villaId, tenantType,
-                function (data) {
+                function (data)
+                {
                     $scope.sales = data;
                     $scope.nbSlides.images = data.images;
                     $scope.template = templatePath + data.register.tenantType;
@@ -43,6 +45,7 @@ mainApp.controller("salesTransactionController",
         }
 
         function init(villaId) {
+
             create(villaId, null);
         }
 
