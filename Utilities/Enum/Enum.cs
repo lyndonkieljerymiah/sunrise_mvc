@@ -21,10 +21,27 @@ namespace Utilities.Enum
 
     public struct CustomResult
     {
-        public bool Success;
-        public List<string> Errors;
-        public object ReturnObject;
-        public IEnumerable<object> ReturnObjects;
+        public bool Success { get; set; }
+        public List<string> Errors { get;private set; }
+        public object ReturnObject { get; set; }
+        public ICollection<object> ReturnObjects { get; set; }
+        
+        public CustomResult(List<string> errors)
+        {
+            Success = false;
+            Errors = errors;
+            ReturnObject = new object();
+            ReturnObjects = new HashSet<object>();
+        }
+
+        public void AddError(string error)
+        {
+            if (Errors == null)
+                Errors = new List<string>();
+            Errors.Add(error);
+        }
+
+       
     }
 
 

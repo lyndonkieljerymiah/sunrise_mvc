@@ -25,6 +25,7 @@ namespace Sunrise.TransactionManagement.DTO
         public decimal Amount { get; set; }
 
         public string Status { get; private set; }
+        public string StatusCode { get; set; }
         public DateTime? StatusDate { get; private set; }
 
         public string Remarks { get; set; }

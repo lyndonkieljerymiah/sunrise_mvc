@@ -3,7 +3,7 @@
 
 /*services*/
 mainApp.service("spinnerManager",
-    function() {
+    function () {
         var $ctrl = this;
 
         this.spinnerLoading = false;
@@ -12,7 +12,7 @@ mainApp.service("spinnerManager",
             $ctrl.spinnerLoading = true;
         }
 
-        this.stop = function() {
+        this.stop = function () {
             $ctrl.spinnerLoading = false;
         }
     });
@@ -78,7 +78,7 @@ mainApp.directive("slider",
                         ? scope.nbSlides.currentIndex--
                         : scope.nbSlides.currentIndex = scope.nbSlides.images.length - 1;
                     },
-                    chooseIndex: function(index) {
+                    chooseIndex: function (index) {
                         scope.nbSlides.currentIndex = index;
                     }
                 }
@@ -134,7 +134,7 @@ mainApp.animation('.slide-animation',
 
 
 mainApp.directive("spinner",
-    function(spinnerManager) {
+    function (spinnerManager) {
         return {
             restrict: "EA",
             template: "<div class='spinner' ng-show='_spinnerLoading'><div class='icon'></div><div class='overlay'></div></div>"

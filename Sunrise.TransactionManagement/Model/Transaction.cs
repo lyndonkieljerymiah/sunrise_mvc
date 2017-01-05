@@ -12,17 +12,19 @@ namespace Sunrise.TransactionManagement.Model
 
         private readonly IRateCalculation _rateCalculation;
 
+
+        #region Factory
         public static Transaction CreateNew(int defaultMonthPeriod,decimal ratePerMonth,IRateCalculation rateCalculation)
         {
             return new Transaction(defaultMonthPeriod,ratePerMonth, rateCalculation);
         }
 
-        public static Transaction Map(string rentalType,string contractStatus,DateTime periodStart,DateTime periodEnd,
+        public static Transaction Map(string code,string rentalType,string contractStatus,DateTime periodStart,DateTime periodEnd,
             decimal amountPayable,string villaId,string tenantId,string userId)
         {
-
             var transaction = new Transaction
             {
+                Code = code,
                 RentalType = rentalType,
                 ContractStatus = contractStatus,
                 PeriodStart = periodStart,
@@ -52,7 +54,7 @@ namespace Sunrise.TransactionManagement.Model
 
         }
 
-
+        #endregion
 
         public Transaction()
         {
@@ -60,7 +62,10 @@ namespace Sunrise.TransactionManagement.Model
             this.DateCreated = DateTime.Today;
             this.Status = "ssp";
         }
+
+
         public string Id { get; private set; }
+        public string Code { get; set; }
         public DateTime DateCreated { get; private set; }
 
         public string RentalType { get; set; }
@@ -82,8 +87,6 @@ namespace Sunrise.TransactionManagement.Model
         {   
             this.AmountPayable = _rateCalculation.Calculate(rate, this.PeriodStart.Date, this.PeriodEnd.Date);
         }
-
-
         public bool AddPayment(
             string paymentType,string paymentMode,string chequeNo,
             string bank,DateTime coveredFrom,DateTime coveredTo,
@@ -95,14 +98,26 @@ namespace Sunrise.TransactionManagement.Model
             {
                 var payment = Payment.Map(paymentType, paymentMode, chequeNo, bank, coveredFrom, coveredTo, amount, remarks);
                 Payments.Add(payment);
-                this.Status = "sscn";
                 return true;
             }
             return false;
-            
         }
 
+        public void UpdatePayment(int id,string status,string remarks)
+        {
+            var payment = this.Payments.SingleOrDefault(p => p.Id == id);
+            payment.SetStatus(status, remarks);
+        }
 
-
+        public void ActivateStatus()
+        {
+            this.Status = "sscn";
+        }
+        
+        public decimal GetBalanceDue()
+        {
+            var totalPayment = this.Payments.Sum(p => p.Amount);
+            return AmountPayable - totalPayment;
+        }
     }
 }

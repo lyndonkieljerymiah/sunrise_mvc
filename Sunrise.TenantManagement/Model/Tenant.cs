@@ -81,7 +81,7 @@ namespace Sunrise.TenantManagement.Model
             this.Code = crNo;
             this.Company = new Company(this.Id,crNo, businessType, validityDate, representative);
         }
-
+        
 
         public void AddAttributeIndividual(DateTime bday, GenderEnum gender,string qatarId, string company)
         {

@@ -71,7 +71,7 @@ namespace Sunrise.Client.App_Start
             kernel.Bind<Sunrise.TransactionManagement.Abstract.IUnitOfWork>().To<Sunrise.TransactionManagement.Persistence.Repository.UnitOfWork>();
 
 
-            kernel.Bind<SalesDataManager>().To<SalesDataManager>();
+            kernel.Bind<ContractDataManager>().To<ContractDataManager>();
             kernel.Bind<VillaDataManager>().To<VillaDataManager>();
             kernel.Bind<SelectionDataManager>().To<SelectionDataManager>();
             kernel.Bind<TenantDataManager>().To<TenantDataManager>();

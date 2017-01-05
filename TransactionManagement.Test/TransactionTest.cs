@@ -31,7 +31,7 @@ namespace TransactionManagement.Test
             using (var uow = new UnitOfWork())
             {
 
-                var transactionToSave = Transaction.Map("rtff", "csl",
+                var transactionToSave = Transaction.Map("V102","rtff", "csl",
                     Convert.ToDateTime("01/03/2017"), Convert.ToDateTime("01/03/2018"),
                     84000m,
                     "32eb3206-1e4d-44f2-a414-4fa185022867",
@@ -69,6 +69,25 @@ namespace TransactionManagement.Test
             }
         }
 
+        [TestMethod]
+        public async Task Can_Get_Transaction_By_Code()
+        {
+            try
+            {
+                using (var uow = new UnitOfWork())
+                {
+                    var transaction = await uow.Transactions.GetContractByCode("VS102");
+                    var totalBalance = transaction.GetBalanceDue();
+
+                    Assert.IsNotNull(transaction);
+                    Assert.AreNotEqual(0, totalBalance);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
 
 
     }

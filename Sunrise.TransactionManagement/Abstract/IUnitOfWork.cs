@@ -9,6 +9,7 @@ namespace Sunrise.TransactionManagement.Abstract
     public interface IUnitOfWork : IDisposable
     {
         ITransactionRepository Transactions { get; }
+        IPaymentRepository Payments { get;}
         Task SaveChanges();
     }
 }

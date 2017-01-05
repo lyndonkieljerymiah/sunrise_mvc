@@ -49,21 +49,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\IPaymentRepository.cs" />
     <Compile Include="Abstract\ITransactionRepository.cs" />
     <Compile Include="Abstract\IUnitOfWork.cs" />
     <Compile Include="DTO\PaymentView.cs" />
     <Compile Include="DTO\TenantView.cs" />
+    <Compile Include="DTO\TransactionDTO.cs" />
     <Compile Include="DTO\TransactionView.cs" />
     <Compile Include="DTO\VillaView.cs" />
     <Compile Include="Migrations\201701021644453_Initial.cs" />
     <Compile Include="Migrations\201701021644453_Initial.Designer.cs">
       <DependentUpon>201701021644453_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701040855584_UpdateCodeInTransaction.cs" />
+    <Compile Include="Migrations\201701040855584_UpdateCodeInTransaction.Designer.cs">
+      <DependentUpon>201701040855584_UpdateCodeInTransaction.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Payment.cs" />
     <Compile Include="Model\Transaction.cs" />
     <Compile Include="Persistence\AppDbContext.cs" />
     <Compile Include="Persistence\ReferenceDbContext.cs" />
+    <Compile Include="Persistence\Repository\PaymentRepository.cs" />
     <Compile Include="Persistence\Repository\TransactionRepository.cs" />
     <Compile Include="Persistence\Repository\UnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -82,6 +89,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201701021644453_Initial.resx">
       <DependentUpon>201701021644453_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701040855584_UpdateCodeInTransaction.resx">
+      <DependentUpon>201701040855584_UpdateCodeInTransaction.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

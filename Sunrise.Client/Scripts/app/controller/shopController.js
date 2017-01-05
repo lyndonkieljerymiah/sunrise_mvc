@@ -1,4 +1,4 @@
-﻿mainApp.controller("shopController",function ($scope,villaDataManager,salesDataManager) {
+﻿mainApp.controller("shopController",function ($scope,villaDataManager,contractDataManager) {
 
     var $ctrl = this;
     $scope.villas = [];
@@ -10,7 +10,6 @@
         $scope._spinnerLoading = true;
         villaDataManager.getAllVillas(
             function (data) {
-                console.log($scope);
                 $scope.villaGroups = data.villaGroups;
                 $scope._spinnerLoading = false;
             });
@@ -20,7 +19,7 @@
      * TODO: proceed to checkout
      *****************************************************/
     function select(villaId) {
-        salesDataManager.redirectToCheckout(villaId);
+        contractDataManager.redirectToContract(villaId);
     }
 
     /*

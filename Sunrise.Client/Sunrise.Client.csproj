@@ -231,12 +231,16 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\Api\SalesController.cs" />
+    <Compile Include="Controllers\Api\BillingController.cs" />
+    <Compile Include="Controllers\Api\ReceivableController.cs" />
+    <Compile Include="Controllers\Api\ContractController.cs" />
     <Compile Include="Controllers\Api\TenantController.cs" />
     <Compile Include="Controllers\Api\VillaController.cs" />
+    <Compile Include="Controllers\BillingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\SalesController.cs" />
+    <Compile Include="Controllers\ReceivableController.cs" />
+    <Compile Include="Controllers\ContractController.cs" />
     <Compile Include="Controllers\TenantController.cs" />
     <Compile Include="Domains\Models\Identity\User.cs" />
     <Compile Include="Domains\ViewModels\Identity\ForgotPasswordViewModel.cs" />
@@ -278,7 +282,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Persistence\Context\AppDbContext.cs" />
-    <Compile Include="Persistence\Manager\SalesDataManager.cs" />
+    <Compile Include="Persistence\Manager\ContractDataManager.cs" />
     <Compile Include="Persistence\Manager\SelectionDataManager.cs" />
     <Compile Include="Persistence\Manager\TenantDataManager.cs" />
     <Compile Include="Persistence\Manager\VillaDataManager.cs" />
@@ -311,11 +315,13 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\app\app-route.js" />
-    <Content Include="Scripts\app\controller\checkoutController.js" />
+    <Content Include="Scripts\app\controller\contractController.js" />
     <Content Include="Scripts\app\controller\billingController.js" />
+    <Content Include="Scripts\app\controller\receivableController.js" />
     <Content Include="Scripts\app\controller\shopController.js" />
     <Content Include="Scripts\app\data\payment-manager.data.js" />
-    <Content Include="Scripts\app\data\sales-manager.data.js" />
+    <Content Include="Scripts\app\data\receivable-manager.data.js" />
+    <Content Include="Scripts\app\data\contract-manager.data.js" />
     <Content Include="Scripts\app\data\tenant-manager.data.js" />
     <Content Include="Scripts\app\data\villa-manager.data.js" />
     <Content Include="Scripts\app\service\utility.service.js" />
@@ -352,7 +358,6 @@
     <Content Include="Scripts\libs\angularjs\angular.js" />
     <Content Include="Scripts\libs\angularjs\angular.min.js" />
     <Content Include="Scripts\app\app-bootstrap.js" />
-    <Content Include="Scripts\app\controller\salesController.js" />
     <Content Include="Scripts\app\controller\tenantRegisterController.js" />
     <Content Include="Scripts\app\directive\app-directives.js" />
     <Content Include="Scripts\app\service\salesService.js" />
@@ -1174,11 +1179,13 @@
     <Content Include="Views\Tenant\SalesView.cshtml" />
     <Content Include="Views\Tenant\ProfileView.cshtml" />
     <Content Include="Views\Tenant\Index.cshtml" />
-    <Content Include="Views\Sales\Transaction.cshtml" />
-    <Content Include="Views\Sales\Index.cshtml" />
-    <Content Include="Views\Sales\Checkout.cshtml" />
-    <Content Include="Views\Sales\_SalesView.cshtml" />
-    <Content Include="Views\Sales\Billing.cshtml" />
+    <Content Include="Views\Contract\Transaction.cshtml" />
+    <Content Include="Views\Contract\Index.cshtml" />
+    <Content Include="Views\Contract\Contract.cshtml" />
+    <Content Include="Views\Billing\Billing.cshtml" />
+    <Content Include="Views\Receivable\Index.cshtml" />
+    <Content Include="Views\Billing\List.cshtml" />
+    <Content Include="Views\Receivable\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

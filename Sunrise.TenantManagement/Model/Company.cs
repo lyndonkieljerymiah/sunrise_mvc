@@ -8,7 +8,7 @@ namespace Sunrise.TenantManagement.Model
 {
     public class Company
     {
-        public Company(string tenantId,string crNo, string businessType, DateTime validityDate, string representative)
+        public Company(string tenantId,string crNo, string businessType, DateTime validityDate, string representative) : this()
         {
             this.CrNo = crNo;
             this.ValidityDate = validityDate;
@@ -19,7 +19,7 @@ namespace Sunrise.TenantManagement.Model
 
         public Company()
         {
-
+            this.ValidityDate = DateTime.Today;
         }
 
         public string TenantId { get; set; }

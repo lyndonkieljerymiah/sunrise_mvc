@@ -12,8 +12,10 @@
         <div class="form-group">
             <label for="name" class="col-md-3 text-right">Full Name:</label>
             <div class="col-md-9">
-                <input type="text" id="name" name="name" ng-model="sales.register.name" class="form-control" />
-                <span ng-show="errorState['vm.register.name']">{{errorState['vm.register.name']}}</span>
+                <input type="text" id="name" name="name" class="form-control"
+                       required
+                       ng-model="sales.register.name" />
+                <span ng-hide="sales.register.name.length > 0">{{errorState['vm.register.name']}}</span>
             </div>
         </div>
         <div class="form-group">
@@ -23,7 +25,6 @@
                     <option value="0">Male</option>
                     <option value="1">Female</option>
                 </select>
-                <span ng-show="errorState['vm.register.individual.gender']">{{errorState['vm.register.individual.gender']}}</span>
             </div>
         </div>
         <div class="form-group">
@@ -32,9 +33,10 @@
                 <div>
                     <input type="text" id="qatarId" name="qatarId"
                            ng-model="sales.register.individual.qatarId"
+                            required
                            class="form-control"/>
                 </div>
-                <span ng-show="errorState['vm.register.individual.qatarid']">{{errorState['vm.register.individual.qatarid']}}</span>
+                <span ng-hide="sales.register.individual.qatarId.length > 0">{{errorState['vm.register.individual.qatarid']}}</span>
             </div>
         </div>
         <div class="form-group">
@@ -43,7 +45,7 @@
                 <input type="date"
                        ng-model="sales.register.individual.birthday"
                        class="form-control" />
-                <span ng-show="errorState['vm.register.individual.birthday']">{{errorState['vm.register.individual.birthday']}}</span>
+                <span ng-hide="sales.register.individual.birthday.length > 0">{{errorState['vm.register.individual.birthday']}}</span>
             </div>
         </div>
         <div class="form-group">
@@ -52,7 +54,7 @@
                 <input type="text" name="company" , id="company"
                        ng-model="sales.register.individual.company"
                        class="form-control" />
-                <span ng-show="errorState['vm.register.individual.company']">{{errorState['vm.register.individual.company']}}</span>
+                <span ng-hide="sales.register.individual.company.length > 0">{{errorState['vm.register.individual.company']}}</span>
             </div>
         </div>
     }
@@ -64,8 +66,7 @@
                 <input type="text" name="businessName" id="businessName"
                        ng-model="sales.register.name"
                        class="form-control" />
-
-                <span ng-show="errorState['vm.register.name']">{{errorState['vm.register.name']}}</span>
+                <span ng-hide="sales.register.name.length > 0">{{errorState['vm.register.name']}}</span>
             </div>
         </div>
         <div class="form-group">
@@ -79,21 +80,21 @@
             <label class="col-md-3 text-right">CR No</label>
             <div class="col-md-9">
                 <input type="text" class="form-control" ng-model="sales.register.company.crNo" />
-                <span ng-show="errorState['vm.register.company.crno']">{{errorState['vm.register.company.crno']}}</span>
+                <span ng-show="sales.register.company.crNo.length > 0">{{errorState['vm.register.company.crno']}}</span>
             </div>
         </div>
         <div class="form-group">
             <label class="col-md-3 text-right">Validity Date:</label>
             <div class="col-md-9">
                 <input type="date" ng-model="sales.register.company.validityDate" class="form-control" />
-                <span ng-show="errorState['vm.register.company.validitydate']">{{errorState['vm.register.company.validitydate']}}</span>
+                <span ng-hide="sales.register.company.validityDate.length > 0">{{errorState['vm.register.company.validitydate']}}</span>
             </div>
         </div>
         <div class="form-group">
             <label class="col-md-3 text-right">Representative:</label>
             <div class="col-md-9">
                 <input type="text" class="form-control" ng-model="sales.register.company.representative" />
-                <span ng-show="errorState['vm.Register.company.representative']">{{errorState['vm.register.company.representative']}}</span>
+                <span ng-hide="sales.register.company.representative.length > 0">{{errorState['vm.register.company.representative']}}</span>
             </div>
         </div>
     }
@@ -105,7 +106,7 @@
         <label class="col-md-3 text-right">Email Address:</label>
         <div class="col-md-9">
             <input type="email" class="form-control" ng-model="sales.register.emailAddress" />
-            <span ng-show="errorState['vm.register.emailaddress']">{{errorState['vm.register.emailaddress']}}</span>
+            <span ng-hide="sales.register.emailAddress.length > 0">{{errorState['vm.register.emailaddress']}}</span>
         </div>
     </div>
     <div class="form-group">
@@ -118,7 +119,7 @@
         <label class="col-md-3 text-right">Mobile No:</label>
         <div class="col-md-9">
             <input type="tel" class="form-control" ng-model="sales.register.mobileNo" />
-            <span ng-show="errorState['vm.register.mobileno']">{{errorState['vm.register.mobileno']}}</span>
+            <span ng-hide="sales.register.mobileNo.length > 0">{{errorState['vm.register.mobileno']}}</span>
         </div>
     </div>
     <div class="form-group">
@@ -135,7 +136,7 @@
         <label class="col-md-3 text-right">Address 1:</label>
         <div class="col-md-9">
             <input type="text" class="form-control" ng-model="sales.register.address1" />
-            <span ng-show="errorState['vm.register.address1']">{{errorState['vm.register.address1']}}</span>
+            <span ng-hide="sales.register.address1.length > 0">{{errorState['vm.register.address1']}}</span>
         </div>
     </div>
 
@@ -150,14 +151,14 @@
         <label class="col-md-3 text-right">City</label>
         <div class="col-md-9">
             <input type="text" ng-model="sales.register.city" class="form-control" />
-            <span ng-show="errorState['vm.register.city']">{{errorState['vm.register.city']}}</span>
+            <span ng-hide="sales.register.city.length > 0">{{errorState['vm.register.city']}}</span>
         </div>
     </div>
     <div class="form-group">
         <label class="col-md-3 text-right">Postal Code</label>
         <div class="col-md-9">
             <input type="text" ng-model="sales.register.postalCode" class="form-control" />
-            <span ng-show="errorState['vm.register.postalcode']">{{errorState['vm.register.postalcode']}}</span>
+            <span ng-hide="sales.register.postalCode">{{errorState['vm.register.postalcode']}}</span>
         </div>
     </div>
 

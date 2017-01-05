@@ -6,9 +6,15 @@ html {
     height: 100%;
 }
 
+
+button,
+.btn {
+    outline:0;
+}
+
 body {
     font-family: 'Open Sans', sans-serif;
-    padding-top: 50px;
+    padding-top: 90px;
     background: #F1F1F1 url('imgs/noise_lines.png') top repeat;
     height: 100%;
 }
@@ -19,7 +25,7 @@ body {
 }
 
 .box-content {
-    padding-top: 10px ;
+    padding-top: 10px;
     padding-bottom: 15px;
 }
 
@@ -29,11 +35,12 @@ body {
     height: 100%;
     position: fixed;
     overflow: hidden;
-    top:0;
-    left:0;
+    top: 0;
+    left: 0;
     background: rgba(0,0,0,0.8);
     text-align: center;
     z-index: 1000;
+
     .overlay {
         position: absolute;
         top: 100%;
@@ -48,12 +55,12 @@ body {
         height: 120px;
         position: absolute;
         top: 40%;
-        left: 50%
+        left: 50%;
     }
 }
 
 /*error*/
-span[ng-show] {
+span[ng-show], span[ng-hide] {
     font-size: 12px;
     font-weight: bold;
     color: #ff0000;
@@ -61,9 +68,49 @@ span[ng-show] {
 
 /* content */
 .box-container {
-
 }
 
+
+/*menu*/
+.nb-nav-menu {
+    width: 100%;
+    background-color: #e6e6e6;
+
+    .nb-module {
+        width: 60%;
+        margin: 0 auto;
+        ul {
+            list-style: none;
+            display: block;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0;
+
+            li {
+                float: left;
+                width: 28%;
+
+                a {
+                    display: block;
+                    padding: 15px 10px;
+                    text-decoration: none;
+                    margin-right: 2%;
+                    text-align:center;
+                    width: 98%;
+                    &:hover {
+                        background: rgba(0,0,0,0.4);
+                    }
+                }
+            }
+
+            &:after {
+                clear: both;
+                display: table;
+                content: "";
+            }
+        }
+    }
+}
 
 @import url("parts/box.less");
 

@@ -12,7 +12,7 @@ namespace Sunrise.TransactionManagement.DTO
     {
         [Key]
         public string Id { get; private set; }
-
+        public string Code { get; set; }
         public DateTime DateCreated { get; private set; }
 
         public string RentalType { get; set; }
@@ -23,6 +23,7 @@ namespace Sunrise.TransactionManagement.DTO
         public Decimal AmountPayable { get; set; }
 
         public string Status { get; set; }
+        public string StatusCode { get; set; }
 
         public string VillaId { get; set; }
         public string TenantId { get; set; }
@@ -35,5 +36,11 @@ namespace Sunrise.TransactionManagement.DTO
 
         [ForeignKey("VillaId")]
         public virtual VillaView Villa { get; set; }
+
+        public decimal GetBalanceDue()
+        {
+            var totalPayment = this.Payments.Sum(p => p.Amount);
+            return AmountPayable - totalPayment;
+        }
     }
 }

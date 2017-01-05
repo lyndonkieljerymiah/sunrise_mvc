@@ -16,16 +16,21 @@
 </head>
 <body ng-app="mainApp" ng-cloak>
     <div class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
+        <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Sunrise Web Portal", "Index", "Sales", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Sunrise Web Portal", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="@Url.Action("Index","Home")"><i class="fa fa-home"></i> Contract</a></li>
+                    <li class="active"><a href="@Url.Action("List","Billing")"><i class="fa fa-dollar"></i> Billing</a></li>
+                    <li class="active"><a href="@Url.Action("Index","Receivable")">Payment</a></li>
+                </ul>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
@@ -42,6 +47,7 @@
     @Scripts.Render("~/bundles/angular")
     @Scripts.Render("~/bundles/ui-bootstrap")
     @Scripts.Render("~/bundles/app")
+
     <!--CDN link for  TweenMax-->
     <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js"></script>
     @RenderSection("scripts", required: false)

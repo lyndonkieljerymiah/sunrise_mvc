@@ -30,11 +30,12 @@ namespace Sunrise.Client
                       "~/Scripts/libs/angularjs/angular-animate.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
-                "~/Scripts/app/app-bootstrap.js"));
+                "~/Scripts/app/app-bootstrap.js"
+                ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/font-awesome.css",
-                      "~/Content/bootstrap.css",
+                      "~/Content/bootstrap-slate.css",
                       "~/Content/default.css"));
 
             bundles.Add(new StyleBundle("~/Content/login").Include(

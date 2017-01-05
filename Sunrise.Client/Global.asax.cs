@@ -27,8 +27,8 @@ namespace Sunrise.Client
             {
 
                 cfg.CreateMap<Villa, VillaViewModel>().ReverseMap();
-
-
+                
+                #region TenantView to ViewModel Map
                 cfg.CreateMap<IndividualView, IndividualViewModel>().ReverseMap();
                 cfg.CreateMap<CompanyView, CompanyViewModel>().ReverseMap();
                 cfg.CreateMap<TenantView, TenantRegisterViewModel>()
@@ -39,7 +39,9 @@ namespace Sunrise.Client
                     .ForMember(dest => dest.Company, opts => opts.Condition(src => (src.Company != null)))
                     .ForMember(dest => dest.Individual, opts => opts.Condition(src => (src.Individual != null)))
                     .ReverseMap();
+                #endregion
 
+                #region Tenant to ViewModel Map
                 cfg.CreateMap<Individual, IndividualViewModel>().ReverseMap();
                 cfg.CreateMap<Company, CompanyViewModel>().ReverseMap();
                 cfg.CreateMap<Tenant, TenantRegisterViewModel>()
@@ -49,6 +51,7 @@ namespace Sunrise.Client
                     .ForMember(dest => dest.PostalCode, opts => opts.MapFrom(src => src.Address.PostalCode))
                     .ForMember(dest => dest.Company, opts => opts.Condition(src => (src.Company != null)))
                     .ForMember(dest => dest.Individual, opts => opts.Condition(src => (src.Individual != null)));
+                #endregion
 
 
                 cfg.CreateMap<Payment, PaymentViewModel>();
@@ -56,13 +59,14 @@ namespace Sunrise.Client
                     .ForMember(dest => dest.Status, opts => opts.Ignore());
                 cfg.CreateMap<PaymentView, PaymentViewModel>().ReverseMap();
 
+                #region VillaView to ViewModel
                 cfg.CreateMap<VillaView, VillaViewModel>().ReverseMap();
                 cfg.CreateMap<TransactionView, SalesViewModel>()
                   .ForMember(dest => dest.Villa, opts => opts.MapFrom(src => src.Villa))
                   .ForMember(dest => dest.Register, opts => opts.MapFrom(src => src.Tenant))
                   .ForMember(dest => dest.Payments, opts => opts.MapFrom(scr => scr.Payments))
                   .ReverseMap();
-
+                #endregion
 
                 cfg.CreateMap<Transaction, SalesRegisterViewModel>().ReverseMap();
             });

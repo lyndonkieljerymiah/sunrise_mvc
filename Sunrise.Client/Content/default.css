@@ -2,9 +2,13 @@
 html {
   height: 100%;
 }
+button,
+.btn {
+  outline: 0;
+}
 body {
   font-family: 'Open Sans', sans-serif;
-  padding-top: 50px;
+  padding-top: 90px;
   background: #F1F1F1 url('imgs/noise_lines.png') top repeat;
   height: 100%;
 }
@@ -12,7 +16,7 @@ body {
   padding: 15px;
 }
 .box-content {
-  padding-top: 10px ;
+  padding-top: 10px;
   padding-bottom: 15px;
 }
 /*spinner*/
@@ -43,12 +47,49 @@ body {
   left: 50%;
 }
 /*error*/
-span[ng-show] {
+span[ng-show],
+span[ng-hide] {
   font-size: 12px;
   font-weight: bold;
   color: #ff0000;
 }
 /* content */
+/*menu*/
+.nb-nav-menu {
+  width: 100%;
+  background-color: #e6e6e6;
+}
+.nb-nav-menu .nb-module {
+  width: 60%;
+  margin: 0 auto;
+}
+.nb-nav-menu .nb-module ul {
+  list-style: none;
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+.nb-nav-menu .nb-module ul li {
+  float: left;
+  width: 28%;
+}
+.nb-nav-menu .nb-module ul li a {
+  display: block;
+  padding: 15px 10px;
+  text-decoration: none;
+  margin-right: 2%;
+  text-align: center;
+  width: 98%;
+}
+.nb-nav-menu .nb-module ul li a:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+.nb-nav-menu .nb-module ul:after {
+  clear: both;
+  display: table;
+  content: "";
+}
 .nb-card {
   font-family: 'Open Sans', sans-serif;
   position: relative;
@@ -143,7 +184,7 @@ span[ng-show] {
   content: "";
 }
 .nb-slide {
-  width: 513px;
+  width: 497px;
   height: 342px;
   position: relative;
   overflow: hidden;
@@ -154,8 +195,6 @@ span[ng-show] {
   left: 0;
   z-index: 1;
   overflow: hidden;
-  width: 513px;
-  height: 342px;
 }
 .nb-slide .nb-image-container img {
   height: 100%;

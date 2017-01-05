@@ -12,12 +12,13 @@
         }
     });
 
-mainApp.controller("salesTransactionController",
-    function ($scope, salesDataManager) {
+mainApp.controller("contractController",
+    function ($scope, contractDataManager) {
 
         var templatePath = "/tenant/register/";
         var isPageLoad = false;
         $scope.sales = {};
+
         function start() {
             $scope._spinnerLoading = true;
         }
@@ -33,8 +34,7 @@ mainApp.controller("salesTransactionController",
         function create(villaId, tenantType) {
             $scope._spinnerLoading = true;
             isPageLoad = true;
-
-            salesDataManager.createCheckout(villaId, tenantType,
+            contractDataManager.createContract(villaId, tenantType,
                 function (data)
                 {
                     $scope.sales = data;
@@ -53,17 +53,16 @@ mainApp.controller("salesTransactionController",
             if (!isPageLoad) {
                 create($scope.sales.villa.id, $scope.sales.register.tenantType);
             }
-
         }
 
         function save() {
             start();
             //reverse
             $scope.sales.register.gender = parseInt($scope.sales.register.gender);
-            salesDataManager.save($scope.sales,
+            contractDataManager.save($scope.sales,
                 function(data) {
                     var id = data.id;
-                    salesDataManager.proceedToBilling(id);
+                    contractDataManager.proceedToBilling(id);
                     restart();
                 },
                 function (data) {

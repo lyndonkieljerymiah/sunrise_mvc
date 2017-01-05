@@ -29,7 +29,6 @@ namespace Sunrise.TransactionManagement.Model
                 Amount = amount,
                 Remarks = remarks
             };
-
         }
 
         public Payment()
@@ -60,7 +59,12 @@ namespace Sunrise.TransactionManagement.Model
 
         public string Remarks { get; set; }
 
+        public virtual Transaction Transaction { get; set; }
 
-        
+        public void SetStatus(string status,string remarks)
+        {
+            this.Status = status;
+            this.Remarks = remarks;
+        }
     }
 }

@@ -22,10 +22,13 @@ namespace Sunrise.Client.Domains.ViewModels
         public string TenantType { get; set; }
         public string FullType { get; private set; }
         public IEnumerable<SelectListItem> TenantTypes { get; set; }
-        
-        public string Code { get; set; }
+
+
         [Required]
         public string Name { get; set; }
+
+        public string Code { get; set; }
+
         [Required]
         [Display(Name = "Email Address")]
         public string EmailAddress { get; set; }
@@ -88,6 +91,7 @@ namespace Sunrise.Client.Domains.ViewModels
         public GenderEnum Gender { get; set; }
         
         [Display(Name="Qatar Id")]
+        [Required]
         public string QatarId { get; set; }
 
         [Required]

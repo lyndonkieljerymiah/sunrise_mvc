@@ -15,7 +15,7 @@ namespace Sunrise.Client.Domains.ViewModels
     public class SalesViewModel
     {
         public string Id { get; set; }
-
+        public string Code { get; set; }
         public string RentalType { get; set; }
         public string ContractStatus { get; set; }
         public DateTime PeriodStart { get; set; }
@@ -23,10 +23,45 @@ namespace Sunrise.Client.Domains.ViewModels
         public Decimal AmountPayable { get; set; }
 
         public string Status { get; set; }
+        public string StatusCode { get; set; }
 
         public VillaViewModel Villa { get; set; }
         public TenantRegisterViewModel Register { get; set; }
+
         public ICollection<PaymentViewModel> Payments { get; set; }
+
+        public decimal TotalPayment
+        {
+            get
+            {
+                decimal totalPayment = 0;
+                if (Payments != null && Payments.Count > 0)
+                {
+                    totalPayment = Payments.Sum(p => p.Amount);
+                }
+                return totalPayment;
+            }
+
+        }
+        
+        public decimal TotalBalance { get
+            {
+                var totalBalance = AmountPayable - TotalPayment;
+                return totalBalance;
+            } 
+
+        }
+
+        public void setPaymentStatuses(IEnumerable<Selection> selections)
+        {
+            if(Payments != null && Payments.Count > 0)
+            {
+                foreach(var payment in Payments)
+                {
+                    payment.SetStatus(selections);
+                }
+            }
+        }
     }
   
     /// <summary>

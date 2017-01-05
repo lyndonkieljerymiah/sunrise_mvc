@@ -10,7 +10,7 @@ namespace Sunrise.TenantManagement.Model
     
     public class Individual
     {
-        public Individual(DateTime birthday, GenderEnum gender, string qatarId, string company)
+        public Individual(DateTime birthday, GenderEnum gender, string qatarId, string company) : this()
         {
 
             this.Birthday = birthday;
@@ -22,7 +22,7 @@ namespace Sunrise.TenantManagement.Model
 
         public Individual()
         {
-
+            this.Birthday = DateTime.Today;
         }
         public string TenantId { get; private set; }
 

@@ -13,16 +13,16 @@ using Utilities.Helper;
 
 namespace Sunrise.Client.Controllers.Api
 {
-    [RoutePrefix("api/sales")]
-    public class SalesController : ApiController
+    [RoutePrefix("api/contract")]
+    public class ContractController : ApiController
     {
-        private readonly SalesDataManager _salesManager;
+        private readonly ContractDataManager _salesManager;
         private readonly SelectionDataManager _selectionDataManager;
         private readonly TenantDataManager _tenantDataManager;
         private readonly VillaDataManager _villaDataManager;
 
-        public SalesController(
-            SalesDataManager salesManager,
+        public ContractController(
+            ContractDataManager salesManager,
             VillaDataManager villaDataManager,
             SelectionDataManager selectionDataManager,
             TenantDataManager tenantDataManager)
@@ -32,15 +32,6 @@ namespace Sunrise.Client.Controllers.Api
             _selectionDataManager = selectionDataManager;
             _tenantDataManager = tenantDataManager;
         }
-
-        [HttpGet]
-        [Route("list")]
-        public async Task<IHttpActionResult> List()
-        {
-            var shop = await _villaDataManager.GetVillas();
-            return Ok(shop);
-        }
-
 
 
         /// <summary>
@@ -59,8 +50,10 @@ namespace Sunrise.Client.Controllers.Api
             villa.Images.Add(new ViewImages(4, Url.Content("~/Content/imgs/villa_1_3.jpg"), ""));
 
             var selections = await _selectionDataManager.GetLookup(new[] {"TenantType", "RentalType", "ContractStatus"});
-
+            
+            //create and map
             var vmRegister = Mapper.Map<TenantRegisterViewModel>(Tenant.CreateNew(tenantType));
+
             vmRegister.SetTenantTypes(selections);
             var vmTransaction = Mapper.Map<SalesRegisterViewModel>(Transaction.CreateNew(12, villa.RatePerMonth, new MonthRateCalculation()));
             
@@ -78,6 +71,7 @@ namespace Sunrise.Client.Controllers.Api
         /// </summary>
         /// <param name="vm"></param>
         /// <returns>Id</returns>
+
         [HttpPost]
         [Route("create")]
         public async Task<IHttpActionResult> Create(SalesRegisterViewModel vm)
@@ -98,73 +92,25 @@ namespace Sunrise.Client.Controllers.Api
 
             vm.Register.Id = result.ReturnObject.ToString();
             //add transaction
-            var transactionResult = await _salesManager.CreateAsync(vm);
+            var transactionResult = await _salesManager.AddContract(vm);
             if(!transactionResult.Success)
             {
                 AddResult(result);
                 return BadRequest(ModelState);
             }
-
-            //update villa status
-            await _villaDataManager.UpdateVillaStatus(vm.Villa.Id, VillaStatusEnum.Reserved);
             var sv = new SalesViewModel {Id = (string)transactionResult.ReturnObject};
 
             return Ok(sv);
         }
 
-        private void AddResult(CustomResult result)
+        #region Private Method
+        private void AddResult(CustomResult result, string key="")
         {
             foreach (var error in result.Errors)
-                ModelState.AddModelError("", error);
+                ModelState.AddModelError(key, error);
         }
-
-        /// <summary>
-        ///     TODO: Show bill
-        /// </summary>
-        /// <param name="transactionId"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("billing/{transactionId?}")]
-        public async Task<IHttpActionResult> Billing(string transactionId)
-        {
-            var transaction = await _salesManager.GetSalesAsync(transactionId);
-            return Ok(transaction);
-        }
+        #endregion
 
 
-        /// <summary>
-        ///     TODO: Show Payment
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("payment")]
-        public async Task<IHttpActionResult> Payment()
-        {
-            var payment = new PaymentViewModel();
-            var selections = await _selectionDataManager.GetLookup(new[] {"Bank", "PaymentTerm", "PaymentMode"});
-            payment.SetTerms(selections);
-            payment.SetMode(selections);
-            payment.SetBank(selections);
-
-            return Ok(payment);
-        }
-
-        /// <summary>
-        ///     TODO: Save Payment
-        /// </summary>
-        /// <param name="vm"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("payment")]
-        public async Task<IHttpActionResult> Payment(PaymentViewModel vm)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var result = await _salesManager.AddPaymentAsync(vm);
-            if (result.Success)
-                await _villaDataManager.UpdateVillaStatus(vm.VillaId, VillaStatusEnum.NotAvailable);
-            return Ok(result);
-        }
     }
 }

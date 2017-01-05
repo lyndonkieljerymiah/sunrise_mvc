@@ -19,11 +19,12 @@ namespace Sunrise.Client.Controllers.Api
         }
 
         [HttpGet]
-        [Route("")]
-        public async Task<IEnumerable<VillaViewModel>> GetVillas()
+        [Route("list")]
+        public async Task<IHttpActionResult> GetVillas()
         {
+            
             var villas = await _villaDataManager.GetVillas();
-            return villas;
+            return Ok(villas);
         }
 
         protected override void Dispose(bool disposing)

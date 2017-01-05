@@ -6,11 +6,9 @@
             function start() {
                 $scope._spinnerLoading = true;
             }   
-
             function stop() {
                 $scope._spinnerLoading = false;
             }
-
             function init(transactionId) {
                 start();
                 paymentDataManager.createBilling(transactionId,
@@ -19,9 +17,10 @@
                         stop();
                     });
             }
-
             function openPaymentDialog() {
+
                 start();
+
                 paymentDataManager.createPayment(function (data) {
                     data.salesTransactionId = $scope.sales.id;
                     data.villaId = $scope.sales.villa.id;
@@ -29,7 +28,6 @@
 
                     var modalInstance = $uibModal
                         .open({
-                            size: 'lg',
                             backdrop: false,
                             animation: true,
                             templateUrl: "myModalContent.html",
@@ -43,7 +41,6 @@
                         init(returnData);
                     });
                     stop();
-
                 });
 
 
@@ -58,16 +55,15 @@
 mainApp.controller("paymentController",
     function ($scope,$uibModalInstance, payment, paymentDataManager) {
 
-        
         var $ctrl = this;
-        this.payment = payment;
-        this.payment.chequeFieldDisabled = false;
-        
-        this.cancel = function () {
+        $ctrl.payment = payment;
+        $ctrl.payment.chequeFieldDisabled = false;
+        $ctrl.cancel = function () {
             $uibModalInstance.dismiss("");
         }
 
-        this.save = function () {
+     
+        $ctrl.save = function () {
             $scope._spinnerLoading = true;
             paymentDataManager.save(this.payment,
                     function (response) {
@@ -83,12 +79,13 @@ mainApp.controller("paymentController",
         }
 
 
-        this.changeBehaviourWhenSelectingTerm = function() {
+        $ctrl.changeBehaviourWhenSelectingTerm = function () {
 
             if (payment.term === "ptcs") {
                 payment.chequeNo = "Cash";
                 payment.chequeFieldDisabled = true;
-            } else {
+            }
+            else {
                 payment.chequeNo = "";
                 payment.chequeFieldDisabled = false;
             }

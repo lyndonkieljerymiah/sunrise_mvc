@@ -3,7 +3,7 @@
         return {
             getAllVillas: function (success, failure) {
                
-                $http.get("/api/sales/list")
+                $http.get("/api/villa/list")
                    .then(
                    function (response)
                    {

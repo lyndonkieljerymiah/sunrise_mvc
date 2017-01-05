@@ -43,6 +43,7 @@ namespace Sunrise.Client.Domains.ViewModels
 
 
         public string Status { get; set; }
+        public string StatusCode { get; set; }
 
         public string PaymentStatus { get; set; }
 
@@ -72,6 +73,7 @@ namespace Sunrise.Client.Domains.ViewModels
         public IEnumerable<SelectListItem> Terms { get;private set; }
         public IEnumerable<SelectListItem> Modes { get; set; }
         public IEnumerable<SelectListItem> Banks { get; set; }
+        public IEnumerable<SelectListItem> Statuses { get; set; }
 
         public void SetTerms(IEnumerable<Selection> selections)
         {
@@ -88,6 +90,14 @@ namespace Sunrise.Client.Domains.ViewModels
                   .Where(s => s.Type == "Bank")
                   .Select(s => new SelectListItem() { Text = s.Description, Value = s.Code });
             this.Banks = types;
+        }
+
+        public void SetStatus(IEnumerable<Selection> selections)
+        {
+            var types = selections
+                  .Where(s => s.Type == "PaymentStatus")
+                  .Select(s => new SelectListItem() { Text = s.Description, Value = s.Code });
+            this.Statuses = types;
         }
 
 

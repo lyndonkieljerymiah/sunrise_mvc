@@ -1,31 +1,41 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Index";
 }
+<div ng-controller="shopController as $ctrl" ng-init="$ctrl.init()">
+    <spinner></spinner>
+    <div class="page-header">
+        <h1>Villa</h1>
+        <small class="lead">Choose Villa</small>
+    </div>
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <div class="row">
+        <div class="col-lg-4" ng-repeat="villas in villaGroups" style="padding-left: 0px; padding-right: 0px">
+            <div class="col-md-4 col-lg-4 box-content" ng-repeat="villa in villas track by villa.id" ng-show="villas" style="padding-left: 5px; padding-right: 5px">
+                <div class="nb-card">
+                    <div class="nb-image">
+                        <div class="card__image" style="background-image: url('@Url.Content("~/Content/imgs/villa_0.jpg")')"></div>
+                        <div class="nb-title">{{villa.villaNo}}</div>
+                    </div>
+                    <div class="nb-detail">
+                        <ul>
+                            <li>Elec. No.{{villa.elecNo}}</li>
+                            <li>Water No.{{villa.waterNo}}</li>
+                            <li>Rate: {{villa.ratePerMonth | currency : 'QR '}}</li>
+                        </ul>
+                    </div>
+                    <div class="nb-footer">
+                        <button ng-hide="villa.status == 'vsna'" class="nb-btn text-success" ng-click="$ctrl.select(villa.id)" uib-tooltip="Click here to select villa {{villa.villaNo}}">Vacant</button>
+                        <span ng-show="villa.status == 'vsna'" class="nb-mute text-danger">Occupied</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+
+@section scripts {
+    <script src="~/Scripts/app/data/villa-manager.data.js"></script>
+    <script src="~/Scripts/app/data/contract-manager.data.js"></script>
+    <script src="~/Scripts/app/controller/shopController.js"></script>
+}

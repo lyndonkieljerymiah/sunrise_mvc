@@ -13,6 +13,8 @@ namespace Sunrise.TransactionManagement.Persistence.Repository
         private readonly AppDbContext _appDbContext;
         private readonly ReferenceDbContext _referenceContext;
         private ITransactionRepository _transactions;
+        private IPaymentRepository _payments;
+
 
         public UnitOfWork()
         {
@@ -29,6 +31,18 @@ namespace Sunrise.TransactionManagement.Persistence.Repository
                     _transactions = new TransactionRepository(_appDbContext, _referenceContext);
                 }
                 return this._transactions;
+            }
+        }
+
+        public IPaymentRepository Payments
+        {
+            get
+            {
+               if(this._payments == null)
+                {
+                    _payments = new PaymentRepository(_appDbContext);
+                }
+                return _payments;
             }
         }
 
