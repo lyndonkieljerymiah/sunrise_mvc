@@ -12,35 +12,45 @@
         }
     </style>
     @Scripts.Render("~/bundles/modernizr")
-
 </head>
 <body ng-app="mainApp" ng-cloak>
-    <div class="navbar navbar-default navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Sunrise Web Portal", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="@Url.Action("Index","Home")"><i class="fa fa-home"></i> Contract</a></li>
-                    <li class="active"><a href="@Url.Action("List","Billing")"><i class="fa fa-dollar"></i> Billing</a></li>
-                    <li class="active"><a href="@Url.Action("Index","Receivable")">Payment</a></li>
+    <div class="container-fluid">
+        <div class="row">
+            <section class="col-md-2 nb-aside-menu">
+                <div class="nb-aside-heading">
+                    Sunrise Web Portal
+                </div>
+                <ul class="nb-aside-nav">
+                    <li><a href="@Url.Action("Index","Home")"><i class="fa fa-home"></i>Contract</a></li>
+                    <li><a href="@Url.Action("List","Billing")"><i class="fa fa-dollar"></i>Billing</a></li>
+                    <li><a href="@Url.Action("Index","Receivable")"><i class="fa fa-money"></i>Payment</a></li>
                 </ul>
-                @Html.Partial("_LoginPartial")
+            </section>
+            <div class="col-md-10 page" style="padding-right:0;padding-left:0;">
+                <div class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            @Html.ActionLink("Sunrise Web Portal", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                        </div>
+                        <div class="navbar-collapse collapse">
+                            @Html.Partial("_LoginPartial")
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    @RenderBody()
+                    <hr />
+                    <footer>
+                        <p>Sunrise Web Portal ver 1.0 - &copy; @DateTime.Now.Year</p>
+                    </footer>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>Sunrise Web Portal ver 1.0 - &copy; @DateTime.Now.Year</p>
-        </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
@@ -48,8 +58,12 @@
     @Scripts.Render("~/bundles/ui-bootstrap")
     @Scripts.Render("~/bundles/app")
 
+
     <!--CDN link for  TweenMax-->
     <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js"></script>
+
     @RenderSection("scripts", required: false)
 </body>
 </html>
+
+

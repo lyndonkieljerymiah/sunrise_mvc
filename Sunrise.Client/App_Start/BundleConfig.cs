@@ -27,15 +27,19 @@ namespace Sunrise.Client
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
                       "~/Scripts/libs/angularjs/angular.js",
                       "~/Scripts/libs/angularjs/angular-route.js",
-                      "~/Scripts/libs/angularjs/angular-animate.js"));
+                      "~/Scripts/libs/angularjs/angular-animate.js",
+                      "~/Scripts/libs/toaster/toaster.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
-                "~/Scripts/app/app-bootstrap.js"
-                ));
+                "~/Scripts/app/app-bootstrap.js",
+                "~/Scripts/app/helper/dialog.js",
+                "~/Scripts/app/helper/router.js"));
+
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/font-awesome.css",
                       "~/Content/bootstrap-slate.css",
+                      "~/Content/toaster.css",
                       "~/Content/default.css"));
 
             bundles.Add(new StyleBundle("~/Content/login").Include(

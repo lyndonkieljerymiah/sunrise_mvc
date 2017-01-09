@@ -24,8 +24,8 @@
                         </ul>
                     </div>
                     <div class="nb-footer">
-                        <button ng-hide="villa.status == 'vsna'" class="nb-btn text-success" ng-click="$ctrl.select(villa.id)" uib-tooltip="Click here to select villa {{villa.villaNo}}">Vacant</button>
-                        <span ng-show="villa.status == 'vsna'" class="nb-mute text-danger">Occupied</span>
+                        <button class="nb-btn text-success" ng-click="$ctrl.select(villa.id)" uib-tooltip="Click here to select villa {{villa.villaNo}}">{{villa.status}}</button>
+
                     </div>
                 </div>
             </div>
@@ -33,9 +33,11 @@
     </div>
 </div>
 
-
 @section scripts {
+    <!--service-->
     <script src="~/Scripts/app/data/villa-manager.data.js"></script>
     <script src="~/Scripts/app/data/contract-manager.data.js"></script>
+
+    <!--controller-->
     <script src="~/Scripts/app/controller/shopController.js"></script>
 }

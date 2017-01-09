@@ -14,6 +14,7 @@ using Utilities.Helper;
 namespace Sunrise.Client.Controllers.Api
 {
     [RoutePrefix("api/contract")]
+    [Authorize]
     public class ContractController : ApiController
     {
         private readonly ContractDataManager _salesManager;
@@ -55,7 +56,7 @@ namespace Sunrise.Client.Controllers.Api
             var vmRegister = Mapper.Map<TenantRegisterViewModel>(Tenant.CreateNew(tenantType));
 
             vmRegister.SetTenantTypes(selections);
-            var vmTransaction = Mapper.Map<SalesRegisterViewModel>(Transaction.CreateNew(12, villa.RatePerMonth, new MonthRateCalculation()));
+            var vmTransaction = Mapper.Map<TransactionRegisterViewModel>(Transaction.CreateNew(12, villa.RatePerMonth, new MonthRateCalculation()));
             
             vmTransaction.Register = vmRegister;
             vmTransaction.SetContractStatuses(selections);
@@ -74,7 +75,7 @@ namespace Sunrise.Client.Controllers.Api
 
         [HttpPost]
         [Route("create")]
-        public async Task<IHttpActionResult> Create(SalesRegisterViewModel vm)
+        public async Task<IHttpActionResult> Create(TransactionRegisterViewModel vm)
         {
             if (vm == null)
                 ModelState.AddModelError("", "Model cannot be empty");
@@ -98,7 +99,10 @@ namespace Sunrise.Client.Controllers.Api
                 AddResult(result);
                 return BadRequest(ModelState);
             }
-            var sv = new SalesViewModel {Id = (string)transactionResult.ReturnObject};
+
+            //update status
+            var villa = _villaDataManager.UpdateVillaStatus(vm.Villa.Id, VillaStatusEnum.Reserved);
+            var sv = new BillingViewModel {Id = (string)transactionResult.ReturnObject};
 
             return Ok(sv);
         }
@@ -107,7 +111,7 @@ namespace Sunrise.Client.Controllers.Api
         private void AddResult(CustomResult result, string key="")
         {
             foreach (var error in result.Errors)
-                ModelState.AddModelError(key, error);
+                ModelState.AddModelError(error.Key, error.Value);
         }
         #endregion
 

@@ -27,8 +27,6 @@ namespace Sunrise.TransactionManagement.DTO
         public AddressView Address { get; set; }
         public IndividualView Individual { get; set; }
         public CompanyView Company { get; set; }
-
-
     }
 
     public class AddressView
@@ -37,6 +35,11 @@ namespace Sunrise.TransactionManagement.DTO
         public string Address2 { get; private set; }
         public string City { get; private set; }
         public string PostalCode { get; private set; }
+
+        public override string ToString()
+        {
+            return Address1 + " " + Address2 + " " + City + " " + PostalCode;
+        }
     }
 
 

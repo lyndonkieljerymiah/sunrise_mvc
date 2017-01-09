@@ -5,7 +5,8 @@
             $http.get("/api/receivable/create/" + villaNo)
                 .then(
                     function (response) {
-                        success(response.data);
+                        var data = response.data;
+                        success(data);
                     },
                     function (response) {
                         failure(modelStateValidation.parseError(response.data));
@@ -13,7 +14,8 @@
         },
         loadUpdate: function (id,success,failure) {
             $http.get("/api/receivable/update/" + id)
-                .then(function (response) {
+                .then(function (response)
+                {
                     var data = {
                         chequeNo: response.data.chequeNo,
                         status: response.data.status,
@@ -24,7 +26,8 @@
                     };
                     success(data);
                 },
-                function (response) {
+                function (response)
+                {
 
                 });
         },

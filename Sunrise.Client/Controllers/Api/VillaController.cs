@@ -24,6 +24,7 @@ namespace Sunrise.Client.Controllers.Api
         {
             
             var villas = await _villaDataManager.GetVillas();
+
             return Ok(villas);
         }
 

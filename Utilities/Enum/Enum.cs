@@ -22,11 +22,11 @@ namespace Utilities.Enum
     public struct CustomResult
     {
         public bool Success { get; set; }
-        public List<string> Errors { get;private set; }
+        public IDictionary<string,string> Errors { get;private set; }
         public object ReturnObject { get; set; }
         public ICollection<object> ReturnObjects { get; set; }
         
-        public CustomResult(List<string> errors)
+        public CustomResult(IDictionary<string,string> errors)
         {
             Success = false;
             Errors = errors;
@@ -34,12 +34,16 @@ namespace Utilities.Enum
             ReturnObjects = new HashSet<object>();
         }
 
-        public void AddError(string error)
+        public void AddError(string key, string error)
         {
             if (Errors == null)
-                Errors = new List<string>();
-            Errors.Add(error);
+                Errors = new Dictionary<string, string>();
+            Errors.Add(key,error);
         }
+
+
+
+
 
        
     }

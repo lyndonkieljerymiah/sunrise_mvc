@@ -5,14 +5,14 @@ namespace Sunrise.VillaManagement.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Sunrise.VillaManagement.Persistence.AppContextDb>
+    internal sealed class Configuration : DbMigrationsConfiguration<Sunrise.VillaManagement.Persistence.AppDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(Sunrise.VillaManagement.Persistence.AppContextDb context)
+        protected override void Seed(Sunrise.VillaManagement.Persistence.AppDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

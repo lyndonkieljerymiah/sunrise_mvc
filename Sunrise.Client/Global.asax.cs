@@ -61,14 +61,17 @@ namespace Sunrise.Client
 
                 #region VillaView to ViewModel
                 cfg.CreateMap<VillaView, VillaViewModel>().ReverseMap();
-                cfg.CreateMap<TransactionView, SalesViewModel>()
-                  .ForMember(dest => dest.Villa, opts => opts.MapFrom(src => src.Villa))
-                  .ForMember(dest => dest.Register, opts => opts.MapFrom(src => src.Tenant))
-                  .ForMember(dest => dest.Payments, opts => opts.MapFrom(scr => scr.Payments))
-                  .ReverseMap();
+                cfg.CreateMap<VillaManagement.DTO.VillaView, VillaViewModel>().ReverseMap();
                 #endregion
 
-                cfg.CreateMap<Transaction, SalesRegisterViewModel>().ReverseMap();
+                cfg.CreateMap<TransactionView, BillingViewModel>()
+                 .ForMember(dest => dest.Villa, opts => opts.MapFrom(src => src.Villa))
+                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Tenant.Name))
+                 .ForMember(dest => dest.Address, opts => opts.MapFrom(src => src.Tenant.Address.ToString()))
+                 .ForMember(dest => dest.Payments, opts => opts.MapFrom(scr => scr.Payments))
+                 .ReverseMap();
+
+                cfg.CreateMap<Transaction, TransactionRegisterViewModel>().ReverseMap();
             });
 
             AreaRegistration.RegisterAllAreas();

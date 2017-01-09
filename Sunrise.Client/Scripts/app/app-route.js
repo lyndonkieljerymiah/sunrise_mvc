@@ -1,7 +1,8 @@
-﻿mainApp.config(function ($routeProvide,$locationProvider) {
+﻿mainApp.config(function ($routeProvide, $locationProvider) {
     $routeProvide
-        .when("/contract", {
-            templateUrl: "/home/index"
+        .when("/", {
+            templateUrl: "/contract/showcase",
+            controller: "shopController"
         })
         .when("/contract/vid", {
             templateUrl: "/contract/form"

@@ -11,43 +11,8 @@ namespace TransactionManagement.Test
     [TestClass]
     public class TransactionTest
     {
-        [TestMethod]
-        public void Can_Start_Contract()
-        {   
-
-            //create transaction
-            var transaction = Transaction.CreateNew(12,7000m,new MonthRateCalculation());
-
-            Assert.AreEqual(transaction.PeriodEnd, Convert.ToDateTime("01/03/2018"));
-            Assert.AreEqual(transaction.AmountPayable, 84000m);
-            Assert.IsNotNull(transaction);
-
-
-        }
-
-        [TestMethod]
-        public async Task Can_Save_Transaction_To_Db()
-        {
-            using (var uow = new UnitOfWork())
-            {
-
-                var transactionToSave = Transaction.Map("V102","rtff", "csl",
-                    Convert.ToDateTime("01/03/2017"), Convert.ToDateTime("01/03/2018"),
-                    84000m,
-                    "32eb3206-1e4d-44f2-a414-4fa185022867",
-                    "4e594630-683f-4b05-989e-ff47f13e5dda",
-                    "4e594630-683f-4b05-989e-ff47f13e5dda");
-
-                uow.Transactions.Add(transactionToSave);
-                await uow.SaveChanges();
-
-                var transactions = await uow.Transactions.GetQueryAsync();
-
-                Assert.IsNotNull(transactions);
-                Assert.AreEqual(transactions.Count(),1);
-            }
-        }
-
+      
+        
         [TestMethod]
         public async Task Can_Get_Transaction_From_Db()
         {
@@ -81,6 +46,44 @@ namespace TransactionManagement.Test
 
                     Assert.IsNotNull(transaction);
                     Assert.AreNotEqual(0, totalBalance);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        [TestMethod]
+        public async Task Can_Prevent_If_CurrentDateExist()
+        {
+            try
+            {
+                using (var uow = new UnitOfWork())
+                {
+                    var newTransaction = await uow.Transactions.GetContractById("4face5b6-6758-4092-80ec-bbb24865751c");
+                    var success = newTransaction.AddPayment(DateTime.Today,"ptcq", "pmp", "123456", "bdb", DateTime.Today, DateTime.Today.AddMonths(6), 7000m, "");
+                    Assert.AreEqual(1, newTransaction.Payments.Count);
+                    Assert.IsFalse(success);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        [TestMethod]
+        public async Task Can_Get_Transaction_Thru_Payment()
+        {
+            try
+            {
+
+                using (var uow = new UnitOfWork())
+                {
+                    var payment = await uow.Payments.GetPaymentById(9);
+                    Assert.IsNotNull(payment);
+                    Assert.IsNotNull(payment.Transaction);
                 }
             }
             catch (Exception e)

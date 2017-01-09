@@ -1,18 +1,16 @@
 ﻿mainApp.factory("contractDataManager",
-    function ($window, $http, modelStateValidation)
+    function ($http, modelStateValidation,router)
     {
         return {
-            redirectToContract: function(villaId) {
-                $window.location = "/contract/" + villaId;
+            redirectToContract: function (villaId) {
+                router.route("contract", "", villaId);
             },
             createContract: function (villaId, tenantType, success, failure) {
-                
-                var uriPath = (tenantType === null) ? "/api/contract/create/" + villaId : "/api/contract/create/" + villaId + "/" + tenantType;
+                var uriPath = (tenantType === null) ? router.apiPath("contract","create",villaId) : router.apiPath("contract","create",villaId + "/" + tenantType);
                 $http.get(uriPath)
                   .then(
                       function (response) {
                           var data = response.data;
-                         
                           data.periodStart = new Date(data.periodStart);
                           data.periodEnd = new Date(data.periodEnd);
 
@@ -37,7 +35,7 @@
                     );
             },
             save: function(data,success,failure) {
-                $http.post("/api/contract/create", data)
+                $http.post(router.apiPath("contract","create"),data)
                 .then(
                 function (response) {
                     //route data
@@ -48,8 +46,8 @@
                     failure(modelStateValidation.parseError(response.data));
                 });
             },
-            proceedToBilling: function(id) {
-                $window.location = "/billing/" + id;
+            proceedToBilling: function (id) {
+                router.route("billing", "", id);
             }
         }
     });

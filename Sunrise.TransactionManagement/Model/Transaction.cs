@@ -14,13 +14,12 @@ namespace Sunrise.TransactionManagement.Model
 
 
         #region Factory
-        public static Transaction CreateNew(int defaultMonthPeriod,decimal ratePerMonth,IRateCalculation rateCalculation)
+        public static Transaction CreateNew(int defaultMonthPeriod, decimal ratePerMonth, IRateCalculation rateCalculation)
         {
-            return new Transaction(defaultMonthPeriod,ratePerMonth, rateCalculation);
+            return new Transaction(defaultMonthPeriod, ratePerMonth, rateCalculation);
         }
-
-        public static Transaction Map(string code,string rentalType,string contractStatus,DateTime periodStart,DateTime periodEnd,
-            decimal amountPayable,string villaId,string tenantId,string userId)
+        public static Transaction Map(string code, string rentalType, string contractStatus, DateTime periodStart, DateTime periodEnd,
+            decimal amountPayable, string villaId, string tenantId, string userId)
         {
             var transaction = new Transaction
             {
@@ -38,12 +37,11 @@ namespace Sunrise.TransactionManagement.Model
             return transaction;
         }
 
-
-        internal Transaction(int defaultMonthPeriod,decimal ratePerMonth,IRateCalculation rateCalculation)
-        {   
+        internal Transaction(int defaultMonthPeriod, decimal ratePerMonth, IRateCalculation rateCalculation)
+        {
             this.RentalType = "rtff";
             this.ContractStatus = "csl";
-           
+
             this.DateCreated = DateTime.Today;
             //set the default period
             this.PeriodStart = DateTime.Today;
@@ -61,6 +59,7 @@ namespace Sunrise.TransactionManagement.Model
             this.Id = Guid.NewGuid().ToString();
             this.DateCreated = DateTime.Today;
             this.Status = "ssp";
+            this.Payments = new HashSet<Payment>();
         }
 
 
@@ -70,7 +69,7 @@ namespace Sunrise.TransactionManagement.Model
 
         public string RentalType { get; set; }
         public string ContractStatus { get; set; }
-        
+
         public DateTime PeriodStart { get; set; }
         public DateTime PeriodEnd { get; set; }
         public Decimal AmountPayable { get; set; }
@@ -80,44 +79,78 @@ namespace Sunrise.TransactionManagement.Model
         public string VillaId { get; set; }
         public string TenantId { get; set; }
         public string UserId { get; set; }
-        
+
         public virtual ICollection<Payment> Payments { get; set; }
-        
+
+
+
+        #region method
         public void ComputePayableAmount(decimal rate)
-        {   
+        {
             this.AmountPayable = _rateCalculation.Calculate(rate, this.PeriodStart.Date, this.PeriodEnd.Date);
         }
+
         public bool AddPayment(
-            string paymentType,string paymentMode,string chequeNo,
-            string bank,DateTime coveredFrom,DateTime coveredTo,
-            decimal amount,string remarks)
+           DateTime paymentDate, string paymentType, string paymentMode, string chequeNo,
+            string bank, DateTime coveredFrom, DateTime coveredTo,
+            decimal amount, string remarks)
         {
 
-            var existingDate = this.Payments.Where(p => p.CoveredPeriodFrom.Date == coveredFrom.Date).ToList();
-            if(existingDate.Count == 0)
+            //no  existing covered date
+            Payment payment = null;
+
+            //do date validation here
+            if (!IsPaymentDateCovered(coveredFrom.Date))
             {
-                var payment = Payment.Map(paymentType, paymentMode, chequeNo, bank, coveredFrom, coveredTo, amount, remarks);
+                payment = Payment.Map(paymentDate, paymentType, paymentMode, chequeNo, bank, coveredFrom, coveredTo, amount, remarks);
+                //payment is cash must be status cleared
+                if (paymentType == "ptcs")
+                {
+                    payment.SetStatus("psc", "");
+                }
                 Payments.Add(payment);
                 return true;
             }
             return false;
         }
 
-        public void UpdatePayment(int id,string status,string remarks)
+        public void UpdatePaymentStatus(int id, string status, string remarks)
         {
             var payment = this.Payments.SingleOrDefault(p => p.Id == id);
-            payment.SetStatus(status, remarks);
+            if (payment.Status != "psc")
+                payment.SetStatus(status, remarks);
         }
-
         public void ActivateStatus()
         {
-            this.Status = "sscn";
+            if (this.Status != "sscn")
+                this.Status = "sscn";
         }
-        
         public decimal GetBalanceDue()
         {
-            var totalPayment = this.Payments.Sum(p => p.Amount);
+            var totalPayment = this.Payments
+                .Where(p => p.Status == "psc")
+                .Sum(p => p.Amount);
             return AmountPayable - totalPayment;
         }
+
+        public bool IsPaymentDateCovered(DateTime value)
+        {
+            var existingDate = 0;
+            if (Payments.Count > 0)
+            {
+                existingDate = this.Payments
+                    .Where(p => value.Date >= p.CoveredPeriodFrom.Date &&
+                            value.Date < p.CoveredPeriodTo.Date).Count();
+            }
+
+            return existingDate > 0 ? true : false;
+        }
+        public bool IsActive()
+        {
+            if (this.Status == "sscn")
+                return true;
+            return false;
+        }
+        #endregion
     }
 }

@@ -8,8 +8,7 @@ button,
 }
 body {
   font-family: 'Open Sans', sans-serif;
-  padding-top: 90px;
-  background: #F1F1F1 url('imgs/noise_lines.png') top repeat;
+  background: #676a6d;
   height: 100%;
 }
 .body-content {
@@ -18,6 +17,10 @@ body {
 .box-content {
   padding-top: 10px;
   padding-bottom: 15px;
+}
+.page {
+  background: url('imgs/noise_lines.png') top repeat;
+  min-height: 1200px;
 }
 /*spinner*/
 .spinner {
@@ -90,6 +93,45 @@ span[ng-hide] {
   display: table;
   content: "";
 }
+.nb-aside-menu {
+  background-color: #676a6d;
+  min-height: 1200px;
+  padding: 0 !important;
+}
+.nb-aside-menu .nb-aside-heading {
+  background-color: #333D4A;
+  padding: 15px 10px;
+}
+.nb-aside-menu ul.nb-aside-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nb-aside-menu ul.nb-aside-nav li a {
+  display: block;
+  padding: 15px 25px;
+  text-decoration: none;
+  color: whitesmoke;
+  line-height: 12px;
+  font-size: 14px;
+}
+.nb-aside-menu ul.nb-aside-nav li a i {
+  margin-right: 10px;
+}
+.nb-aside-menu ul.nb-aside-nav li a:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #337ab7;
+  border-left: 5px solid #337ab7;
+}
+/*Toaster*/
+.nb-toaster {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 50px;
+  height: 10px;
+}
+/*box*/
 .nb-card {
   font-family: 'Open Sans', sans-serif;
   position: relative;
@@ -183,6 +225,7 @@ span[ng-hide] {
   display: table;
   content: "";
 }
+/*slider*/
 .nb-slide {
   width: 497px;
   height: 342px;
@@ -271,3 +314,16 @@ span[ng-hide] {
   content: "";
 }
 /*override*/
+.navbar-nav > li > span > a {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: #666;
+  line-height: 23px;
+  text-decoration: none;
+}
+@media (min-width: 768px) {
+  .navbar-nav > li > span > a {
+    padding-top: 20.5px;
+    padding-bottom: 20.5px;
+  }
+}

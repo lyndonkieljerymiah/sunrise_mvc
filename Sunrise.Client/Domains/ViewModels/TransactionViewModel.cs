@@ -10,24 +10,24 @@ namespace Sunrise.Client.Domains.ViewModels
         {
             //get for tenant
             this.Tenant = new TenantRegisterViewModel();
-            this.SalesRegister = new SalesRegisterViewModel();
+            this.TransactionRegister = new TransactionRegisterViewModel();
         }
         
         public TenantRegisterViewModel Tenant { get; set; }
-        public SalesRegisterViewModel SalesRegister { get; set; }
+        public TransactionRegisterViewModel TransactionRegister { get; set; }
 
         public string Template { get; set; }
 
         public void SetSelections(IEnumerable<Selection> selections)
         {
             Tenant.SetTenantTypes(selections);
-            SalesRegister.SetRentalTypes(selections);
-            SalesRegister.SetContractStatuses(selections);
+            TransactionRegister.SetRentalTypes(selections);
+            TransactionRegister.SetContractStatuses(selections);
         }
 
         public void AddVillaToSales(VillaViewModel villa)
         {
-            this.SalesRegister.Villa = villa;
+            this.TransactionRegister.Villa = villa;
         }
         
     }

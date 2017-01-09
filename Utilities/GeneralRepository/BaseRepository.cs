@@ -58,5 +58,15 @@ namespace Utilities.GeneralRepository
         {
             _set.AddRange(entities);
         }
+
+        public T FindQuery(object id)
+        {
+            return _set.Find(id);
+        }
+
+        public IEnumerable<T> GetQuery()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

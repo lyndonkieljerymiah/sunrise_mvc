@@ -7,6 +7,7 @@ using System.Web.Mvc;
 namespace Sunrise.Client.Controllers
 {
     [RoutePrefix("receivable")]
+    [Authorize]
     public class ReceivableController : Controller
     {
 

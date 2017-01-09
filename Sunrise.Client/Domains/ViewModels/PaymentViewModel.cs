@@ -11,25 +11,30 @@ namespace Sunrise.Client.Domains.ViewModels
     public class PaymentViewModel
     {
 
-
-
-        public PaymentViewModel()
+        
+        public PaymentViewModel(bool enabledWriteState = false)
         {
             PaymentDate = DateTime.Today;
             CoveredPeriodFrom = DateTime.Today;
             CoveredPeriodTo = CoveredPeriodFrom.Date.AddMonths(1);
-            this.Bank = "";
-            this.Term = "ptcq";
-            this.PaymentMode = "pmp";
+            this.BankCode = "";
+            this.PaymentTypeCode = "ptcq";
+            this.PaymentModeCode = "pmp";
+            this.WriteState = enabledWriteState;
         }
+
+        
+
 
         public int Id { get; set; }
 
-        public string SalesTransactionId { get; set; }
+        public string TransactionId { get; set; }
         public string VillaId { get; set; }
 
+        
+        public string PaymentType { get; set; }
         [Required]
-        public string Term { get; set; }
+        public string PaymentTypeCode { get; set; }
 
         [Required]
         public string ChequeNo { get; set; }
@@ -40,75 +45,86 @@ namespace Sunrise.Client.Domains.ViewModels
         [Required]
         [CustomCurrencyValue]
         public decimal Amount { get; set; }
-
-
+        
         public string Status { get; set; }
         public string StatusCode { get; set; }
-
         public string PaymentStatus { get; set; }
-
+        public bool WriteState {get;private set;}
         public DateTime? StatusDate { get; set; }
-
         public string Remarks { get; set; }
-
-        [CustomRequiredMatchToValidation("Term","ptcq",ErrorMessage = "Bank is required")]
         public string Bank { get; set; }
 
-        public string PaymentMode { get; set; }
+        [CustomRequiredMatchToValidation("PaymentTypeCode", "ptcq", ErrorMessage = "Bank is required")]
+        public string BankCode { get; set; }
 
-        public string FullPaymentMode { get; set; }
+        public string PaymentMode { get; set; }
+        public string PaymentModeCode { get; set; }
+        
 
         [Required]
         [CustomDateEndStartValidation("CoveredPeriodTo", ValueComparison.IsLessThan, ErrorMessage = "Start date must be earlier than end date")]
         [CustomDateCurrentValidation(ErrorMessage = "Start date must be current or later date")]
         public DateTime CoveredPeriodFrom { get; set; }
-
+        
         [Required]
         [CustomDateEndStartValidation("CoveredPeriodFrom", ValueComparison.IsGreaterThan, ErrorMessage = "End date must be later than end date")]
         public DateTime CoveredPeriodTo { get; set; }
-
-        public string CoveredPeriod => CoveredPeriodFrom.ToShortDateString() + "-" + CoveredPeriodTo.ToShortDateString();
         
+    }
 
-        public IEnumerable<SelectListItem> Terms { get;private set; }
-        public IEnumerable<SelectListItem> Modes { get; set; }
-        public IEnumerable<SelectListItem> Banks { get; set; }
-        public IEnumerable<SelectListItem> Statuses { get; set; }
 
-        public void SetTerms(IEnumerable<Selection> selections)
+    public class PaymentDictionary
+    {
+        private IEnumerable<Selection> _selections;
+
+        public PaymentDictionary(IEnumerable<Selection> selections)
         {
-            var types = selections
-                   .Where(s => s.Type == "PaymentTerm")
-                   .Select(s => new SelectListItem() { Text = s.Description, Value = s.Code });
-
-            this.Terms = types;
+            _selections = selections;
         }
 
-        public void SetBank(IEnumerable<Selection> selections)
+        public IEnumerable<SelectListItem> Terms
         {
-            var types = selections
-                  .Where(s => s.Type == "Bank")
+            get
+            {
+                var types = _selections
+                  .Where(s => s.Type == "PaymentTerm")
                   .Select(s => new SelectListItem() { Text = s.Description, Value = s.Code });
-            this.Banks = types;
+
+                return types;
+            }
         }
-
-        public void SetStatus(IEnumerable<Selection> selections)
+        public IEnumerable<SelectListItem> Modes
         {
-            var types = selections
-                  .Where(s => s.Type == "PaymentStatus")
-                  .Select(s => new SelectListItem() { Text = s.Description, Value = s.Code });
-            this.Statuses = types;
-        }
-
-
-        public void SetMode(IEnumerable<Selection> selections)
-        {
-            var types = selections
+            get
+            {
+                var types = _selections
                    .Where(s => s.Type == "PaymentMode")
                    .Select(s => new SelectListItem() { Text = s.Description, Value = s.Code });
 
-            this.Modes = types;
+                return types;
+
+            }
+        }
+        public IEnumerable<SelectListItem> Banks {
+            get
+            {
+                var types = _selections
+                 .Where(s => s.Type == "Bank")
+                 .Select(s => new SelectListItem() { Text = s.Description, Value = s.Code });
+
+                return types;
+            }
+        }
+        public IEnumerable<SelectListItem> Statuses { get
+            {
+                var types = _selections
+                .Where(s => s.Type == "PaymentStatus")
+                .Select(s => new SelectListItem() { Text = s.Description, Value = s.Code });
+
+                return types;
+            }
         }
 
+        public PaymentViewModel InitialValue { get; set; }
     }
 }

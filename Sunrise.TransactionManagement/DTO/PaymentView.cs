@@ -14,10 +14,14 @@ namespace Sunrise.TransactionManagement.DTO
         public int Id { get; set; }
         public string TransactionId { get; set; }
         public string PaymentType { get; set; }
+        public string PaymentTypeCode { get; set; }
         public string PaymentMode { get; set; }
+        public string PaymentModeCode { get; set; }
+
         public DateTime PaymentDate { get; private set; }
         public string ChequeNo { get; set; }
         public string Bank { get; set; }
+        public string BankCode { get; set; }
 
         public DateTime CoveredPeriodFrom { get; set; }
         public DateTime CoveredPeriodTo { get; set; }

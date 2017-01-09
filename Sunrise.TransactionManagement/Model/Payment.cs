@@ -14,12 +14,13 @@ namespace Sunrise.TransactionManagement.Model
             return new Payment();
         }
 
-        public static Payment Map(string paymentType, string paymentMode, string chequeNo,
+        public static Payment Map(DateTime paymentDate,string paymentType, string paymentMode, string chequeNo,
             string bank, DateTime coveredFrom, DateTime coveredTo,
             decimal amount,string remarks)
         {
             return new Payment
-            {
+            {  
+                PaymentDate = paymentDate,
                 PaymentType = paymentType,
                 PaymentMode = paymentMode,
                 ChequeNo = chequeNo,
@@ -41,7 +42,7 @@ namespace Sunrise.TransactionManagement.Model
         }
 
         public int Id { get; set; }
-        public DateTime PaymentDate { get; private set; }
+        public DateTime PaymentDate { get; set; }
         public string TransactionId { get; set; }
         public string PaymentType { get; set; }
         public string PaymentMode { get; set; }
@@ -62,9 +63,10 @@ namespace Sunrise.TransactionManagement.Model
         public virtual Transaction Transaction { get; set; }
 
         public void SetStatus(string status,string remarks)
-        {
+        {   
             this.Status = status;
             this.Remarks = remarks;
+            this.StatusDate = DateTime.Today;
         }
     }
 }

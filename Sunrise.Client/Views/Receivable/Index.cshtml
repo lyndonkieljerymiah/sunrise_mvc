@@ -23,6 +23,7 @@
                                     </button>
                                 </span>
                             </div>
+                            <span ng-show="errorState['notfoundexception']">{{errorState['notfoundexception']}}</span>
                         </div>
                     </div>
                 </div>
@@ -113,7 +114,7 @@
                                                 <p ng-hide="$ctrl.currentIndex == $index">{{payment.status}}</p>
                                                 <div class="form-group" ng-show="$ctrl.currentIndex == $index">
                                                     <select ng-model="payment.statusCode" class="form-control" ng-change="$ctrl.updateStatus(payment.statusCode)">
-                                                        <option ng-repeat="status in payment.statuses" value="{{status.value}}">{{status.text}}</option>
+                                                        <option ng-repeat="status in $ctrl.contract.paymentObject.statuses" value="{{status.value}}">{{status.text}}</option>
                                                     </select>
                                                 </div>
                                             </td>
@@ -124,8 +125,8 @@
                                                     <textarea name="remarks" id="remarks" class="form-control" ng-model="payment.remarks"></textarea>
                                                 </div>
                                             </td>
-                                            <td style="width:5%">
-                                                <button class="btn btn-default btn-sm">
+                                            <td style="width:5%;text-align:center">
+                                                <button class="btn btn-default btn-sm" ng-hide="payment.readState">
                                                     <i class="fa fa-pencil" ng-click="$ctrl.toggle($index)"></i>
                                                 </button>
                                             </td>
@@ -134,10 +135,12 @@
                                 </table>
                                 <hr />
                                 <div class="row">
-                                    <div class="panel panel-danger col-md-3 pull-right">
-                                        <div class="panel-body">
-                                            <p class="text-danger text-left"><i class="fa fa-money"></i> Payment: {{$ctrl.contract.totalPayment | currency : "QR "}}</p>
-                                            <p class="text-danger text-left"><i class="fa fa-money"></i> Balance: {{$ctrl.contract.totalBalance | currency : "QR "}}</p>
+                                    <div class="col-md-3 pull-right">
+                                        <div class="panel panel-danger">
+                                            <div class="panel-body">
+                                                <p class="text-danger text-right"><i class="fa fa-money"></i> Payment: {{$ctrl.contract.totalPayment | currency : "QR "}}</p>
+                                                <p class="text-danger text-right"><i class="fa fa-money"></i> Balance: {{$ctrl.contract.totalBalance | currency : "QR "}}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -149,9 +152,9 @@
         </div>
     </div>
     <div class="panel-footer">
-        <div class="row" ng-show="$ctrl.contract.payments">
+        <div class="row" ng-hide="$ctrl.contract.payments == null || $ctrl.contract.totalBalance == 0">
             <div class="col-md-2 pull-right">
-                <button class="btn btn-default btn-block" ng-click="$ctrl.update()">Update</button>
+                <button class="btn btn-danger btn-block" ng-click="$ctrl.update()">Update</button>
             </div>
         </div>
     </div>

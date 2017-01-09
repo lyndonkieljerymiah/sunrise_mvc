@@ -1,9 +1,9 @@
 ﻿mainApp.factory("villaDataManager",
-    function ($http, modelStateValidation) {
+    function ($http, modelStateValidation,router) {
         return {
             getAllVillas: function (success, failure) {
                
-                $http.get("/api/villa/list")
+                $http.get(router.apiPath("villa","list"))
                    .then(
                    function (response)
                    {
@@ -11,7 +11,6 @@
                        var counterRow = 0;
                        var virtVillas = [];
                        var rows = [];
-
                        for (var i = 0; i < data.length; i++) {
                            rows.push(data[i]);
                            if (((i + 1) % 3) === 0) {
@@ -26,7 +25,6 @@
                            virtVillas.push(rows);
                        }
                        data.villaGroups = virtVillas;
-                       
                        success(data);
                    },
                    function (response) {

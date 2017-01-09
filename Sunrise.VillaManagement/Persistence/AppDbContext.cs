@@ -11,7 +11,7 @@ using Utilities.GeneralContext;
 
 namespace Sunrise.VillaManagement.Persistence
 {
-    public class AppContextDb : BaseDbContext
+    public class AppDbContext : BaseDbContext
     {
         public virtual DbSet<Villa> Villas { get; set; }
         public virtual DbSet<VillaGallery> Galleries { get; set; }

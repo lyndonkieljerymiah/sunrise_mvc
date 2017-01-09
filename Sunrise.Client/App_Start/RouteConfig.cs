@@ -14,6 +14,7 @@ namespace Sunrise.Client
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapMvcAttributeRoutes();
+            
 
             routes.MapRoute(
                 name: "Default",

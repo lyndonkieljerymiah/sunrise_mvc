@@ -48,7 +48,7 @@ namespace Sunrise.Client.Persistence.Manager
             catch (Exception e)
             {
                 result.Success = false;
-                result.Errors.Add(e.Message);
+                result.Errors.Add("InternalErrorException", e.Message);
             }
 
             return result;

@@ -17,7 +17,7 @@ namespace Sunrise.Client.Domains.ViewModels
         }
 
         public string Id { get; set; }
-
+        
         [Required]
         public string TenantType { get; set; }
         public string FullType { get; private set; }
@@ -26,7 +26,6 @@ namespace Sunrise.Client.Domains.ViewModels
 
         [Required]
         public string Name { get; set; }
-
         public string Code { get; set; }
 
         [Required]

@@ -12,6 +12,7 @@ using Utilities.Enum;
 namespace Sunrise.Client.Controllers.Api
 {
     [RoutePrefix("api/receivable")]
+    [Authorize]
     public class ReceivableController : ApiController
     {
         private readonly ContractDataManager _contractDataManager;
@@ -33,25 +34,26 @@ namespace Sunrise.Client.Controllers.Api
         public async Task<IHttpActionResult> Create(string villaNo)
         {   
             var contract = await _contractDataManager.GetContractByCode(villaNo);
-            var statusLookup = await _selectionDataManager.GetLookup(new string[] { "PaymentStatus" });
-            contract.setPaymentStatuses(statusLookup);
-
             if (contract == null)
-                return BadRequest("Invalid or no exisitng contract");
+            {
+                ModelState.AddModelError("NotFoundException", "Invalid or no existing contract");
+                return BadRequest(ModelState);
+            }
 
+            contract.Initialize((await _selectionDataManager.GetLookup(new string[] { "PaymentStatus" })));
             return Ok(contract);
         }
         
         [HttpPost]
         [Route("update")]
-        public async Task<IHttpActionResult> UpdatePayment(SalesViewModel vm)
+        public async Task<IHttpActionResult> UpdatePayment(BillingViewModel vm)
         {   
+
             //update the payment first
-            var result = await _contractDataManager.UpdatePayments(vm.Id, vm.Payments);
+            var result = await _contractDataManager.UpdateContractPaymentStatus(vm.Id, vm.Payments);
             if(result.Success)
             {
                 await _villaDataManager.UpdateVillaStatus(vm.Villa.Id, VillaStatusEnum.NotAvailable);
-
             }
             return Ok(result);
         }

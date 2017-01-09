@@ -12,10 +12,9 @@ namespace Sunrise.TransactionManagement.Abstract
     public interface ITransactionRepository : IBaseRepository<Transaction>
     {
         Task<Transaction> GetContractById(string id);
-
         Task<TransactionView> GetContractByCode(string villaNo);
-
         Task<TransactionView> GetTransactionView(string id);
-        
+        Task<IEnumerable<TransactionView>> GetContracts();
+
     }
 }

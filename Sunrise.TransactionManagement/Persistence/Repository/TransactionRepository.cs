@@ -42,9 +42,19 @@ namespace Sunrise.TransactionManagement.Persistence.Repository
             return transaction;
         }
 
-     
+        public async Task<IEnumerable<TransactionView>> GetContracts()
+        {
+            var contracts = await this._referenceDbContext
+                                .Transactions
+                                .Include(t => t.Tenant)
+                                .Include(v => v.Villa)
+                                .Include(v => v.Payments)
+                                .ToListAsync();
+            return contracts;
+        }
+
         public async Task<TransactionView> GetTransactionView(string id)
-        {   
+        {
             var transaction = await this._referenceDbContext
                                         .Transactions
                                         .Include(t => t.Tenant)

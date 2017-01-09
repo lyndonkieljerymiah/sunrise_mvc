@@ -9,12 +9,15 @@ namespace Sunrise.VillaManagement.Persistence.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private AppContextDb _appContextDb;
+        private AppDbContext _appContextDb;
+        private ReferenceDbContext _referenceDbContext;
         private IVillaRepository _villaRepo;
+        
 
         public UnitOfWork()
         {
-            _appContextDb = new AppContextDb();
+            _appContextDb = new AppDbContext();
+            _referenceDbContext = new ReferenceDbContext();
 
         }
 
@@ -24,7 +27,7 @@ namespace Sunrise.VillaManagement.Persistence.Repository
             {
                 if(this._villaRepo == null)
                 {
-                    this._villaRepo = new VillaRepository(_appContextDb);
+                    this._villaRepo = new VillaRepository(_appContextDb,_referenceDbContext);
                 }
                 return this._villaRepo;
             }
@@ -33,6 +36,11 @@ namespace Sunrise.VillaManagement.Persistence.Repository
         public async Task SaveChanges()
         {
             await _appContextDb.SaveChangesAsync();
+        }
+
+        public void SaveChangesNonAsync()
+        {
+            _appContextDb.SaveChanges();
         }
 
 
@@ -57,7 +65,9 @@ namespace Sunrise.VillaManagement.Persistence.Repository
             GC.SuppressFinalize(this);
         }
 
-        
+       
+
+
         #endregion
     }
 }

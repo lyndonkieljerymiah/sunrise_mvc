@@ -40,5 +40,13 @@ namespace Sunrise.Client.Persistence.Manager
             _uow.Villas.Update(villa);
             await _uow.SaveChanges();
         }
+
+        public void UpdateVillaStatusNonAsync(string id, VillaStatusEnum status)
+        {
+            var villa = _uow.Villas.FindQuery(id);
+            villa.SetStatus(status);
+            _uow.Villas.Update(villa);
+            _uow.SaveChangesNonAsync();
+        }
     }
 }

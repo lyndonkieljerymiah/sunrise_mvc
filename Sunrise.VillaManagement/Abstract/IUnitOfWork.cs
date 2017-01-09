@@ -11,5 +11,6 @@ namespace Sunrise.VillaManagement.Abstract
         IVillaRepository Villas { get; }
 
         Task SaveChanges();
+        void SaveChangesNonAsync();
     }
 }

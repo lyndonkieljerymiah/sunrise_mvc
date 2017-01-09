@@ -15,6 +15,9 @@ namespace Utilities.GeneralRepository
         void Remove(T entity);
 
         Task<T> FindQueryAsync(object id);
+        T FindQuery(object id);
+
         Task<IEnumerable<T>> GetQueryAsync(Expression<Func<T,bool>> where = null);
+        IEnumerable<T> GetQuery();
     }
 }

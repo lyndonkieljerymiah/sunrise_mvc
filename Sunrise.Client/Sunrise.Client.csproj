@@ -261,7 +261,7 @@
     <Compile Include="Domains\ViewModels\Manage\SetPasswordViewModel.cs" />
     <Compile Include="Domains\ViewModels\Manage\VerifyPhoneNumberViewModel.cs" />
     <Compile Include="Domains\ViewModels\PaymentViewModel.cs" />
-    <Compile Include="Domains\ViewModels\SalesRegisterViewModel.cs" />
+    <Compile Include="Domains\ViewModels\TransactionRegisterViewModel.cs" />
     <Compile Include="Domains\ViewModels\ShopViewModel.cs" />
     <Compile Include="Domains\ViewModels\TenantRegisterViewModel.cs" />
     <Compile Include="Domains\ViewModels\TransactionViewModel.cs" />
@@ -310,6 +310,8 @@
     <Content Include="Content\login.min.css">
       <DependentUpon>login.css</DependentUpon>
     </Content>
+    <Content Include="Content\toaster.css" />
+    <Content Include="Content\toaster.min.css" />
     <Content Include="Content\ui-bootstrap-csp.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -324,6 +326,8 @@
     <Content Include="Scripts\app\data\contract-manager.data.js" />
     <Content Include="Scripts\app\data\tenant-manager.data.js" />
     <Content Include="Scripts\app\data\villa-manager.data.js" />
+    <Content Include="Scripts\app\helper\dialog.js" />
+    <Content Include="Scripts\app\helper\router.js" />
     <Content Include="Scripts\app\service\utility.service.js" />
     <Content Include="Scripts\app\service\villaService.js" />
     <Content Include="Scripts\libs\angularjs\angular-animate.js" />
@@ -396,6 +400,7 @@
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="Content\parts\mixin.less" />
+    <Content Include="Content\toaster.scss" />
     <None Include="Scripts\libs\jquery\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\libs\angularjs\i18n\angular-locale_af-na.js" />
     <Content Include="Scripts\libs\angularjs\i18n\angular-locale_af-za.js" />
@@ -1136,6 +1141,8 @@
     <Content Include="Scripts\libs\other\modernizr-2.6.2.js" />
     <Content Include="Scripts\libs\other\respond.js" />
     <Content Include="Scripts\libs\other\respond.min.js" />
+    <Content Include="Scripts\libs\toaster\toaster.js" />
+    <Content Include="Scripts\libs\toaster\toaster.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -1186,6 +1193,7 @@
     <Content Include="Views\Receivable\Index.cshtml" />
     <Content Include="Views\Billing\List.cshtml" />
     <Content Include="Views\Receivable\List.cshtml" />
+    <Content Include="Views\Home\MasterPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

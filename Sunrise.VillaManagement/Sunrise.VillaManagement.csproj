@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Abstract\IUnitOfWork.cs" />
     <Compile Include="Abstract\IVillaRepository.cs" />
+    <Compile Include="DTO\VillaView.cs" />
     <Compile Include="Migrations\201701021515301_Initial.cs" />
     <Compile Include="Migrations\201701021515301_Initial.Designer.cs">
       <DependentUpon>201701021515301_Initial.cs</DependentUpon>
@@ -66,7 +67,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Villa.cs" />
     <Compile Include="Model\VillaGallery.cs" />
-    <Compile Include="Persistence\AppContextDb.cs" />
+    <Compile Include="Persistence\AppDbContext.cs" />
+    <Compile Include="Persistence\ReferenceDbContext.cs" />
     <Compile Include="Persistence\Repository\UnitOfWork.cs" />
     <Compile Include="Persistence\Repository\VillaRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

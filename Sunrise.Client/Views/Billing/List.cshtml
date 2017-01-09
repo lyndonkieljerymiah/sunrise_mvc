@@ -6,6 +6,41 @@
 <div class="page-header">
     <h2>Billing List</h2>
 </div>
+<div class="panel panel-primary">
+    <div class="panel-body">
+        <div class="row"
+             ng-controller="billingController as $ctrl"
+             ng-init="$ctrl.list()">
+            <div class="col-md-12">
+                <table class="table table-condensed table-bordered" >
+                    <tr class="active">
+                        <th style="width:10%;text-align:center">Date</th>
+                        <th style="width:10%;text-align:center">Villa No</th>
+                        <th>Tenant</th>
+                        <th style="width:15%;text-align:center">Total Payment</th>
+                        <th style="width:15%;text-align:center">Total Balance</th>
+                        <th style="width:10%;text-align:center">Status</th>
+                        <th style="width:5%"></th>
+                    </tr>
+                    <tr ng-repeat="bill in billings">
+                        <td style="text-align:center">{{bill.dateCreated | date: 'MM/dd/yyyy'}}</td>
+                        <td style="text-align:center">{{bill.villaNo}}</td>
+                        <td>{{bill.tenant}}</td>
+                        <td style="text-align:right">{{bill.totalPayment | currency : 'QR '}}</td>
+                        <td style="text-align:right">{{bill.totalBalance | currency : 'QR '}}</td>
+                        <td style="text-align:center">{{bill.status}}</td>
+                        <td style="text-align:center">
+                            <a class="btn btn-warning btn-sm" href="/billing/{{bill.id}}">View</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-
-
+<!-- payment details component -->
+@section scripts {
+    <script src="@Url.Content("~/Scripts/app/data/payment-manager.data.js")"></script>
+    <script src="@Url.Content("~/Scripts/app/controller/billingController.js")"></script>
+}
