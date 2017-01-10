@@ -1,6 +1,29 @@
 ﻿mainApp.controller("billingController",
-        function ($http, $scope, $uibModal, paymentDataManager,confirmationDialog,toaster) {
+        function ($http, $scope, $uibModal, paymentDataManager, confirmationDialog, toaster) {
+
             var $ctrl = this;
+
+            //initialize
+            $scope.showSaveButton = false;
+            $scope.$watch("sales.payments", function (nv, ov, ob) {
+                $scope.sales.totalReceivedPayment = 0;
+                //check length
+                if (nv && nv.length > 0) {
+
+                    $scope.sales.totalReceivedPayment = nv.sum("amount");
+
+                    angular.forEach(nv, function (item) {
+                        $scope.showSaveButton = false;
+                        if (item.id == 0) {
+                            $scope.showSaveButton = true;
+                            return;
+                        }
+                    });
+                }
+                else {
+                    $scope.showSaveButton = false;
+                }
+            }, true);
 
             function start() {
                 $scope._spinnerLoading = true;
@@ -8,20 +31,20 @@
             function stop() {
                 $scope._spinnerLoading = false;
             }
-            function openModal(payment) {
+            function openModal(payment)
+            {
                 var modalInstance = $uibModal
-                           .open({
-                               backdrop: false,
-                               animation: true,
-                               templateUrl: "myModalContent.html",
-                               controller: "paymentController",
-                               controllerAs: "$ctrl",
-                               resolve: {
-                                   payment: function () { return payment; },
-                                   paymentObject: function () { return $scope.sales.paymentDictionary; }
-                               }
-                           });
-
+                          .open({
+                              backdrop: false,
+                              animation: true,
+                              templateUrl: "myModalContent.html",
+                              controller: "paymentController",
+                              controllerAs: "$ctrl",
+                              resolve: {
+                                  payment: function () { return payment; },
+                                  paymentObject: function () { return $scope.sales.paymentDictionary; }
+                              }
+                          });
                 return modalInstance;
             }
 
@@ -32,8 +55,8 @@
                     stop();
                 });
             }
+
             function init(transactionId) {
-                console.log(transactionId);
                 start();
                 paymentDataManager.createBilling(transactionId,
                     function (data) {
@@ -41,13 +64,36 @@
                         $scope.sales.currentPaymentIndex = -1;
                         stop();
                     });
+                //preventing to close the page
+                window.onbeforeunload = function (event) {
+                    var message = 'Sure you want to leave?';
+                    if (typeof event == 'undefined') {
+                        event = window.event;
+                    }
+                    if (event) {
+                        event.returnValue = message;
+                    }
+                    return message;
+                }
             }
 
             function addNewPayment() {
                 start();
-                var payment = $scope.sales.paymentDictionary.initialValue; //get new payment
+                //get new payment
+                var payment = angular.copy($scope.sales.paymentDictionary.initialValue); 
+
+                //set up payment
+                var lastIndex = $scope.sales.payments.length;
+                if (lastIndex > 0) {
+                    //new should be ahead of one month
+                    payment.paymentDate.setMonth($scope.sales.payments[lastIndex - 1].paymentDate.getMonth() + 1);
+                    payment.coveredPeriodFrom = payment.paymentDate;
+                    payment.coveredPeriodTo.setMonth(payment.coveredPeriodFrom.getMonth() + 1);
+                }
+
                 $scope.sales.currentPaymentIndex = -1;
                 var modalInstance = openModal(payment);
+                console.log(modalInstance);
                 modalInstance.result.then(function (returnData) {
                     $scope.sales.payments.push(angular.copy(returnData));
                 });
@@ -57,52 +103,57 @@
                 $event.preventDefault();
                 $event.stopPropagation();
                 start();
-                var payment = $scope.sales.payments[$index];
+                var payment = angular.copy($scope.sales.payments[$index]);
                 $scope.sales.currentPaymentIndex = $index;
                 var modalInstance = openModal(payment);
                 modalInstance.result.then(function (returnData) {
                     angular.copy(returnData, $scope.sales.payments[$index]);
                     $scope.sales.currentPaymentIndex = -1;
-                    //init(returnData.transactionId);
                 }, function () {
                     $scope.sales.currentPaymentIndex = -1;
                 });
                 stop();
             }
             function remove($index) {
-
+                $scope.sales.currentPaymentIndex = $index;
                 confirmationDialog.open({
                     title: "Confirmation",
                     description: "Do you want to remove the payment?",
-                    valueOk: "Yes",
-                    valueCancel: "No",
+                    buttons: ["Yes", "No"],
                     action: function (response) {
+                        //remove item
                         $scope.sales.payments.splice($index, 1);
+                        $scope.sales.currentPaymentIndex = -1;
+                        toaster.pop("success", "Successfully remove");
+                    },
+                    cancel: function (response) {
+                        $scope.sales.currentPaymentIndex = -1;
                     }
                 });
-                
             }
             function save() {
-
                 confirmationDialog.open({
                     title: "Save Confirmation",
                     description: "Are you sure do you want to save all changes?",
-                    valueOk: "Yes",
-                    valueCancel: "No",
+                    buttons: ["Yes", "No"],
                     action: function (response) {
-                        console.log(response);
-                        paymentDataManager.save($scope.sales, function (returnData) {
-                            toaster.pop('success', 'Payment saving', 'Add Successfully');
-                            init(returnData.id);
-                        });
+                        paymentDataManager.save($scope.sales,
+                            function (returnData) {
+                                toaster.pop('success', 'Payment saving', 'Add Successfully');
+                                init(returnData.id);
+                            },
+                            function (returnData) {
+                                toaster.pop("error","Failed to save unexpected error occured!!!");
+                            }
+                        );
                     }
                 });
             }
 
             return {
                 init: init,
-                list: list,
                 edit: edit,
+                list: list,
                 save: save,
                 remove: remove,
                 addNewPayment: addNewPayment
@@ -116,7 +167,9 @@ mainApp.controller("paymentController",
 
         //not reference 
         //isolate object value
-        $ctrl.payment = angular.copy(payment);
+        $ctrl.payment = payment;
+
+
         //for date time object
         $ctrl.dateTimePicker = {
             isOpen: [false, false, false],
@@ -133,22 +186,12 @@ mainApp.controller("paymentController",
         $ctrl.payment.chequeFieldDisabled = $ctrl.payment.paymentTypeCode == "ptcs" ? true : false;
 
         //run
-
         function cancel() {
             $uibModalInstance.dismiss("cancel");
         }
         function save() {
             $scope._spinnerLoading = true;
-            //must be save
-            paymentDataManager.validate(this.payment,
-                    function (response) {
-                        $uibModalInstance.close($ctrl.payment);
-                        $scope._spinnerLoading = false;
-                    },
-                    function (response) {
-                        $scope.errorState = response;
-                        $scope._spinnerLoading = false;
-                    });
+            $uibModalInstance.close($ctrl.payment);
         }
 
         function changeBehaviourWhenSelectingTerm() {

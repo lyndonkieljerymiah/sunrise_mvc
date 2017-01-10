@@ -87,7 +87,7 @@
                                     </tr>
                                     <tbody>
                                         <tr ng-repeat="payment in sales.payments"
-                                            ng-class="{info: $index==sales.currentPaymentIndex}">
+                                            ng-class="{active: $index==sales.currentPaymentIndex}">
                                             <td class="text-center">{{payment.paymentDate | date: 'MM/dd/yyyy'}}</td>
                                             <td class="text-center">{{payment.chequeNo}}</td>
                                             <td class="text-left">{{payment.coveredPeriodFrom | date : 'MM/dd/yyyy'}} - {{payment.coveredPeriodTo | date : 'MM/dd/yyyy'}}</td>
@@ -115,18 +115,37 @@
                                     </tbody>
                                     <tfoot>
                                         <tr class="active">
-                                            <th colspan="6"></th>
-                                            <th class="text-center"><button class="btn btn-sm btn-primary" ng-click="$ctrl.addNewPayment()"><i class="fa fa-plus-circle"></i></button></th>
+                                            <td colspan="6"></td>
+                                            <td class="text-center">
+                                                <!--<button class="btn btn-sm btn-primary" ng-click="$ctrl.addNewPayment()"><i class="fa fa-plus-circle"></i></button>-->
+                                                <!-- Single button -->
+                                                <div class="btn-group"
+                                                     uib-dropdown>
+                                                    <button id="single-button" type="button" class="btn btn-primary btn-sm"
+                                                            uib-dropdown-toggle
+                                                            ng-disabled="disabled">
+                                                        <span class="fa fa-plus-circle"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                                                        <li role="menuitem"><a href="#" ng-click="$ctrl.addNewPayment()">Add New</a></li>
+                                                        <li class="divider" role="menuitem"></li>
+                                                        <li role="menuitem"><a href="#">Generate 6 Months</a></li>
+                                                        <li role="menuitem"><a href="#">Generate 12 Months</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+
                                         </tr>
                                     </tfoot>
                                 </table>
                             </div>
                             <hr />
-                            <div class="col-md-3 pull-right">
+                            <div class="col-md-4 pull-right">
                                 <div class="panel panel-danger">
                                     <div class="panel-body">
-                                        <p class="text-danger text-left"><i class="fa fa-money"></i> Payment: {{sales.totalPayment | currency : "QR "}}</p>
-                                        <p class="text-danger text-left"><i class="fa fa-money"></i> Balance: {{sales.totalBalance | currency : "QR "}}</p>
+                                        <p class="text-danger text-left"><i class="fa fa-money"></i> Total Received: {{sales.totalReceivedPayment | currency : "QR "}}</p>
+                                        <p class="text-danger text-left"><i class="fa fa-money"></i> Total Payment: {{sales.totalPayment | currency : "QR "}}</p>
+                                        <p class="text-danger text-left"><i class="fa fa-money"></i> Remaining Balance: {{sales.totalBalance | currency : "QR "}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -134,7 +153,7 @@
                         <div class="panel-footer">
                             <div class="row">
                                 <div class="col-md-2 pull-right">
-                                    <button class="btn btn-primary btn-block" ng-click="$ctrl.save()" ng-show="sales.payments.length > 0"><i class="fa fa-save"></i> Save</button>
+                                    <button class="btn btn-primary btn-block" ng-click="$ctrl.save()" ng-show="showSaveButton"><i class="fa fa-save"></i> Save</button>
                                 </div>
                             </div>
                             

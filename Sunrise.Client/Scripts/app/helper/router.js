@@ -1,8 +1,17 @@
 ﻿mainApp.factory("router", function ($window) {
     return {
         route: function (controller, action, value) {
+            var path
+            if (action && action.length > 0) {
+                path = "/" + controller + "/" + action;
+            }
+            else {
+                path = "/" + controller;
+            }
 
-            var path = "/" + controller + "/" + action + value;
+            if (value) {
+                path = path + "/" + value;
+            }
             $window.location = path;
 
         },

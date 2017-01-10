@@ -31,6 +31,7 @@ namespace Sunrise.Client
                       "~/Scripts/libs/toaster/toaster.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
+                "~/Scripts/app/helper/extension.js",
                 "~/Scripts/app/app-bootstrap.js",
                 "~/Scripts/app/helper/dialog.js",
                 "~/Scripts/app/helper/router.js"));

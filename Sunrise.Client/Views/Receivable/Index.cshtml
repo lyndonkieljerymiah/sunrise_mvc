@@ -3,6 +3,7 @@
 }
 <div class="panel panel-warning" ng-controller="receivableController as $ctrl">
     <spinner></spinner>
+    <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
     <div class="panel-heading">
         <h4>Payment</h4>
     </div>
@@ -43,36 +44,23 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-2">Name:</div>
-                            <div class="col-md-10">{{$ctrl.contract.register.name}}</div>
+                            <div class="col-md-10">{{$ctrl.contract.name}}</div>
                         </div>
-                        <div class="row" ng-show="$ctrl.contract.register.individual.qatarId">
+                        <div class="row" ng-show="$ctrl.contract.qatarId">
                             <div class="col-md-2">Qatar Id:</div>
-                            <div class="col-md-10">{{$ctrl.contract.register.individual.qatarId}}</div>
+                            <div class="col-md-10">{{$ctrl.contract.qatarId}}</div>
                         </div>
-                        <div class="row" ng-show="$ctrl.contract.register.company.crNo">
+                        <div class="row" ng-show="$ctrl.contract.crNo">
                             <div class="col-md-2">CR No:</div>
-                            <div class="col-md-4">{{$ctrl.contract.register.company.crNo}}</div>
+                            <div class="col-md-4">{{$ctrl.contract.crNo}}</div>
                             <div class="col-md-2">Validity Date:</div>
-                            <div class="col-md-4">{{$ctrl.contract.register.company.validityDate | date : 'MM/dd/yyyy'}}</div>
+                            <div class="col-md-4">{{$ctrl.contract.validityDate | date : 'MM/dd/yyyy'}}</div>
                         </div>
                         <div class="row">
                             <div class="col-md-2">Address:</div>
-                            <div class="col-md-10">{{$ctrl.contract.register.fullAddress}}</div>
+                            <div class="col-md-10">{{$ctrl.contract.address}}</div>
                         </div>
-
-                    </div>
-                </section>
-            </div>
-        </div>
-        <!-- end general-->
-        <!-- payment -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Details
-                    </div>
-                    <div class="panel-body">
+                        <hr />
                         <div class="row">
                             <div class="col-md-12">
                                 <table class="table table-condensed">
@@ -91,6 +79,19 @@
                                 </table>
                             </div>
                         </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <!-- end general-->
+        <!-- payment -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Details
+                    </div>
+                    <div class="panel-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <table class="table table-condensed table-bordered">
@@ -105,7 +106,7 @@
                                         <th></th>
                                     </tr>
                                     <tbody>
-                                        <tr ng-repeat="payment in $ctrl.contract.payments">
+                                        <tr ng-repeat="payment in $ctrl.contract.payments" class="{{payment.status.toLowerCase()}}">
                                             <td style="width:10%;text-align:center">{{payment.chequeNo}}</td>
                                             <td style="width:10%;text-align:center">{{payment.paymentDate | date: 'MM/dd/yyyy'}}</td>
                                             <td style="width:20%">{{payment.coveredPeriodFrom | date:'MM/dd/yyyy'}} - {{payment.coveredPeriodTo | date:'MM/dd/yyyy'}}</td>
@@ -114,7 +115,7 @@
                                                 <p ng-hide="$ctrl.currentIndex == $index">{{payment.status}}</p>
                                                 <div class="form-group" ng-show="$ctrl.currentIndex == $index">
                                                     <select ng-model="payment.statusCode" class="form-control" ng-change="$ctrl.updateStatus(payment.statusCode)">
-                                                        <option ng-repeat="status in $ctrl.contract.paymentObject.statuses" value="{{status.value}}">{{status.text}}</option>
+                                                        <option ng-repeat="status in $ctrl.contract.paymentDictionary.statuses" value="{{status.value}}">{{status.text}}</option>
                                                     </select>
                                                 </div>
                                             </td>

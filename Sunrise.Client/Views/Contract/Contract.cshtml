@@ -85,14 +85,38 @@
                             <div class="form-group">
                                 <label class="col-md-4 text-right">Start:</label>
                                 <div class="col-md-8">
-                                    <input type="date" ng-model="sales.periodStart" class="form-control" />
+                                    <div class="input-group">
+                                        <input type="text" class="form-control"
+                                               uib-datepicker-popup="MM/dd/yyyy"
+                                               ng-model="sales.periodStart"
+                                               is-open="dateTimePicker.isOpen[1]"
+                                               datepicker-options="dateOptions"
+                                               ng-required="true"
+                                               close-text="Close"
+                                               alt-input-formats="altInputFormats" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="dateTimePicker.toggle($event,1)"><i class="fa fa-calendar"></i></button>
+                                        </span>
+                                    </div>
                                     <span ng-show="errorState['vm.periodstart']">{{errorState['vm.periodstart']}}</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-4 text-right">End:</label>
                                 <div class="col-md-8">
-                                    <input type="date" ng-model="sales.periodEnd" class="form-control" />
+                                    <div class="input-group">
+                                        <input type="text" class="form-control"
+                                               uib-datepicker-popup="MM/dd/yyyy"
+                                               ng-model="sales.periodEnd"
+                                               is-open="dateTimePicker.isOpen[2]"
+                                               datepicker-options="dateOptions"
+                                               ng-required="true"
+                                               close-text="Close"
+                                               alt-input-formats="altInputFormats" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="dateTimePicker.toggle($event,2)"><i class="fa fa-calendar"></i></button>
+                                        </span>
+                                    </div>
                                     <span ng-show="errorState['vm.periodend']">{{errorState['vm.periodend']}}</span>
                                 </div>
                             </div>

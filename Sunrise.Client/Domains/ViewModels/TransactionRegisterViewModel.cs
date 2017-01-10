@@ -65,7 +65,15 @@ namespace Sunrise.Client.Domains.ViewModels
             } 
 
         }
-        
+        public decimal TotalReceivedPayment
+        {
+            get
+            {
+                decimal totalPayment = this.Payments.Sum(p => p.Amount);
+                return totalPayment;
+            }
+        }
+
         public void SetCheatSheet()
         {
             foreach(var payment in Payments)
@@ -80,6 +88,7 @@ namespace Sunrise.Client.Domains.ViewModels
 
             payment.TransactionId = this.Id;
             payment.VillaId = this.Villa.Id;
+            payment.Amount = this.Villa.RatePerMonth;
             this.PaymentDictionary.InitialValue = payment;
         }
     }

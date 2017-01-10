@@ -42,9 +42,19 @@
         <div class="form-group">
             <label for="birthday" class="col-md-3 text-right">Birthday</label>
             <div class="col-md-9">
-                <input type="date"
-                       ng-model="sales.register.individual.birthday"
-                       class="form-control" />
+                <div class="input-group">
+                    <input type="text" class="form-control"
+                           uib-datepicker-popup="MM/dd/yyyy"
+                           ng-model="sales.register.individual.birthday"
+                           is-open="dateTimePicker.isOpen[0]"
+                           datepicker-options="dateOptions"
+                           ng-required="true"
+                           close-text="Close"
+                           alt-input-formats="altInputFormats" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="dateTimePicker.toggle($event,0)"><i class="fa fa-calendar"></i></button>
+                    </span>
+                </div>
                 <span ng-hide="sales.register.individual.birthday.length > 0">{{errorState['vm.register.individual.birthday']}}</span>
             </div>
         </div>
@@ -86,7 +96,19 @@
         <div class="form-group">
             <label class="col-md-3 text-right">Validity Date:</label>
             <div class="col-md-9">
-                <input type="date" ng-model="sales.register.company.validityDate" class="form-control" />
+                <div class="input-group">
+                    <input type="text" class="form-control"
+                           uib-datepicker-popup="MM/dd/yyyy"
+                           ng-model="sales.register.company.validityDate"
+                           is-open="dateTimePicker.isOpen[0]"
+                           datepicker-options="dateOptions"
+                           ng-required="true"
+                           close-text="Close"
+                           alt-input-formats="altInputFormats" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="dateTimePicker.toggle($event,0)"><i class="fa fa-calendar"></i></button>
+                    </span>
+                </div>
                 <span ng-hide="sales.register.company.validityDate.length > 0">{{errorState['vm.register.company.validitydate']}}</span>
             </div>
         </div>

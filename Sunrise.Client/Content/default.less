@@ -121,6 +121,7 @@ span[ng-show], span[ng-hide] {
         }
     }
 }
+
 .nb-aside-menu {
     background-color: @color-sidemenu;
     min-height: 1200px;
@@ -179,9 +180,7 @@ span[ng-show], span[ng-hide] {
 
 
 /*override*/
-.navbar-nav >
-
-li > span > a {
+.navbar-nav > li > span > a {
     padding-top: 10px;
     padding-bottom: 10px;
     color: #666;
@@ -189,10 +188,32 @@ li > span > a {
     text-decoration: none;
 }
 
-@media (min-width: 768px) 
-{
-    .navbar-nav > li > span> a {
+@media (min-width: 768px) {
+    .navbar-nav > li > span > a {
         padding-top: 20.5px;
         padding-bottom: 20.5px;
+    }
+}
+
+/*for payment status */
+table {
+    tr {
+        &.clear {
+            background-color: lightgreen;
+            .transition();
+        }
+
+        &.bounce {
+            background-color: darkred;
+            color:whitesmoke;
+            .transition();
+        }
+
+        &.hold {
+            background-color: darkorange;
+            .transition();
+        }
+
+
     }
 }

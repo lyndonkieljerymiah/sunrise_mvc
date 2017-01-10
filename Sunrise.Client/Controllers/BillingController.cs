@@ -18,7 +18,7 @@ namespace Sunrise.Client.Controllers
             return View();
         }
 
-        [Route("list")]
+        [Route("")]
         public ViewResult List()
         {
             return View();

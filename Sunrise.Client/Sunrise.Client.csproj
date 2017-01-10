@@ -327,6 +327,7 @@
     <Content Include="Scripts\app\data\tenant-manager.data.js" />
     <Content Include="Scripts\app\data\villa-manager.data.js" />
     <Content Include="Scripts\app\helper\dialog.js" />
+    <Content Include="Scripts\app\helper\extension.js" />
     <Content Include="Scripts\app\helper\router.js" />
     <Content Include="Scripts\app\service\utility.service.js" />
     <Content Include="Scripts\app\service\villaService.js" />
@@ -362,7 +363,6 @@
     <Content Include="Scripts\libs\angularjs\angular.js" />
     <Content Include="Scripts\libs\angularjs\angular.min.js" />
     <Content Include="Scripts\app\app-bootstrap.js" />
-    <Content Include="Scripts\app\controller\tenantRegisterController.js" />
     <Content Include="Scripts\app\directive\app-directives.js" />
     <Content Include="Scripts\app\service\salesService.js" />
     <Content Include="Scripts\app\service\tenantService.js" />

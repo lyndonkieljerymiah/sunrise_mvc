@@ -14,10 +14,20 @@
 
 mainApp.controller("contractController",
     function ($scope, contractDataManager) {
-
         var templatePath = "/tenant/register/";
         var isPageLoad = false;
+
+
+
         $scope.sales = {};
+        $scope.dateTimePicker = {
+            isOpen: [false, false, false],
+            toggle: function ($event, key) {
+                $event.preventDefault();
+                $event.stopPropagation();
+                $scope.dateTimePicker.isOpen[key] = $scope.dateTimePicker.isOpen[key] ? false : true;
+            }
+        }
 
         function start() {
             $scope._spinnerLoading = true;
@@ -31,7 +41,8 @@ mainApp.controller("contractController",
             stop();
         }
 
-        function create(villaId, tenantType) {
+        function create(villaId, tenantType)
+        {
             $scope._spinnerLoading = true;
             isPageLoad = true;
             contractDataManager.createContract(villaId, tenantType,
@@ -45,7 +56,6 @@ mainApp.controller("contractController",
         }
 
         function init(villaId) {
-
             create(villaId, null);
         }
 
@@ -57,6 +67,7 @@ mainApp.controller("contractController",
 
         function save() {
             start();
+
             //reverse
             $scope.sales.register.gender = parseInt($scope.sales.register.gender);
             contractDataManager.save($scope.sales,

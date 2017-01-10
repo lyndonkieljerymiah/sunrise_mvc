@@ -11,7 +11,7 @@
                                 id: item.id,
                                 dateCreated: item.dateCreated,
                                 villaNo: item.villa.villaNo,
-                                tenant: item.register.name,
+                                tenant: item.name,
                                 totalPayment: item.totalPayment,
                                 totalBalance: item.totalBalance,
                                 status: item.status
@@ -21,12 +21,12 @@
                     });
             },
             createBilling: function (transactionId, success, failure) {
-                console.log(router.apiPath("billing", "", transactionId));
                 $http.get(router.apiPath("billing","",transactionId))
                   .then(function (response) {
                       var data = response.data;
                       if (data.payments.length > 0) {
-                          data.payments.forEach(function (payment) {
+                          data.payments.forEach(function (payment)
+                          {
                               payment.paymentDate = new Date(payment.paymentDate);
                               payment.paymentDate.setMinutes(payment.paymentDate.getMinutes() + payment.paymentDate.getTimezoneOffset());
 
@@ -41,7 +41,6 @@
                       data.paymentDictionary.initialValue.paymentDate = new Date(data.paymentDictionary.initialValue.paymentDate);
                       data.paymentDictionary.initialValue.coveredPeriodFrom = new Date(data.paymentDictionary.initialValue.coveredPeriodFrom);
                       data.paymentDictionary.initialValue.coveredPeriodTo = new Date(data.paymentDictionary.initialValue.coveredPeriodTo);
-
 
                       success(response.data);
                   });

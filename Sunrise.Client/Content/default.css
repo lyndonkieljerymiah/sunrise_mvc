@@ -327,3 +327,20 @@ span[ng-hide] {
     padding-bottom: 20.5px;
   }
 }
+/*for payment status */
+table tr.clear {
+  background-color: lightgreen;
+  transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+}
+table tr.bounce {
+  background-color: darkred;
+  color: whitesmoke;
+  transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+}
+table tr.hold {
+  background-color: darkorange;
+  transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+}
