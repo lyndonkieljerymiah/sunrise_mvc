@@ -64,6 +64,16 @@
                     function (response) {
                         failure(modelStateValidation.parseError(response));
                     });
+            },
+            dismiss: function(value,action,failure) {
+                $http.post(router.apiPath("billing","dismiss"),value).then(
+                    function(response) {
+                        action(response.data);
+                    },
+                    function(response) {
+                        failure(response.data);
+                    });
             }
-        }
-    });
+
+    }
+});

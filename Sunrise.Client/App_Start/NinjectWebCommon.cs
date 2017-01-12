@@ -69,12 +69,12 @@ namespace Sunrise.Client.App_Start
             kernel.Bind<Sunrise.TenantManagement.Abstract.IUnitOfWork>().To<Sunrise.TenantManagement.Persistence.Repository.UnitOfWork>();
             kernel.Bind<Sunrise.Maintenance.Abstract.IUnitOfWork>().To<Sunrise.Maintenance.Persistence.Repository.UnitOfWork>();
             kernel.Bind<Sunrise.TransactionManagement.Abstract.IUnitOfWork>().To<Sunrise.TransactionManagement.Persistence.Repository.UnitOfWork>();
-
-
+            
             kernel.Bind<ContractDataManager>().To<ContractDataManager>();
             kernel.Bind<VillaDataManager>().To<VillaDataManager>();
             kernel.Bind<SelectionDataManager>().To<SelectionDataManager>();
             kernel.Bind<TenantDataManager>().To<TenantDataManager>();
+            kernel.Bind<ReceivableDataManager>().To<ReceivableDataManager>();
         }        
     }
 }

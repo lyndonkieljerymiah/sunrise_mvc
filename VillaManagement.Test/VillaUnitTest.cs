@@ -53,12 +53,12 @@ namespace VillaManagement.Test
             {
                 var r = new Random();
                 ICollection<Villa> villas = new List<Villa>();
-                for (var i = 1; i < 15; i++)
+                for (var i = 46; i < 145; i++)
                 {
                     i++;
                     var rNext = r.Next(ratesPerMonth.Length - 1);
                     var rate = ratesPerMonth[rNext];
-                    var villa = Villa.Map("V00" + i, "E1000"+i, "W10000"+i, "12335", "rtff", 10, "Fully furnished", rate);
+                    var villa = Villa.Map("V0" + i, "E1000"+i, "W10000"+i, "12335", "rtff", 10, "Fully furnished", rate);
                     villas.Add(villa);
                 }
                 uow.Villas.AddRange(villas);

@@ -48,12 +48,29 @@ namespace Sunrise.Client.Persistence.Manager
             catch (Exception e)
             {
                 result.Success = false;
-                result.Errors.Add("InternalErrorException", e.Message);
+                result.AddError("InternalErrorException", e.Message);
             }
 
             return result;
         }
 
+        public CustomResult RemoveTenantNonAsync(string id)
+        {
+            var result = new CustomResult();
+            try
+            {
+                var tenant = _unitOfWork.Tenants.FindQuery(id);
+                _unitOfWork.Tenants.Remove(tenant);
+                _unitOfWork.SaveChangesNonAsync();
+                result.Success = true;
+            }
+            catch(Exception e)
+            {
+                result.AddError("InternalErrorException", e.Message);
+            }
+
+            return result;
+        }
        
     }
 }

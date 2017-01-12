@@ -1,4 +1,5 @@
-﻿using Sunrise.Client.Domains.ViewModels;
+﻿using Microsoft.AspNet.Identity;
+using Sunrise.Client.Domains.ViewModels;
 using Sunrise.Client.Persistence.Manager;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,12 @@ namespace Sunrise.Client.Controllers.Api
     public class ReceivableController : ApiController
     {
         private readonly ContractDataManager _contractDataManager;
+        private ReceivableDataManager _receivableDataManager;
         private SelectionDataManager _selectionDataManager;
         private VillaDataManager _villaDataManager;
 
         public ReceivableController(
+            ReceivableDataManager receivableDataManager,
             ContractDataManager contractDataManager,
             SelectionDataManager selectionDataManager,
             VillaDataManager villaDataManager)
@@ -27,13 +30,15 @@ namespace Sunrise.Client.Controllers.Api
             _contractDataManager = contractDataManager;
             _selectionDataManager = selectionDataManager;
             _villaDataManager = villaDataManager;
+            _receivableDataManager = receivableDataManager;
         }
 
         [HttpGet]
-        [Route("create/{villaNo?}")]
-        public async Task<IHttpActionResult> Create(string villaNo)
-        {   
-            var contract = await _contractDataManager.GetContractByCode(villaNo);
+        [Route("create/{billNo?}")]
+        public async Task<IHttpActionResult> Create(string billNo)
+        {
+            var contract = await _receivableDataManager.GetActiveContract(billNo);
+
             if (contract == null)
             {
                 ModelState.AddModelError("NotFoundException", "Invalid or no existing contract");
@@ -46,15 +51,13 @@ namespace Sunrise.Client.Controllers.Api
         
         [HttpPost]
         [Route("update")]
-        public async Task<IHttpActionResult> UpdatePayment(BillingViewModel vm)
-        {   
-
+        public async Task<IHttpActionResult> ClearPayment(BillingViewModel vm)
+        {
+            var userId = User.Identity.GetUserId();
             //update the payment first
-            var result = await _contractDataManager.UpdateContractPaymentStatus(vm.Id, vm.Payments);
-            if(result.Success)
-            {
-                await _villaDataManager.UpdateVillaStatus(vm.Villa.Id, VillaStatusEnum.NotAvailable);
-            }
+            var result = await _receivableDataManager.ClearPayment(vm.Id,vm.Payments,userId,(villaId) => {
+                _villaDataManager.UpdateVillaStatusNonAsync(villaId, VillaStatusEnum.NotAvailable);
+            });
             return Ok(result);
         }
     }

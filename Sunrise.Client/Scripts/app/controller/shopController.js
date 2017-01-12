@@ -1,17 +1,19 @@
-﻿mainApp.controller("shopController",function ($scope,villaDataManager,contractDataManager) {
+﻿mainApp.controller("shopController", function ($scope, villaDataManager, contractDataManager, spinnerManager) {
 
     var $ctrl = this;
     $scope.villas = [];
+    spinnerManager.scope = $scope;
 
     /*
      * TODO: Initialize
      ***************************/
     function init() {
-        $scope._spinnerLoading = true;
+        //$scope._spinnerLoading = true;
+        spinnerManager.start();
         villaDataManager.getAllVillas(
             function (data) {
                 $scope.villaGroups = data.villaGroups;
-                $scope._spinnerLoading = false;
+                spinnerManager.stop();
             });
     }
 

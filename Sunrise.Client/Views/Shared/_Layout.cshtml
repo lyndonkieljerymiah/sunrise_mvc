@@ -19,8 +19,7 @@
             <section class="col-md-2 nb-aside-menu">
                 <div class="nb-aside-heading">Sunrise Web Portal</div>
                 <ul class="nb-aside-nav">
-                    <li><a href="@Url.Action("Index","Home")"><i class="fa fa-home"></i>Contract</a></li>
-                    <li><a href="@Url.Action("List","Billing")"><i class="fa fa-dollar"></i>Billing</a></li>
+                    <li><a href="@Url.Action("Index","Contract")"><i class="fa fa-home"></i>Contract</a></li>
                     <li><a href="@Url.Action("Index","Receivable")"><i class="fa fa-money"></i>Payment</a></li>
                 </ul>
             </section>
@@ -33,7 +32,7 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            @Html.ActionLink("Sunrise Web Portal", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                            @Html.ActionLink("Sunrise Web Portal", "Index", "Contract", new { area = "" }, new { @class = "navbar-brand" })
                         </div>
                         <div class="navbar-collapse collapse">
                             @Html.Partial("_LoginPartial")

@@ -16,9 +16,9 @@ namespace Sunrise.TransactionManagement.Model
 
         public static Payment Map(DateTime paymentDate,string paymentType, string paymentMode, string chequeNo,
             string bank, DateTime coveredFrom, DateTime coveredTo,
-            decimal amount,string remarks)
+            decimal amount,string remarks,string userId)
         {
-            return new Payment
+            var p = new Payment
             {  
                 PaymentDate = paymentDate,
                 PaymentType = paymentType,
@@ -30,6 +30,9 @@ namespace Sunrise.TransactionManagement.Model
                 Amount = amount,
                 Remarks = remarks
             };
+
+            p.LogStamp(userId);
+            return p;
         }
 
         public Payment()
@@ -39,6 +42,7 @@ namespace Sunrise.TransactionManagement.Model
             this.PaymentType = "ptcq";
             this.PaymentMode = "pmp";
             this.Status = "psv";
+            this.UpdateStamp = new UpdateStamp();
         }
 
         public int Id { get; set; }
@@ -57,16 +61,22 @@ namespace Sunrise.TransactionManagement.Model
 
         public string Status { get; private set; }
         public DateTime? StatusDate { get; private set; }
-
         public string Remarks { get; set; }
-
+        public bool IsReverse { get; set; }
+        public virtual UpdateStamp UpdateStamp { get; set; }
         public virtual Transaction Transaction { get; set; }
-
-        public void SetStatus(string status,string remarks)
+        public void SetStatus(string status,string remarks,string userId)
         {   
             this.Status = status;
             this.Remarks = remarks;
             this.StatusDate = DateTime.Today;
+            this.LogStamp(userId);
+        }
+        public void LogStamp(string userId)
+        {
+            this.UpdateStamp.UserId = userId;
+            this.UpdateStamp.DateStamp = DateTime.Today;
         }
     }
+    
 }

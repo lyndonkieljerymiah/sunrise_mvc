@@ -25,7 +25,16 @@ namespace Sunrise.Client.Domains.ViewModels
 
         public string Status { get; set; }
         public string StatusCode { get; set; }
-        
+        public bool EditState { get
+            {
+                if(StatusCode == "ssp")
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
         public VillaViewModel Villa { get; set; }
 
         //tenant
@@ -36,13 +45,9 @@ namespace Sunrise.Client.Domains.ViewModels
         public DateTime? ValidityDate { get; set; }
         public string CrNo { get; set; }
         
-
         public ICollection<PaymentViewModel> Payments { get; set; }
-        
         public PaymentDictionary PaymentDictionary { get; private set; }
-
-
-
+        
         public decimal TotalPayment
         {
             get
@@ -69,18 +74,14 @@ namespace Sunrise.Client.Domains.ViewModels
         {
             get
             {
-                decimal totalPayment = this.Payments.Sum(p => p.Amount);
+                decimal totalPayment = 0;
+                if (Payments != null)
+                    totalPayment = this.Payments.Sum(p => p.Amount);
                 return totalPayment;
             }
         }
 
-        public void SetCheatSheet()
-        {
-            foreach(var payment in Payments)
-            {
-                payment.VillaId = this.Villa.Id;
-            }
-        }
+        
         public void Initialize(IEnumerable<Selection> selections)
         {
             this.PaymentDictionary = new PaymentDictionary(selections);

@@ -4,7 +4,14 @@
     <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h4>Billing</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Billing No: {{sales.code}}</h4>
+                </div>
+                <div class="col-md-1 pull-right" ng-show="sales.statusCode=='ssp'">
+                    <a href="#" class="text-info text-right" ng-click="$ctrl.dismiss()"><i class="fa fa-3x fa-trash-o"></i></a>
+                </div>
+            </div>
         </div>
         <div class="panel-body">
             <!--- General Information -->
@@ -77,24 +84,28 @@
                             <div class="col-md-12">
                                 <table class="table table-bordered table-condensed">
                                     <tr class="active">
+                                        <th class="active" style="width:3%;">No</th>
                                         <th style="width:10%;" class="text-center">Date</th>
                                         <th style="width:10%;" class="text-center">Cheque No</th>
+                                        <th style="width:15%;" class="text-center">Payment Mode</th>
                                         <th class="text-center">Covered Period</th>
                                         <th style="width:12%;text-align:center">Amount</th>
                                         <th style="width:10%;text-align:center">Status</th>
-                                        <th style="width:10%;text-align:center">Status Date</th>
                                         <th></th>
                                     </tr>
                                     <tbody>
-                                        <tr ng-repeat="payment in sales.payments"
-                                            ng-class="{active: $index==sales.currentPaymentIndex}">
+                                        <tr ng-repeat="payment in sales.payments | orderBy : 'paymentDate':reverse track by $index"
+                                            ng-class="{danger: sales.selectedRow == $index}">
+                                            <td class="active text-center">{{($index+1)}}</td>
                                             <td class="text-center">{{payment.paymentDate | date: 'MM/dd/yyyy'}}</td>
                                             <td class="text-center">{{payment.chequeNo}}</td>
-                                            <td class="text-left">{{payment.coveredPeriodFrom | date : 'MM/dd/yyyy'}} - {{payment.coveredPeriodTo | date : 'MM/dd/yyyy'}}</td>
+                                            <td class="text-center">{{payment.paymentMode}}</td>
+                                            <td class="text-left">
+                                                {{payment.coveredPeriodFrom | date : 'MM/dd/yyyy'}} -
+                                                {{payment.coveredPeriodTo | date : 'MM/dd/yyyy'}}
+                                            </td>
                                             <td class="text-right">{{payment.amount | currency:"QR "}}</td>
                                             <td class="text-center">{{payment.status}}</td>
-                                            <td class="text-center">{{payment.statusDate | date: 'MM/dd/yyyy'}}</td>
-
                                             <th style="width:5%;text-align:center">
                                                 <!-- Single button -->
                                                 <div class="btn-group"
@@ -106,8 +117,8 @@
                                                         <span class="caret"></span>
                                                     </button>
                                                     <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
-                                                        <li role="menuitem"><a href="#" ng-click="$ctrl.edit($index,$event)">Edit</a></li>
-                                                        <li role="menuitem"><a href="#" ng-click="$ctrl.remove($index)">Remove</a></li>
+                                                        <li role="menuitem"><a href="#" ng-click="$ctrl.edit($index,payment,$event)">Edit</a></li>
+                                                        <li role="menuitem"><a href="#" ng-click="$ctrl.remove($index,payment)">Remove</a></li>
                                                     </ul>
                                                 </div>
                                             </th>
@@ -115,24 +126,9 @@
                                     </tbody>
                                     <tfoot>
                                         <tr class="active">
-                                            <td colspan="6"></td>
+                                            <td colspan="7"></td>
                                             <td class="text-center">
-                                                <!--<button class="btn btn-sm btn-primary" ng-click="$ctrl.addNewPayment()"><i class="fa fa-plus-circle"></i></button>-->
-                                                <!-- Single button -->
-                                                <div class="btn-group"
-                                                     uib-dropdown>
-                                                    <button id="single-button" type="button" class="btn btn-primary btn-sm"
-                                                            uib-dropdown-toggle
-                                                            ng-disabled="disabled">
-                                                        <span class="fa fa-plus-circle"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
-                                                        <li role="menuitem"><a href="#" ng-click="$ctrl.addNewPayment()">Add New</a></li>
-                                                        <li class="divider" role="menuitem"></li>
-                                                        <li role="menuitem"><a href="#">Generate 6 Months</a></li>
-                                                        <li role="menuitem"><a href="#">Generate 12 Months</a></li>
-                                                    </ul>
-                                                </div>
+                                                <button ng-show="sales.statusCode=='ssp'" class="btn btn-sm btn-primary" ng-click="$ctrl.addNewPayment()"><i class="fa fa-plus-circle"></i></button>
                                             </td>
 
                                         </tr>
@@ -156,10 +152,10 @@
                                     <button class="btn btn-primary btn-block" ng-click="$ctrl.save()" ng-show="showSaveButton"><i class="fa fa-save"></i> Save</button>
                                 </div>
                             </div>
-                            
+
                             <!-- template -->
                             <script type="text/ng-template" id="myModalContent.html">
-                                <form id="paymentForm" class="form-horizontal">
+                                <form id="paymentForm" class="form-horizontal" name="paymentForm">
                                     <div class="modal-header">
                                         <h3 class="modal-title" id="modal-title">Payment</h3>
                                     </div>
@@ -185,37 +181,25 @@
                                         <div class="form-group">
                                             <label class="col-md-2 text-right">Date:</label>
                                             <div class="col-md-10">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control"
-                                                           uib-datepicker-popup="MM/dd/yyyy"
-                                                           ng-model="$ctrl.payment.paymentDate"
-                                                           is-open="$ctrl.dateTimePicker.isOpen[0]"
-                                                           datepicker-options="dateOptions"
-                                                           ng-required="true"
-                                                           close-text="Close"
-                                                           alt-input-formats="altInputFormats" />
-                                                    <span class="input-group-btn">
-                                                        <button type="button" class="btn btn-default" ng-click="$ctrl.dateTimePicker.toggle($event,0)"><i class="fa fa-calendar"></i></button>
-                                                    </span>
-                                                </div>
-                                                <span ng-show="errorState['vm.paymentdate']">{{errorState['vm.paymentdate']}}</span>
+                                                <date-time-picker format="MM/dd/yyyy" index="0" model="$ctrl.payment.paymentDate" required="true"></date-time-picker>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-2 text-right">Cheque No:</label>
                                             <div class="col-md-10">
-                                                <input type="text" ng-disabled="$ctrl.payment.chequeFieldDisabled" name="chequeNo" id="chequeNo" class="form-control" ng-model="$ctrl.payment.chequeNo" />
-                                                <span ng-show="errorState['vm.chequeno']">{{errorState['vm.chequeno']}}</span>
+                                                <input type="text"
+                                                       name="chequeNo" id="chequeNo" class="form-control"
+                                                       ng-disabled="$ctrl.payment.chequeFieldDisabled"
+                                                       ng-model="$ctrl.payment.chequeNo" required />
                                             </div>
                                         </div>
                                         <div class="form-group" ng-hide="$ctrl.payment.paymentTypeCode == 'ptcs'">
                                             <label class="col-md-2 text-right">Bank:</label>
                                             <div class="col-md-10">
-                                                <select ng-model="$ctrl.payment.bankCode" class="form-control">
+                                                <select ng-model="$ctrl.payment.bankCode" class="form-control" ng-required="$ctrl.payment.paymentTypeCode == 'ptcq'">
                                                     <option value="">--Select Bank--</option>
                                                     <option ng-repeat="bank in $ctrl.paymentObject.banks" value="{{bank.value}}">{{bank.text}}</option>
                                                 </select>
-                                                <span ng-show="errorState['vm.bankcode']">{{errorState['vm.bankcode']}}</span>
                                             </div>
                                         </div>
                                         <div class="page-header">
@@ -224,45 +208,28 @@
                                         <div class="form-group">
                                             <label class="col-md-2 text-right">Start:</label>
                                             <div class="col-md-4">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control"
-                                                           uib-datepicker-popup="MM/dd/yyyy"
-                                                           ng-model="$ctrl.payment.coveredPeriodFrom"
-                                                           is-open="$ctrl.dateTimePicker.isOpen[1]"
-                                                           datepicker-options="dateOptions"
-                                                           ng-required="true"
-                                                           close-text="Close"
-                                                           alt-input-formats="altInputFormats" />
-                                                    <span class="input-group-btn">
-                                                        <button type="button" class="btn btn-default" ng-click="$ctrl.dateTimePicker.toggle($event,1)"><i class="fa fa-calendar"></i></button>
-                                                    </span>
-                                                </div>
-                                                <span ng-show="errorState['vm.coveredperiodfrom']">{{errorState['vm.coveredperiodfrom']}}</span>
-                                                <span ng-show="errorState['perioderror']">{{errorState['perioderror']}}</span>
+                                                <date-time-picker format="MM/dd/yyyy" index="1" model="$ctrl.payment.coveredPeriodFrom" required="true">
+                                                    <span ng-show="errorState['vm.coveredperiodfrom']">{{errorState['vm.coveredperiodfrom']}}</span>
+                                                    <span ng-show="errorState['perioderror']">{{errorState['perioderror']}}</span>
+                                                </date-time-picker>
                                             </div>
                                             <label class="col-md-2 text-right">End:</label>
                                             <div class="col-md-4">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control"
-                                                           uib-datepicker-popup="MM/dd/yyyy"
-                                                           ng-model="$ctrl.payment.coveredPeriodTo"
-                                                           is-open="$ctrl.dateTimePicker.isOpen[2]"
-                                                           datepicker-options="dateOptions"
-                                                           ng-required="true"
-                                                           close-text="Close"
-                                                           alt-input-formats="altInputFormats" />
-                                                    <span class="input-group-btn">
-                                                        <button type="button" class="btn btn-default" ng-click="$ctrl.dateTimePicker.toggle($event,2)"><i class="fa fa-calendar"></i></button>
-                                                    </span>
+                                                    <date-time-picker format="MM/dd/yyyy" index="2" model="$ctrl.payment.coveredPeriodTo" required="true">
+                                                        <span ng-show="errorState['vm.coveredperiodto']">{{errorState['vm.coveredperiodto']}}</span>
+                                                    </date-time-picker>
                                                 </div>
-                                                <span ng-show="errorState['vm.coveredperiodto']">{{errorState['vm.coveredperiodto']}}</span>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-2 text-right">Amount:</label>
                                             <div class="col-md-10">
-                                                <input type="text" name="amount" id="amount" class="form-control text-right" placeholder="Amount" ng-model="$ctrl.payment.amount" />
-                                                <span ng-show="errorState['vm.amount']">{{errorState['vm.amount']}}</span>
+                                                <input type="text"
+                                                       name="amount" id="amount" class="form-control text-right" placeholder="Amount"
+                                                       ng-pattern="/^\d+/"
+                                                       ng-model="$ctrl.payment.amount" required />
+                                                <span ng-show="paymentForm.amount.$invalid">Please enter numeric value</span>
                                             </div>
                                         </div>
                                     </div>

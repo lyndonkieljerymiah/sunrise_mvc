@@ -35,7 +35,10 @@ namespace Sunrise.TenantManagement.Persistence.Repository
             await _appContextDb.SaveChangesAsync();
         }
 
-
+        public void SaveChangesNonAsync()
+        {
+            _appContextDb.SaveChanges();
+        }
         #region disposed method
         private bool disposed = false;
 
@@ -56,6 +59,8 @@ namespace Sunrise.TenantManagement.Persistence.Repository
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+       
 
 
         #endregion

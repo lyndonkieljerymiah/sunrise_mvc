@@ -7,8 +7,9 @@ namespace Sunrise.Client.Controllers
     [Authorize]
     public class ContractController : Controller
     {
-        public PartialViewResult Index() {
-            return PartialView();
+               
+        public ViewResult Index() {
+            return View();
         }
 
         [Route("{villaId?}")]
@@ -16,6 +17,12 @@ namespace Sunrise.Client.Controllers
         {
             ViewBag.Id = villaId;
             return View();
+        }
+
+        [Route("search")]
+        public PartialViewResult Search()
+        {
+            return PartialView();
         }
 
 

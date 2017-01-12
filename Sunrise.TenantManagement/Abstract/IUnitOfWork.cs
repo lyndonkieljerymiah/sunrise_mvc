@@ -12,5 +12,6 @@ namespace Sunrise.TenantManagement.Abstract
         ITenantRepository Tenants { get; }
 
         Task SaveChanges();
+        void SaveChangesNonAsync();
     }
 }

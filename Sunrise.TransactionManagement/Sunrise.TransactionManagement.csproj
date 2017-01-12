@@ -65,9 +65,18 @@
     <Compile Include="Migrations\201701040855584_UpdateCodeInTransaction.Designer.cs">
       <DependentUpon>201701040855584_UpdateCodeInTransaction.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701111657184_AddRevereseInPayment.cs" />
+    <Compile Include="Migrations\201701111657184_AddRevereseInPayment.Designer.cs">
+      <DependentUpon>201701111657184_AddRevereseInPayment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701111702220_UpdatePaymentStamp.cs" />
+    <Compile Include="Migrations\201701111702220_UpdatePaymentStamp.Designer.cs">
+      <DependentUpon>201701111702220_UpdatePaymentStamp.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Payment.cs" />
     <Compile Include="Model\Transaction.cs" />
+    <Compile Include="Model\UpdateStamp.cs" />
     <Compile Include="Persistence\AppDbContext.cs" />
     <Compile Include="Persistence\ReferenceDbContext.cs" />
     <Compile Include="Persistence\Repository\PaymentRepository.cs" />
@@ -92,6 +101,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701040855584_UpdateCodeInTransaction.resx">
       <DependentUpon>201701040855584_UpdateCodeInTransaction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701111657184_AddRevereseInPayment.resx">
+      <DependentUpon>201701111657184_AddRevereseInPayment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701111702220_UpdatePaymentStamp.resx">
+      <DependentUpon>201701111702220_UpdatePaymentStamp.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,5 +1,65 @@
-﻿<div>
-    <div class="page-header">
-        <h3>Contract List</h3>
+﻿@{
+    ViewBag.Title = "Contract";
+}
+<div ng-controller="contractListController as $ctrl" ng-init="$ctrl.list()">
+    <spinner></spinner>
+    <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>Contract List</strong>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-2 pull-right">
+                    <button class="btn btn-success btn-block" ng-click="$ctrl.add()"><i class="fa fa-plus"></i> New Contract</button>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-bordered table-condensed">
+                        <tr class="active">
+                            <th>Date</th>
+                            <th>Contract No</th>
+                            <th>Villa No</th>
+                            <th>Tenant</th>
+                            <th>Covered Period</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="contract in contracts | orderBy : 'code'">
+                            <td>{{contract.dateCreated | date : 'MM/dd/yyyy'}}</td>
+                            <td>{{contract.code}}</td>
+                            <td>{{contract.villaNo}}</td>
+                            <td>{{contract.tenant}}</td>
+                            <td>
+                                {{contract.periodStart | date  : 'MM/dd/yyyy'}} -
+                                {{contract.periodEnd | date : 'MM/dd/yyyy'}}
+                            </td>
+                            <td>{{contract.amountPayable | currency : 'QR '}}</td>
+                            <td>{{contract.status}}</td>
+                            <td class="text-center">
+                                <div class="btn-group" uib-dropdown ng-show="contract.editState">
+                                    <button class="btn btn-primary btn-sm" uib-dropdown-toggle>
+                                        <i class="fa fa-caret-down"></i>
+                                    </button>
+                                    <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+                                        <li role="menuitem"><a href="#" ng-click="$ctrl.view(contract.id)">Edit</a></li>
+                                        <li role="menuitem"><a href="#" ng-click="$ctrl.cancel(contract.id)">Cancel</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+@section scripts {
+    <script src="@Url.Content("~/Scripts/app/data/villa-manager.data.js")"></script>
+    <script src="@Url.Content("~/Scripts/app/data/contract-manager.data.js")"></script>
+    <script src="@Url.Content("~/Scripts/app/controller/contractController.js")"></script>
+}

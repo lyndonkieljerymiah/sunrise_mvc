@@ -20,7 +20,7 @@ namespace TransactionManagement.Test
             {
                 using (var uow = new UnitOfWork())
                 {
-                    var transaction = await uow.Transactions.GetTransactionView("f84cb8b1-2c95-48a3-ace7-8364f6a16d2c");
+                    var transaction = await uow.Transactions.GetTransactionView(c => c.Id == "f84cb8b1-2c95-48a3-ace7-8364f6a16d2c");
                     Assert.IsNotNull(transaction);
                     Assert.IsNotNull(transaction.Tenant.Company);
                     Assert.IsNotNull(transaction.Tenant.Individual);
@@ -62,7 +62,7 @@ namespace TransactionManagement.Test
                 using (var uow = new UnitOfWork())
                 {
                     var newTransaction = await uow.Transactions.GetContractById("4face5b6-6758-4092-80ec-bbb24865751c");
-                    var success = newTransaction.AddPayment(DateTime.Today,"ptcq", "pmp", "123456", "bdb", DateTime.Today, DateTime.Today.AddMonths(6), 7000m, "");
+                    var success = newTransaction.AddPayment(DateTime.Today,"ptcq", "pmp", "123456", "bdb", DateTime.Today, DateTime.Today.AddMonths(6), 7000m, "","");
                     Assert.AreEqual(1, newTransaction.Payments.Count);
                     Assert.IsFalse(success);
                 }

@@ -9,9 +9,7 @@ using Sunrise.Maintenance.Model;
 namespace Sunrise.Client.Domains.ViewModels
 {
     public class PaymentViewModel
-    {
-
-        
+    {   
         public PaymentViewModel(bool enabledWriteState = false)
         {
             PaymentDate = DateTime.Today;
@@ -49,7 +47,7 @@ namespace Sunrise.Client.Domains.ViewModels
         public string Status { get; set; }
         public string StatusCode { get; set; }
         public string PaymentStatus { get; set; }
-        public bool WriteState {get;private set;}
+        public bool WriteState {get; set;}
         public DateTime? StatusDate { get; set; }
         public string Remarks { get; set; }
         public string Bank { get; set; }

@@ -7,6 +7,7 @@ using Sunrise.TransactionManagement.DTO;
 using System.Data.Entity;
 using System.Linq;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Sunrise.TransactionManagement.Persistence.Repository
 {
@@ -41,26 +42,32 @@ namespace Sunrise.TransactionManagement.Persistence.Repository
 
             return transaction;
         }
-
-        public async Task<IEnumerable<TransactionView>> GetContracts()
+        
+        public async Task<IEnumerable<TransactionView>> GetContracts(Expression<Func<TransactionView,bool>> clause=null)
         {
-            var contracts = await this._referenceDbContext
+
+            var contracts = this._referenceDbContext
                                 .Transactions
                                 .Include(t => t.Tenant)
                                 .Include(v => v.Villa)
-                                .Include(v => v.Payments)
-                                .ToListAsync();
-            return contracts;
+                                .Include(v => v.Payments);
+
+            if (clause != null)
+            {
+                contracts = contracts.Where(clause);
+            }
+
+            return await contracts.ToListAsync();
         }
 
-        public async Task<TransactionView> GetTransactionView(string id)
+        public async Task<TransactionView> GetTransactionView(Expression<Func<TransactionView,bool>> clause)
         {
             var transaction = await this._referenceDbContext
                                         .Transactions
                                         .Include(t => t.Tenant)
                                         .Include(v => v.Villa)
                                         .Include(p => p.Payments)
-                                        .SingleOrDefaultAsync(t => t.Id == id);
+                                        .SingleOrDefaultAsync(clause);
             return transaction;
         }
 

@@ -15,6 +15,7 @@ namespace Sunrise.VillaManagement.DTO
         public string WaterNo { get; set; }
         public string QtelNo { get; set; }
         public string Status { get; set; }
+        public string StatusCode { get; set; }
         public string Type { get; set; }
         public int Capacity { get; set; }
         public string Description { get; set; }

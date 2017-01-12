@@ -3,14 +3,13 @@
 }
 
 <form class="form-horizontal" method="post" ng-controller="contractController as $ctrl" ng-init="$ctrl.init('@ViewBag.Id')">
+    <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4>Villa Rent Contract</h4>
         </div>
         <div class="panel-body">
-
-            <spinner show-loading="loading"></spinner>
-
+            <spinner></spinner>
             <div class="row">
                 <div class="col-md-6">
                     <div class="panel panel-default">
@@ -85,39 +84,17 @@
                             <div class="form-group">
                                 <label class="col-md-4 text-right">Start:</label>
                                 <div class="col-md-8">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control"
-                                               uib-datepicker-popup="MM/dd/yyyy"
-                                               ng-model="sales.periodStart"
-                                               is-open="dateTimePicker.isOpen[1]"
-                                               datepicker-options="dateOptions"
-                                               ng-required="true"
-                                               close-text="Close"
-                                               alt-input-formats="altInputFormats" />
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-default" ng-click="dateTimePicker.toggle($event,1)"><i class="fa fa-calendar"></i></button>
-                                        </span>
-                                    </div>
-                                    <span ng-show="errorState['vm.periodstart']">{{errorState['vm.periodstart']}}</span>
+                                    <date-time-picker index="1" model="sales.periodStart">
+                                        <span ng-show="errorState['vm.periodstart']">{{errorState['vm.periodstart']}}</span>
+                                    </date-time-picker>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-4 text-right">End:</label>
                                 <div class="col-md-8">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control"
-                                               uib-datepicker-popup="MM/dd/yyyy"
-                                               ng-model="sales.periodEnd"
-                                               is-open="dateTimePicker.isOpen[2]"
-                                               datepicker-options="dateOptions"
-                                               ng-required="true"
-                                               close-text="Close"
-                                               alt-input-formats="altInputFormats" />
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-default" ng-click="dateTimePicker.toggle($event,2)"><i class="fa fa-calendar"></i></button>
-                                        </span>
-                                    </div>
-                                    <span ng-show="errorState['vm.periodend']">{{errorState['vm.periodend']}}</span>
+                                    <date-time-picker index="2" model="sales.periodEnd">
+                                        <span ng-show="errorState['vm.periodend']">{{errorState['vm.periodend']}}</span>
+                                    </date-time-picker>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -131,7 +108,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <div class="panel-footer">
             <div class="row">

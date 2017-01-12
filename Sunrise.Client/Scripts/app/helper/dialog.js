@@ -35,6 +35,10 @@ mainApp.factory("confirmationDialog",
         return {
             open: function (objectValue) {
 
+                if (typeof (objectValue.buttons) === "undefined") {
+                    objectValue.buttons = ["Ok", "Cancel"];
+                }
+
                 var uibModalInstance = $uibModal.open({
                     size: 'sm',
                     template: [

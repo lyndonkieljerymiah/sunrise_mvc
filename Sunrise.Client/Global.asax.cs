@@ -27,7 +27,7 @@ namespace Sunrise.Client
             {
 
                 cfg.CreateMap<Villa, VillaViewModel>().ReverseMap();
-                
+
                 #region TenantView to ViewModel Map
                 cfg.CreateMap<IndividualView, IndividualViewModel>().ReverseMap();
                 cfg.CreateMap<CompanyView, CompanyViewModel>().ReverseMap();
@@ -55,7 +55,7 @@ namespace Sunrise.Client
 
 
                 cfg.CreateMap<Payment, PaymentViewModel>();
-                cfg.CreateMap<PaymentViewModel,Payment>()
+                cfg.CreateMap<PaymentViewModel, Payment>()
                     .ForMember(dest => dest.Status, opts => opts.Ignore());
                 cfg.CreateMap<PaymentView, PaymentViewModel>().ReverseMap();
 
@@ -71,6 +71,13 @@ namespace Sunrise.Client
                  .ForMember(dest => dest.Payments, opts => opts.MapFrom(scr => scr.Payments))
                  .ReverseMap();
 
+                cfg.CreateMap<TransactionView, ReceivableViewModel>()
+                 .ForMember(dest => dest.Villa, opts => opts.MapFrom(src => src.Villa))
+                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Tenant.Name))
+                 .ForMember(dest => dest.Address, opts => opts.MapFrom(src => src.Tenant.Address.ToString()))
+                 .ForMember(dest => dest.Payments, opts => opts.MapFrom(scr => scr.Payments))
+                 .ReverseMap();
+
                 cfg.CreateMap<Transaction, TransactionRegisterViewModel>().ReverseMap();
             });
 
@@ -80,7 +87,7 @@ namespace Sunrise.Client
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-           
+
         }
     }
 }

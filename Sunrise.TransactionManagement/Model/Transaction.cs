@@ -23,7 +23,7 @@ namespace Sunrise.TransactionManagement.Model
         {
             var transaction = new Transaction
             {
-                Code = code,
+                Code = "C" + code + DateTime.Today.Year.ToString(),
                 RentalType = rentalType,
                 ContractStatus = contractStatus,
                 PeriodStart = periodStart,
@@ -81,9 +81,7 @@ namespace Sunrise.TransactionManagement.Model
         public string UserId { get; set; }
 
         public virtual ICollection<Payment> Payments { get; set; }
-
-
-
+        
         #region method
         public void ComputePayableAmount(decimal rate)
         {
@@ -93,20 +91,19 @@ namespace Sunrise.TransactionManagement.Model
         public bool AddPayment(
            DateTime paymentDate, string paymentType, string paymentMode, string chequeNo,
             string bank, DateTime coveredFrom, DateTime coveredTo,
-            decimal amount, string remarks)
+            decimal amount, string remarks,string userId)
         {
 
             //no  existing covered date
             Payment payment = null;
-
             //do date validation here
             if (!IsPaymentDateCovered(coveredFrom.Date))
             {
-                payment = Payment.Map(paymentDate, paymentType, paymentMode, chequeNo, bank, coveredFrom, coveredTo, amount, remarks);
+                payment = Payment.Map(paymentDate, paymentType, paymentMode, chequeNo, bank, coveredFrom, coveredTo, amount, remarks,userId);
                 //payment is cash must be status cleared
                 if (paymentType == "ptcs")
                 {
-                    payment.SetStatus("psc", "");
+                    payment.SetStatus("psc", "",userId);
                 }
                 Payments.Add(payment);
                 return true;
@@ -114,11 +111,14 @@ namespace Sunrise.TransactionManagement.Model
             return false;
         }
 
-        public void UpdatePaymentStatus(int id, string status, string remarks)
+        public void UpdatePaymentStatus(int id, string status, string remarks,string userId)
         {
             var payment = this.Payments.SingleOrDefault(p => p.Id == id);
-            if (payment.Status != "psc")
-                payment.SetStatus(status, remarks);
+            //shouldn't update if it's the same value 
+            //means not dirty
+            if (payment.Status != status)
+                payment.SetStatus(status, remarks,userId);
+
         }
         public void ActivateStatus()
         {
@@ -140,7 +140,7 @@ namespace Sunrise.TransactionManagement.Model
             {
                 existingDate = this.Payments
                     .Where(p => value.Date >= p.CoveredPeriodFrom.Date &&
-                            value.Date < p.CoveredPeriodTo.Date).Count();
+                            value.Date < p.CoveredPeriodTo.Date && p.PaymentMode == "pmp").Count();
             }
 
             return existingDate > 0 ? true : false;

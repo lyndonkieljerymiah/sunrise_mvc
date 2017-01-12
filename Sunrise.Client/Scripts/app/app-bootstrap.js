@@ -1,21 +1,5 @@
 ﻿var mainApp = angular.module("mainApp", ["ngRoute", "ui.bootstrap", "ngAnimate","toaster"]);
 
-/*services*/
-mainApp.service("spinnerManager",
-    function () {
-        var $ctrl = this;
-
-        this.spinnerLoading = false;
-
-        this.start = function () {
-            $ctrl.spinnerLoading = true;
-        }
-
-        this.stop = function () {
-            $ctrl.spinnerLoading = false;
-        }
-    });
-
 
 mainApp.factory('modelStateValidation',
     function () {
@@ -132,10 +116,3 @@ mainApp.animation('.slide-animation',
     });
 
 
-mainApp.directive("spinner",
-    function (spinnerManager) {
-        return {
-            restrict: "EA",
-            template: "<div class='spinner' ng-show='_spinnerLoading'><div class='icon'></div><div class='overlay'></div></div>"
-        };
-    });

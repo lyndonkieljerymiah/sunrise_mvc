@@ -1,4 +1,5 @@
-﻿using Sunrise.Client.Domains.ViewModels;
+﻿using Microsoft.AspNet.Identity;
+using Sunrise.Client.Domains.ViewModels;
 using Sunrise.Client.Persistence.Manager;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Utilities.Enum;
 
+
 namespace Sunrise.Client.Controllers.Api
 {
     [RoutePrefix("api/billing")]
@@ -18,15 +20,18 @@ namespace Sunrise.Client.Controllers.Api
         private ContractDataManager _contractDataManager;
         private SelectionDataManager _selectionDataManager;
         private VillaDataManager _villaDataManager;
+        private TenantDataManager _tenantDataManager;
 
         public BillingController(
             ContractDataManager contractDataManager,
             SelectionDataManager selectionDataManager,
+            TenantDataManager tenantDataManager,
             VillaDataManager villaDataManager)
         {
             _contractDataManager = contractDataManager;
             _selectionDataManager = selectionDataManager;
             _villaDataManager = villaDataManager;
+            _tenantDataManager = tenantDataManager;
         }
 
 
@@ -41,11 +46,8 @@ namespace Sunrise.Client.Controllers.Api
         {
             var transaction = await _contractDataManager.GetContractById(transactionId);
             var selections = await _selectionDataManager
-                .GetLookup(new[] { "Bank", "PaymentTerm", "PaymentMode" });
+                .GetLookup(new[] { "Bank", "PaymentTerm", "PaymentMode", "PaymentStatus" });
             transaction.Initialize(selections);
-
-            //cheat the villa id
-            transaction.SetCheatSheet();
 
             return Ok(transaction);
         }
@@ -54,34 +56,12 @@ namespace Sunrise.Client.Controllers.Api
         [Route("list")]
         public async Task<IHttpActionResult> List()
         {
-            var transactions = await _contractDataManager.GetContracts();
+            var transactions = await _contractDataManager.GetContracts("ssp");
             return Ok(transactions);
         }
 
 
-        /// <summary>
-        ///     TODO: Save Payment
-        /// </summary>
-        /// <param name="vm"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("validate")]
-        public async Task<IHttpActionResult> Validate(PaymentViewModel vm)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var result = await _contractDataManager.ValidatePayment(vm);
-
-            if (!result.Success)
-            {
-                AddErrorResult(result);
-                return BadRequest(ModelState);
-            }
-
-            return Ok(result);
-        }
-
+      
         /// <summary>
         ///     TODO: Save Payment
         /// </summary>
@@ -91,10 +71,14 @@ namespace Sunrise.Client.Controllers.Api
         [Route("save")]
         public async Task<IHttpActionResult> Save(BillingViewModel vm)
         {
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _contractDataManager.AddPayment(vm,
+            //get current user 
+            var userId = User.Identity.GetUserId();
+
+            var result = await _contractDataManager.AddPayment(vm,userId,
                 () =>
                 {
                     _villaDataManager.UpdateVillaStatusNonAsync(vm.Villa.Id, VillaStatusEnum.NotAvailable);
@@ -109,9 +93,18 @@ namespace Sunrise.Client.Controllers.Api
             return Ok(vm);
         }
 
+        [HttpPost]
+        [Route("dismiss")]
+        public async Task<IHttpActionResult> Dismiss(BillingViewModel vm) {
 
+            var result = await _contractDataManager.RemoveContract(vm.Id,(tenantId,villaId)=> {
+                    _tenantDataManager.RemoveTenantNonAsync(tenantId);
+                    _villaDataManager.UpdateVillaStatusNonAsync(villaId, VillaStatusEnum.Available);
+                });
 
-
+            return Ok(result);
+        }
+        
         #region Private Method
         private void AddErrorResult(CustomResult result)
         {

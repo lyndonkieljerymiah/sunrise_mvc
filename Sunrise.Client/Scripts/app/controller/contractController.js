@@ -13,77 +13,151 @@
     });
 
 mainApp.controller("contractController",
-    function ($scope, contractDataManager) {
+    function ($scope, contractDataManager, confirmationDialog, toaster, spinnerManager) {
+
         var templatePath = "/tenant/register/";
         var isPageLoad = false;
-
-
+        spinnerManager.scope = $scope;
 
         $scope.sales = {};
-        $scope.dateTimePicker = {
-            isOpen: [false, false, false],
-            toggle: function ($event, key) {
-                $event.preventDefault();
-                $event.stopPropagation();
-                $scope.dateTimePicker.isOpen[key] = $scope.dateTimePicker.isOpen[key] ? false : true;
-            }
-        }
 
-        function start() {
-            $scope._spinnerLoading = true;
-        }
-        function stop() {
-            $scope._spinnerLoading = false;
-        }
         function restart() {
             $scope.errorState = {};
             isPageLoad = false;
-            stop();
         }
 
-        function create(villaId, tenantType)
-        {
-            $scope._spinnerLoading = true;
+
+
+        function create(villaId, tenantType) {
+            spinnerManager.start();
             isPageLoad = true;
             contractDataManager.createContract(villaId, tenantType,
-                function (data)
-                {
+                function (data) {
                     $scope.sales = data;
                     $scope.nbSlides.images = data.images;
                     $scope.template = templatePath + data.register.tenantType;
-                    restart();
+                    spinnerManager.stop(restart);
                 });
         }
-
         function init(villaId) {
             create(villaId, null);
         }
-
         function changeTenantType() {
             if (!isPageLoad) {
                 create($scope.sales.villa.id, $scope.sales.register.tenantType);
             }
         }
-
         function save() {
-            start();
-
-            //reverse
-            $scope.sales.register.gender = parseInt($scope.sales.register.gender);
-            contractDataManager.save($scope.sales,
-                function(data) {
-                    var id = data.id;
-                    contractDataManager.proceedToBilling(id);
-                    restart();
-                },
-                function (data) {
-                    $scope.errorState  = data;
-                    stop();
-                });
+            confirmationDialog.open({
+                title: "Saving Confirmation!!",
+                description: "Are you sure you want to save?",
+                buttons: ["Yes", "No"],
+                action: function (response) {
+                    spinnerManager.start();
+                    //reverse
+                    $scope.sales.register.gender = parseInt($scope.sales.register.gender);
+                    contractDataManager.save($scope.sales,
+                        function (data) {
+                            var id = data.id;
+                            contractDataManager.proceedToBilling(id);
+                            spinnerManager.stop(restart);
+                        },
+                        function (data) {
+                            $scope.errorState = data;
+                            toaster.pop("error", "Failed to save unexpected error occured");
+                            spinnerManager.stop();
+                        });
+                }
+            });
         }
+
         return {
             init: init,
             changeTenantType: changeTenantType,
             save: save
         }
     });
+
+mainApp.controller("contractListController",
+    function ($scope, contractDataManager,
+        confirmationDialog, spinnerManager,
+        $uibModal, router, toaster)
+    {
+
+        spinnerManager.scope = $scope;
+        function list() {
+            spinnerManager.start();
+            contractDataManager.list(
+                function (data) {
+                    $scope.contracts = data;
+                    spinnerManager.stop();
+                },
+                function (data) {
+
+                });
+        }
+
+        function add() {
+
+            var modalInstance = $uibModal.open({
+                size: "lg",
+                templateUrl: '/contract/search',
+                controller: 'villaSearchController',
+                controllerAs: '$ctrl'
+            });
+
+            modalInstance.result.then(function (villaId) {
+                contractDataManager.redirectToContract(villaId);
+            });
+        }
+
+        function cancel(id) {
+            confirmationDialog.open({
+                title: "Remove Contract",
+                description: "Do you want to cancel the contract?",
+                action: function (response) {
+                    spinnerManager.start();
+                    contractDataManager.cancel(id,
+                        function (data) {
+                            toaster.pop("success", "Contract successfully remove");
+                            spinnerManager.stop();
+                            list();
+                        },
+                        function (data) {
+                            toaster.pop("error", "Contract unable to remove");
+                            spinnerManager.stop();
+                        });
+                    
+                }
+            });
+        }
+
+        function view(id) {
+            contractDataManager.proceedToBilling(id);
+        }
+        return {
+            list: list,
+            add: add,
+            view: view,
+            cancel: cancel
+        }
+    });
+
+mainApp.controller("villaSearchController", function (villaDataManager, $uibModalInstance) {
+    $ctrl = this;
+    $ctrl.villas = [];
+    $ctrl.txtSearch = "";
+    $ctrl.search = search;
+    $ctrl.select = select;
+    function search() {
+        villaDataManager
+            .searchByNo($ctrl.txtSearch, function (data)
+            {
+                $ctrl.villas = data;
+            });
+    }
+
+    function select(id) {
+        $uibModalInstance.close(id);
+    }
+});

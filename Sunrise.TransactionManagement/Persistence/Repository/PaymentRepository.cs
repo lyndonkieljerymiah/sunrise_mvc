@@ -18,11 +18,9 @@ namespace Sunrise.TransactionManagement.Persistence.Repository
 
         public async Task<Payment> GetPaymentById(int id)
         {
-
             var payment = await _set
                 .Include(p => p.Transaction)
                 .SingleOrDefaultAsync(p => p.Id == id);
-
             return payment;
 
         }

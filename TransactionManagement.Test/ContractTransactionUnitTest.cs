@@ -25,7 +25,7 @@ namespace TransactionManagement.Test
         {
             //initial
             var transaction = Transaction.Map("123", "rtff", "csl", DateTime.Today, DateTime.Today.AddYears(1), 54000m, "a", "b", "123456");
-            transaction.AddPayment(DateTime.Today, "ptcq", "bdb", "123456", "bdb", DateTime.Today, DateTime.Today.AddMonths(1), 7500m,"");
+            transaction.AddPayment(DateTime.Today, "ptcq", "bdb", "123456", "bdb", DateTime.Today, DateTime.Today.AddMonths(1), 7500m,"","");
 
             var ps = transaction.Payments;
             foreach (var payment in ps)
@@ -39,8 +39,8 @@ namespace TransactionManagement.Test
         public void Pay_Cash_StatusShouldCleared()
         {
             var transaction = Transaction.Map("123","rtff","csl",DateTime.Today,DateTime.Today.AddYears(1),54000m,"a","b","123456");
-            transaction.AddPayment(DateTime.Today, "ptcs", "bdb", "Cash", "", DateTime.Today, DateTime.Today.AddMonths(1), 7500m, "");
-            transaction.AddPayment(DateTime.Today,"ptcs", "bdb", "Cash", "", DateTime.Today.AddMonths(1), DateTime.Today.AddMonths(2), 7500m, "");
+            transaction.AddPayment(DateTime.Today, "ptcs", "bdb", "Cash", "", DateTime.Today, DateTime.Today.AddMonths(1), 7500m, "","");
+            transaction.AddPayment(DateTime.Today,"ptcs", "bdb", "Cash", "", DateTime.Today.AddMonths(1), DateTime.Today.AddMonths(2), 7500m, "","");
 
             var ps = transaction.Payments;
             foreach(var payment in ps)
@@ -54,8 +54,8 @@ namespace TransactionManagement.Test
         public void IsPaymentCovered_Exist_ShouldFailed()
         {
             var transaction = Transaction.Map("123", "rtff", "csl", DateTime.Today, DateTime.Today.AddYears(1), 54000m, "a", "b", "123456");
-            var is1Success = transaction.AddPayment(DateTime.Today,"ptcq", "bdb", "123456", "", DateTime.Today, DateTime.Today.AddMonths(1), 7500m, "");
-            var is2Success = transaction.AddPayment(DateTime.Today,"ptcs", "bdb", "Cash", "", DateTime.Today.AddMonths(1).AddDays(1), DateTime.Today.AddMonths(2), 7500m, "");
+            var is1Success = transaction.AddPayment(DateTime.Today,"ptcq", "bdb", "123456", "", DateTime.Today, DateTime.Today.AddMonths(1), 7500m, "","");
+            var is2Success = transaction.AddPayment(DateTime.Today,"ptcs", "bdb", "Cash", "", DateTime.Today.AddMonths(1).AddDays(1), DateTime.Today.AddMonths(2), 7500m, "","");
 
             Assert.AreEqual(true, is1Success);
             Assert.AreEqual(false, is2Success);

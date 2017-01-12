@@ -22,7 +22,9 @@ namespace Sunrise.TransactionManagement.DTO
 
         public string QtelNo { get; set; }
 
-        public string Status { get; private set; }
+        public string Status { get; set; }
+
+        public string StatusCode { get; set; }
 
         public string Type { get; set; }
 

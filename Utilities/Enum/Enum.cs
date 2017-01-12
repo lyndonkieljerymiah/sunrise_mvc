@@ -13,6 +13,12 @@ namespace Utilities.Enum
         Reserved
     }
 
+    public enum SearchByEnum
+    {
+        Code,
+        Id
+    }
+
     public enum GenderEnum
     {
         Male,
