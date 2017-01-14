@@ -78,23 +78,13 @@ namespace Sunrise.Client.Domains.ViewModels
             payment.TransactionId = this.Id;
             payment.VillaId = this.Villa.Id;
             payment.Amount = this.Villa.RatePerMonth;
+
             this.PaymentDictionary.InitialValue = payment;
         }
 
         public void SetEditMode()
-        {
-            if(Payments != null && Payments.Count > 0)
-            {   
-                foreach (var payment in Payments)
-                {
-                    payment.WriteState = false;
-                    if (payment.StatusCode == "psv")
-                    {
-                        payment.WriteState = true;
-                    }   
-                }
-                UpdateState = Payments.Where(p => p.WriteState == true).Count() == 0 ? false : true;
-            }
+        {   
+            UpdateState = Payments.Where(p => p.WriteState == true).Count() == 0 ? false : true;
         }
     }
 }

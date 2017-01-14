@@ -20,7 +20,6 @@ namespace Sunrise.Client.Persistence.Manager
         {
             _uow = uow;
         }
-
         public async Task<CustomResult> AddContract(TransactionRegisterViewModel vmTransaction,Action<string> updateStatus)
         {
             var result = new CustomResult();
@@ -65,17 +64,17 @@ namespace Sunrise.Client.Persistence.Manager
             return result;
             
         }
-        public async Task<CustomResult> AddPayment(BillingViewModel model,string userId, Action updateStatus)
-        {
+        public async Task<CustomResult> AddPayment(BillingViewModel model,string userId, Action updateStatus) {
             var result = new CustomResult();
             try
             {
-                var contract = await _uow.Transactions.GetContractById(model.Id);
+                var contract = await _uow.Transactions.FindQueryAsync(c => c.Id == model.Id,c => c.Payments);
                 if (contract == null)
                     throw new Exception("Invalid Contract");
 
                 //activate contract
                 contract.ActivateStatus();
+
                 bool isOk = false;
                 bool isTriggerUpdate = false;
                 foreach (var payment in model.Payments)
@@ -88,6 +87,17 @@ namespace Sunrise.Client.Persistence.Manager
                                 payment.CoveredPeriodFrom,
                                 payment.CoveredPeriodTo,
                                 payment.Amount, payment.Remarks,userId);
+                        if (payment.Status == "psc")
+                            isTriggerUpdate = true;
+                        if (!isOk) break;
+                    }
+                    else
+                    {
+                        isOk = contract.UpdatePayment(payment.Id, payment.PaymentDate, payment.PaymentTypeCode, payment.PaymentModeCode,
+                                payment.ChequeNo, payment.BankCode,
+                                payment.CoveredPeriodFrom,
+                                payment.CoveredPeriodTo,
+                                payment.Amount, payment.Remarks, userId);
                         if (payment.Status == "psc")
                             isTriggerUpdate = true;
                         if (!isOk) break;

@@ -1,4 +1,4 @@
-﻿mainApp.factory("receivableDataManager", function ($http, modelStateValidation) {
+﻿mainApp.factory("receivableDataManager", function ($http, modelStateValidation,router) {
     return {
         load: function (villaNo, success, failure) {
             //load data
@@ -35,6 +35,19 @@
             $http.post("/api/receivable/update", data)
                 .then(function (response) {
                     success(response.data);
+                });
+        },
+        reverse: function (data, action, failure)
+        {
+            $http.post("api/receivable/reverse", data)
+                .then(function (response)
+                {
+                    console.log(response.data);
+                    action(response.data);
+                },
+                function (response)
+                {
+                    failure(response.data);
                 });
         }
     };

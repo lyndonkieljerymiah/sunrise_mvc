@@ -6,19 +6,25 @@ using Utilities.Helper;
 namespace TransactionManagement.Test
 {
     [TestClass]
-    public class ContractTransactionUnitTest
+    public class ContractUnitTest
     {
 
         [TestMethod]
-        public void Initial_Contract_Value()
+        public void Initial_Contract_Value_ShouldCalculateAccurately()
         {
+            var monthToAdd = 12;
+            var villaRatePerMonth = 7000m;
+            
             //create transaction
-            var transaction = Transaction.CreateNew(12, 7000m, new MonthRateCalculation());
+            var transaction = Transaction.CreateNew(monthToAdd, villaRatePerMonth, new MonthRateCalculation());
+            var expectedOutput = monthToAdd * villaRatePerMonth;
 
-            Assert.AreEqual(transaction.PeriodEnd, Convert.ToDateTime("01/03/2018"));
-            Assert.AreEqual(transaction.AmountPayable, 84000m);
+            Assert.AreEqual(transaction.PeriodEnd,DateTime.Today.AddMonths(monthToAdd));
+            Assert.AreEqual(transaction.AmountPayable, expectedOutput);
             Assert.IsNotNull(transaction);
         }
+
+
 
         [TestMethod]
         public void Pay_Cheque_StatusShouldRecevied()

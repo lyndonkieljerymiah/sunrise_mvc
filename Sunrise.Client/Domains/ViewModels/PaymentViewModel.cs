@@ -18,11 +18,7 @@ namespace Sunrise.Client.Domains.ViewModels
             this.BankCode = "";
             this.PaymentTypeCode = "ptcq";
             this.PaymentModeCode = "pmp";
-            this.WriteState = enabledWriteState;
         }
-
-        
-
 
         public int Id { get; set; }
 
@@ -47,7 +43,12 @@ namespace Sunrise.Client.Domains.ViewModels
         public string Status { get; set; }
         public string StatusCode { get; set; }
         public string PaymentStatus { get; set; }
-        public bool WriteState {get; set;}
+
+        public bool WriteState {
+            get {
+                return this.StatusCode == "psv" ? true : false;
+            }
+        }
         public DateTime? StatusDate { get; set; }
         public string Remarks { get; set; }
         public string Bank { get; set; }

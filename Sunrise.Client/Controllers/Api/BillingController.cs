@@ -59,9 +59,7 @@ namespace Sunrise.Client.Controllers.Api
             var transactions = await _contractDataManager.GetContracts("ssp");
             return Ok(transactions);
         }
-
-
-      
+        
         /// <summary>
         ///     TODO: Save Payment
         /// </summary>
@@ -69,15 +67,12 @@ namespace Sunrise.Client.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("save")]
-        public async Task<IHttpActionResult> Save(BillingViewModel vm)
-        {
-
+        public async Task<IHttpActionResult> Save(BillingViewModel vm) {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             //get current user 
             var userId = User.Identity.GetUserId();
-
             var result = await _contractDataManager.AddPayment(vm,userId,
                 () =>
                 {

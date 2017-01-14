@@ -48,6 +48,17 @@ namespace Utilities.GeneralRepository
         {
             return await _set.FindAsync(id);
         }
+        public async Task<T> FindQueryAsync(Expression<Func<T, bool>> clause, params Expression<Func<T, object>>[] includeExpressions)
+        {   
+            return await includeExpressions
+                .Aggregate<Expression<Func<T, object>>, IQueryable<T>>
+                (_set, (current, expression) => current.Include(expression))
+                .SingleOrDefaultAsync(clause);
+        }
+        public async Task<T> FindQueryAsync(Expression<Func<T, bool>> clause)
+        {
+            return await _set.SingleOrDefaultAsync(clause);
+        }
 
         public async Task<IEnumerable<T>> GetQueryAsync(Expression<Func<T,bool>> where = null)
         {
@@ -68,5 +79,7 @@ namespace Utilities.GeneralRepository
         {
             throw new NotImplementedException();
         }
+
+       
     }
 }

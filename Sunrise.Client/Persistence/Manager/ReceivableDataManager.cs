@@ -30,6 +30,24 @@ namespace Sunrise.Client.Persistence.Manager
             return vm;
         }
 
+        public async Task<CustomResult> ReverseContract(string id,Action<string> updateStatus)
+        {
+            var result = new CustomResult();
+            try
+            {
+                var contract = await _unitOfWork.Transactions.FindQueryAsync(c => c.Id == id, c => c.Payments);
+                contract.ReversedContract();
+                await _unitOfWork.SaveChanges();
+                result.Success = true;
+                updateStatus(contract.VillaId);
+            }
+            catch(Exception e)
+            {
+                result.AddError("InternalErrorException", e.Message);
+            }
+            return result;
+        }
+
         public async Task<CustomResult> ClearPayment(string transactionId, IEnumerable<PaymentViewModel> values,string userId,Action<string> updateStatus)
         {
             var result = new CustomResult();
@@ -60,5 +78,6 @@ namespace Sunrise.Client.Persistence.Manager
 
             return result;
         }
+
     }
 }

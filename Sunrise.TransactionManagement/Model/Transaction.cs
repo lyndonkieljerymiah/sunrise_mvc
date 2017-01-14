@@ -36,6 +36,7 @@ namespace Sunrise.TransactionManagement.Model
 
             return transaction;
         }
+        #endregion
 
         internal Transaction(int defaultMonthPeriod, decimal ratePerMonth, IRateCalculation rateCalculation)
         {
@@ -51,9 +52,6 @@ namespace Sunrise.TransactionManagement.Model
             this.ComputePayableAmount(ratePerMonth);
 
         }
-
-        #endregion
-
         public Transaction()
         {
             this.Id = Guid.NewGuid().ToString();
@@ -61,8 +59,7 @@ namespace Sunrise.TransactionManagement.Model
             this.Status = "ssp";
             this.Payments = new HashSet<Payment>();
         }
-
-
+        
         public string Id { get; private set; }
         public string Code { get; set; }
         public DateTime DateCreated { get; private set; }
@@ -79,9 +76,11 @@ namespace Sunrise.TransactionManagement.Model
         public string VillaId { get; set; }
         public string TenantId { get; set; }
         public string UserId { get; set; }
-
+        public bool IsReversed { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
         
+       
+
         #region method
         public void ComputePayableAmount(decimal rate)
         {
@@ -97,7 +96,9 @@ namespace Sunrise.TransactionManagement.Model
             //no  existing covered date
             Payment payment = null;
             //do date validation here
-            if (!IsPaymentDateCovered(coveredFrom.Date))
+
+            bool hasCollision = paymentMode == "ptcq" ? IsPaymentDateCovered(coveredFrom.Date) : false;
+            if (!hasCollision)
             {
                 payment = Payment.Map(paymentDate, paymentType, paymentMode, chequeNo, bank, coveredFrom, coveredTo, amount, remarks,userId);
                 //payment is cash must be status cleared
@@ -111,9 +112,37 @@ namespace Sunrise.TransactionManagement.Model
             return false;
         }
 
+        public bool UpdatePayment(int id,
+           DateTime paymentDate, string paymentType, string paymentMode, string chequeNo,
+            string bank, DateTime coveredFrom, DateTime coveredTo,
+            decimal amount, string remarks, string userId) {
+            var payment = Payments.SingleOrDefault(p => p.Id == id);
+
+            bool hasCollision = paymentMode == "ptcq" ? IsPaymentDateCovered(coveredFrom.Date) : false;
+            if (!hasCollision)
+            {
+                payment.PaymentDate = paymentDate;
+                payment.PaymentType = paymentType;
+                payment.PaymentMode = paymentMode;
+                payment.ChequeNo = chequeNo;
+                payment.Bank = bank;
+                payment.CoveredPeriodFrom = coveredFrom;
+                payment.CoveredPeriodTo = coveredTo;
+                payment.Amount = amount;
+                payment.LogStamp(userId);
+                return true;
+            }
+
+            return false;
+        }
+
+
         public void UpdatePaymentStatus(int id, string status, string remarks,string userId)
         {
             var payment = this.Payments.SingleOrDefault(p => p.Id == id);
+            if (payment == null)
+                throw new Exception("Cannot find payment");
+            
             //shouldn't update if it's the same value 
             //means not dirty
             if (payment.Status != status)
@@ -125,22 +154,42 @@ namespace Sunrise.TransactionManagement.Model
             if (this.Status != "sscn")
                 this.Status = "sscn";
         }
-        public decimal GetBalanceDue()
+        public bool ReversedContract()
         {
-            var totalPayment = this.Payments
-                .Where(p => p.Status == "psc")
-                .Sum(p => p.Amount);
-            return AmountPayable - totalPayment;
-        }
+            var clearPaymentCount = this.Payments.Where(p => p.Status == "psc").Count();
+            if (clearPaymentCount > 0)
+                return false;
 
-        public bool IsPaymentDateCovered(DateTime value)
+            IsReversed = IsReversed ? false : true;
+            if(IsReversed)
+            {
+                if (IsActive())
+                    this.Status = "ssp";
+            }
+            return true;
+        }
+        public bool IsPaymentDateCovered(DateTime value,int id=0)
         {
             var existingDate = 0;
             if (Payments.Count > 0)
             {
-                existingDate = this.Payments
-                    .Where(p => value.Date >= p.CoveredPeriodFrom.Date &&
-                            value.Date < p.CoveredPeriodTo.Date && p.PaymentMode == "pmp").Count();
+                if (id == 0)
+                {
+                    existingDate = this.Payments
+                        .Where(p => value.Date >= p.CoveredPeriodFrom.Date &&
+                                value.Date < p.CoveredPeriodTo.Date && p.PaymentMode == "pmp").Count();
+                }
+                else
+                {
+                    //exclude the selected payment
+                    existingDate = this.Payments
+                        .Where(p => value.Date >= p.CoveredPeriodFrom.Date &&
+                                value.Date < p.CoveredPeriodTo.Date && p.PaymentMode == "pmp" && p.Id != id).Count();
+
+                    var ps = this.Payments
+                        .Where(p => value.Date >= p.CoveredPeriodFrom.Date &&
+                                value.Date < p.CoveredPeriodTo.Date && p.PaymentMode == "pmp" && p.Id != id).ToList();
+                }
             }
 
             return existingDate > 0 ? true : false;

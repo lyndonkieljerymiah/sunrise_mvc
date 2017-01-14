@@ -73,6 +73,10 @@
     <Compile Include="Migrations\201701111702220_UpdatePaymentStamp.Designer.cs">
       <DependentUpon>201701111702220_UpdatePaymentStamp.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701141402358_AddReverseInContract.cs" />
+    <Compile Include="Migrations\201701141402358_AddReverseInContract.Designer.cs">
+      <DependentUpon>201701141402358_AddReverseInContract.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Payment.cs" />
     <Compile Include="Model\Transaction.cs" />
@@ -107,6 +111,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701111702220_UpdatePaymentStamp.resx">
       <DependentUpon>201701111702220_UpdatePaymentStamp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701141402358_AddReverseInContract.resx">
+      <DependentUpon>201701141402358_AddReverseInContract.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
