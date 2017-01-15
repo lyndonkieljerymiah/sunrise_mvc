@@ -5,14 +5,7 @@
                 <div class="form-group">
                     <label class="col-md-2">Villa:</label>
                     <div class="col-md-6">
-                        <div class="input-group">
-                            <input type="text" class="form-control" ng-model="$ctrl.txtSearch" />
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" ng-click="$ctrl.search()">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                        </div>
+                        <search-box search-key="$ctrl.txtSearch" action="$ctrl.search()"></search-box>
                     </div>
                 </div>
             </form>

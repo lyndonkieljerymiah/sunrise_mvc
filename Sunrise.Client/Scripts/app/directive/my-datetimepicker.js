@@ -14,7 +14,8 @@
                 '</div>','<ng-transclude></ng-transclude>'].join(''),
         link: function (scope, elem, attrs) {
             scope.opened = [];
-            scope.toggleDateTimePicker = function ($event,index) {
+            scope.toggleDateTimePicker = function ($event, index)
+            {
                 $event.preventDefault();
                 $event.stopPropagation();
                 scope.opened[scope.index] = scope.opened[scope.index] ? false : true;

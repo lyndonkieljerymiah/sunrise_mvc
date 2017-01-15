@@ -9,14 +9,11 @@ using Utilities.Enum;
 namespace Sunrise.Client.Domains.ViewModels
 {
     public class VillaViewModel
-    {
-
-        
+    {   
         public VillaViewModel()
         {
             Images = new HashSet<ViewImages>();
         }
-
         public string Id { get; set; }
         public DateTime DateStamp { get; private set; }
         public string VillaNo { get; set; }
@@ -30,7 +27,6 @@ namespace Sunrise.Client.Domains.ViewModels
         public int Capacity { get; set; }
         public string Description { get; set; }
         public decimal RatePerMonth { get; set; }
-
         public string Label { get { return this.VillaNo + " - " + this.VillaStatus; } }
         public ICollection<ViewImages> Images { get; private set; }
         

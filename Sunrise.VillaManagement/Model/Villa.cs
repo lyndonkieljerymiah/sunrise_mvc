@@ -52,6 +52,7 @@ namespace Sunrise.VillaManagement.Model
         public decimal RatePerMonth { get; set; }
 
         public virtual ICollection<VillaGallery> Galleries { get; set; }
+        
         public void SetStatus(VillaStatusEnum status)
         {
             var strStatus = "";
@@ -69,6 +70,11 @@ namespace Sunrise.VillaManagement.Model
             }
 
             this.Status = strStatus;
+        }
+
+        public void AddPrimaryPicture()
+        {
+
         }
     }
 }

@@ -188,9 +188,13 @@
                                             <label class="col-md-2 text-right">Cheque No:</label>
                                             <div class="col-md-10">
                                                 <input type="text"
-                                                       name="chequeNo" id="chequeNo" class="form-control"
+                                                       name="chequeNo"
+                                                       id="chequeNo"
+                                                       class="form-control"
                                                        ng-disabled="$ctrl.payment.chequeFieldDisabled"
-                                                       ng-model="$ctrl.payment.chequeNo" required />
+                                                       ng-model="$ctrl.payment.chequeNo"
+                                                       required />
+                                                <span ng-show="errorState.chequeNo">{{errorState.chequeNo}}</span>
                                             </div>
                                         </div>
                                         <div class="form-group" ng-hide="$ctrl.payment.paymentTypeCode == 'ptcs'">
@@ -209,15 +213,14 @@
                                             <label class="col-md-2 text-right">Start:</label>
                                             <div class="col-md-4">
                                                 <date-time-picker format="MM/dd/yyyy" index="1" model="$ctrl.payment.coveredPeriodFrom" required="true">
-                                                    <span ng-show="errorState['vm.coveredperiodfrom']">{{errorState['vm.coveredperiodfrom']}}</span>
-                                                    <span ng-show="errorState['perioderror']">{{errorState['perioderror']}}</span>
+                                                    <span ng-show="errorState['periodFromException']">{{errorState['periodFromException']}}</span>
                                                 </date-time-picker>
                                             </div>
                                             <label class="col-md-2 text-right">End:</label>
                                             <div class="col-md-4">
                                                 <div class="input-group">
                                                     <date-time-picker format="MM/dd/yyyy" index="2" model="$ctrl.payment.coveredPeriodTo" required="true">
-                                                        <span ng-show="errorState['vm.coveredperiodto']">{{errorState['vm.coveredperiodto']}}</span>
+                                                        <span ng-show="errorState['periodToException']">{{errorState['periodToException']}}</span>
                                                     </date-time-picker>
                                                 </div>
                                             </div>
@@ -226,7 +229,10 @@
                                             <label class="col-md-2 text-right">Amount:</label>
                                             <div class="col-md-10">
                                                 <input type="text"
-                                                       name="amount" id="amount" class="form-control text-right" placeholder="Amount"
+                                                       name="amount" 
+                                                       id="amount" 
+                                                       class="form-control text-right" 
+                                                       placeholder="Amount"
                                                        ng-pattern="/^\d+/"
                                                        ng-model="$ctrl.payment.amount" required />
                                                 <span ng-show="paymentForm.amount.$invalid">Please enter numeric value</span>

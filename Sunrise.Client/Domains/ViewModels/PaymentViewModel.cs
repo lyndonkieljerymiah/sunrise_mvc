@@ -46,7 +46,7 @@ namespace Sunrise.Client.Domains.ViewModels
 
         public bool WriteState {
             get {
-                return this.StatusCode == "psv" ? true : false;
+                return this.StatusCode == "psv" || this.StatusCode == null ? true : false;
             }
         }
         public DateTime? StatusDate { get; set; }

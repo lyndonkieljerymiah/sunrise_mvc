@@ -5,7 +5,7 @@
     $ctrl.currentIndex = -1;
     $ctrl.txtSearch = "";
     spinnerManager.scope = $scope;
-    $scope.showReverse = true;
+    $scope.showReverse = false;
 
 
     $ctrl.search = function ()
@@ -63,7 +63,8 @@
             }
         });
     };
-    $ctrl.reverse = function () {
+    $ctrl.reverse = function ()
+    {
         confirmationDialog.open({
             title: 'Reverse Contract',
             description: 'Are you sure you want to reverse contract?',
@@ -103,6 +104,9 @@
                         throw "Error";
                     }
                 });
+            }
+            else {
+                $scope.showReverse = false;
             }
         },true);
     }

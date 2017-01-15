@@ -14,10 +14,8 @@
             //observer
             $scope.$watch("sales.payments", function (nv, ov, ob) {
                 $scope.sales.totalReceivedPayment = 0;
-               
                 //check length
                 if (nv && nv.length > 0) {
-
                     $scope.sales.totalReceivedPayment = nv.sum("amount");
 
                     angular.forEach(nv, function (item) {
@@ -43,7 +41,8 @@
                               controllerAs: "$ctrl",
                               resolve: {
                                   payment: function () { return payment; },
-                                  paymentObject: function () { return $scope.sales.paymentDictionary; }
+                                  paymentObject: function () { return $scope.sales.paymentDictionary; },
+                                  payments: function () { return $scope.sales.payments }
                               }
                           });
                 return modalInstance;
@@ -58,7 +57,9 @@
                 });
             }
 
-            function init(transactionId) {
+            function init(transactionId)
+            {
+
                 spinnerManager.start();
                 paymentDataManager.createBilling(transactionId,
                     function (data) {
@@ -79,10 +80,14 @@
                     return message;
                 }
             }
+
             function addNewPayment() {
+
                 spinnerManager.start();
+
                 //get new payment and copy to untouch the orig
                 var payment = angular.copy($scope.sales.paymentDictionary.initialValue);
+
                 //set up payment
                 var lastIndex = $scope.sales.payments.length;
                 if (lastIndex > 0) {
@@ -91,10 +96,12 @@
                     payment.coveredPeriodFrom = payment.paymentDate;
                     payment.coveredPeriodTo.setMonth(payment.coveredPeriodFrom.getMonth() + 1);
                 }
+
                 $scope.sales.selectedRow = -1;
                 var modalInstance = openModal(payment);
 
-                modalInstance.result.then(function (returnData) {
+                modalInstance.result.then(function (returnData)
+                {
                     //return status
                     angular.forEach($scope.sales.paymentDictionary.statuses, function (item) {
                         if (returnData.statusCode == item.value)
@@ -107,7 +114,8 @@
                     //return payment
                     angular.forEach($scope.sales.paymentDictionary.modes, function (item)
                     {
-                        if (returnData.paymentModeCode == item.value) {
+                        if (returnData.paymentModeCode == item.value)
+                        {
                             returnData.paymentMode = item.text;
                             return;
                         }
@@ -226,9 +234,10 @@
         });
 
 mainApp.controller("paymentController",
-    function ($scope, $uibModalInstance, payment, paymentObject, paymentDataManager)
+    function ($scope, $uibModalInstance, payment, paymentObject,payments, paymentDataManager)
     {
         var $ctrl = this;
+
 
         //not reference 
         //isolate object value
@@ -239,20 +248,25 @@ mainApp.controller("paymentController",
         $ctrl.changeBehaviourWhenSelectingTerm = changeBehaviourWhenSelectingTerm;
         $ctrl.payment.chequeFieldDisabled = $ctrl.payment.paymentTypeCode == "ptcs" ? true : false;
 
+        //error 
+        $scope.errorState = null;
+
         //run
-        function cancel() {
+        function cancel()
+        {
             $uibModalInstance.dismiss("cancel");
         }
+
         function save() {
             if (validateInputs()) {
                 $scope._spinnerLoading = true;
                 $ctrl.payment.statusCode = $ctrl.payment.paymentTypeCode == "ptcs" ? "psc" : "psv";
-
                 $uibModalInstance.close($ctrl.payment);
             }
         }
         function changeBehaviourWhenSelectingTerm() {
-            if ($ctrl.payment.paymentTypeCode === "ptcs") {
+            if ($ctrl.payment.paymentTypeCode === "ptcs")
+            {
                 $ctrl.payment.chequeNo = "Cash";
                 $ctrl.payment.chequeFieldDisabled = true;
             }
@@ -260,12 +274,29 @@ mainApp.controller("paymentController",
                 $ctrl.payment.chequeNo = "";
                 $ctrl.payment.chequeFieldDisabled = false;
             }
+
             $scope.errorState = null;
         }
-        function validateInputs() {
-            if ($scope.paymentForm.$invalid) {
+        function validateInputs()
+        {
+            if ($scope.paymentForm.$invalid)
+            {
                 return false;
             }
+
+            //do validation
+            var isConflict = false;
+            angular.forEach(payments, function (item) {
+                if ($ctrl.payment.paymentTypeCode === "ptcq" && item.chequeNo === $ctrl.payment.chequeNo) {
+                    isConflict = true;
+                }
+            });
+
+            if (isConflict) {
+                $scope.errorState = {chequeNo : "Cheque No already exist!!"};
+                return false;
+            }
+
 
             return true;
         }

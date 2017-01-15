@@ -1,0 +1,48 @@
+﻿@using Sunrise.Client.Helpers.Extension;
+@model Sunrise.Client.Domains.ViewModels.VillaViewModel
+@{
+    ViewBag.Title = "Create";
+}
+<form id="villaEntryForm" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-heading"><strong>Create Villa</strong></div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="col-md-3">Villa No:</label>
+                <input-set my-class="col-md-6" my-model="villa.villaNo">
+                    <span></span>
+                </input-set>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3">Description:</label>
+                <div class="col-md-6">
+                    <textarea class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3">Electricity No:</label>
+                <input-set my-class="col-md-6" my-model="villa.elecNo">
+                    <span></span>
+                </input-set>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3">Water No:</label>
+                <input-set my-class="col-md-6" my-model="villa.waterNo">
+                    <span></span>
+                </input-set>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3">Qtel No:</label>
+                <input-set my-class="col-md-6" my-model="villa.qtelNo">
+                    <span></span>
+                </input-set>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3">Capacity</label>
+                <input-set my-class="col-md-6" my-model="villa.capacity">
+                    <span></span>
+                </input-set>
+            </div>
+        </div>
+    </div>
+</form>

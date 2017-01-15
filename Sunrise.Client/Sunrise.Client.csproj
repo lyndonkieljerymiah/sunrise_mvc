@@ -242,6 +242,7 @@
     <Compile Include="Controllers\ReceivableController.cs" />
     <Compile Include="Controllers\ContractController.cs" />
     <Compile Include="Controllers\TenantController.cs" />
+    <Compile Include="Controllers\VillaController.cs" />
     <Compile Include="Domains\Models\Identity\User.cs" />
     <Compile Include="Domains\ViewModels\Identity\ForgotPasswordViewModel.cs" />
     <Compile Include="Domains\ViewModels\Identity\ForgotViewModel.cs" />
@@ -271,6 +272,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Extension\AngularBootstrap.cs" />
+    <Compile Include="Helpers\Extension\StringExtension.cs" />
     <Compile Include="Helpers\Validations\CustomCurrencyValue.cs" />
     <Compile Include="Helpers\Validations\CustomDateCurrentValidation.cs" />
     <Compile Include="Helpers\Validations\CustomDateEndStartValidation.cs" />
@@ -367,6 +369,9 @@
     <Content Include="Scripts\app\data\tenant-manager.data.js" />
     <Content Include="Scripts\app\data\villa-manager.data.js" />
     <Content Include="Scripts\app\directive\my-datetimepicker.js" />
+    <Content Include="Scripts\app\directive\my-file-upload.js" />
+    <Content Include="Scripts\app\directive\my-inputset.js" />
+    <Content Include="Scripts\app\directive\my-search.js" />
     <Content Include="Scripts\app\directive\my-spinner.js" />
     <Content Include="Scripts\app\helper\dialog.js" />
     <Content Include="Scripts\app\helper\extension.js" />
@@ -1245,6 +1250,7 @@
     <Content Include="Views\Receivable\List.cshtml" />
     <Content Include="Views\Home\MasterPage.cshtml" />
     <Content Include="Views\Contract\Search.cshtml" />
+    <Content Include="Views\Villa\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

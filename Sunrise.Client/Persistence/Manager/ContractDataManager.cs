@@ -20,9 +20,11 @@ namespace Sunrise.Client.Persistence.Manager
         {
             _uow = uow;
         }
+
         public async Task<CustomResult> AddContract(TransactionRegisterViewModel vmTransaction,Action<string> updateStatus)
         {
             var result = new CustomResult();
+
             try
             {
                 var transaction = Transaction.Map(vmTransaction.Villa.VillaNo,
@@ -37,6 +39,7 @@ namespace Sunrise.Client.Persistence.Manager
 
                 result.Success = true;
                 result.ReturnObject = transaction.Id;
+
                 updateStatus(transaction.Id);
             }
             catch (Exception e)
@@ -77,6 +80,7 @@ namespace Sunrise.Client.Persistence.Manager
 
                 bool isOk = false;
                 bool isTriggerUpdate = false;
+
                 foreach (var payment in model.Payments)
                 {
                     //insert only new 
