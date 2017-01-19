@@ -72,9 +72,11 @@ namespace Sunrise.Client.Controllers.Api
         [Route("reverse")]
         public async Task<IHttpActionResult> ReverseContract(ReceivableViewModel vm)
         {
+
             var result = await _receivableDataManager.ReverseContract(vm.Id,(villaId) => {
                 _villaDataManager.UpdateVillaStatusNonAsync(villaId, VillaStatusEnum.Reserved);
             });
+
             if (!result.Success)
             {
                 var errors = result.Errors;
@@ -83,7 +85,6 @@ namespace Sunrise.Client.Controllers.Api
                     ModelState.AddModelError(error.Key, error.Value);
                     return BadRequest(ModelState);
                 }
-                
                 
             }
 

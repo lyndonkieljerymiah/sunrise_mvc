@@ -28,7 +28,8 @@ namespace Sunrise.Client
                       "~/Scripts/libs/angularjs/angular.js",
                       "~/Scripts/libs/angularjs/angular-route.js",
                       "~/Scripts/libs/angularjs/angular-animate.js",
-                      "~/Scripts/libs/toaster/toaster.js"));
+                      "~/Scripts/libs/toaster/toaster.js",
+                      "~/Scripts/libs/fileupload/ng-file-upload.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
                 "~/Scripts/app/helper/extension.js",

@@ -13,5 +13,6 @@ namespace Sunrise.VillaManagement.Abstract
     {
         Task<IEnumerable<VillaView>> GetAllVilla(int currentPage,int pageSize);
         Task<IEnumerable<VillaView>> GetVillaByNo(string no);
+        void RemoveGallery(Villa parent, int childId);
     }
 }

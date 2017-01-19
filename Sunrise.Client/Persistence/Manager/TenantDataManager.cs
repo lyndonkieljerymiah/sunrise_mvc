@@ -20,12 +20,11 @@ namespace Sunrise.Client.Persistence.Manager
         public async Task<CustomResult> CreateAsync(TenantRegisterViewModel vmTenant)
         {
             var result = new CustomResult();
-
             try
             {
                 //register tenant
                 var newTenant = Tenant.Map(
-                    vmTenant.Name, vmTenant.EmailAddress, 
+                    vmTenant.Name, vmTenant.EmailAddress,
                     vmTenant.TelNo, vmTenant.MobileNo, 
                     vmTenant.FaxNo, vmTenant.Address1, 
                     vmTenant.Address2, vmTenant.City, vmTenant.PostalCode);

@@ -64,6 +64,18 @@
     <Compile Include="Migrations\201701021515301_Initial.Designer.cs">
       <DependentUpon>201701021515301_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701161527043_UpdateVillaImageBlob.cs" />
+    <Compile Include="Migrations\201701161527043_UpdateVillaImageBlob.Designer.cs">
+      <DependentUpon>201701161527043_UpdateVillaImageBlob.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701170803336_UpdateGallery.cs" />
+    <Compile Include="Migrations\201701170803336_UpdateGallery.Designer.cs">
+      <DependentUpon>201701170803336_UpdateGallery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701171305255_RemovePicture.cs" />
+    <Compile Include="Migrations\201701171305255_RemovePicture.Designer.cs">
+      <DependentUpon>201701171305255_RemovePicture.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Villa.cs" />
     <Compile Include="Model\VillaGallery.cs" />
@@ -89,6 +101,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201701021515301_Initial.resx">
       <DependentUpon>201701021515301_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701161527043_UpdateVillaImageBlob.resx">
+      <DependentUpon>201701161527043_UpdateVillaImageBlob.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701170803336_UpdateGallery.resx">
+      <DependentUpon>201701170803336_UpdateGallery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701171305255_RemovePicture.resx">
+      <DependentUpon>201701171305255_RemovePicture.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Sunrise.Client.Domains.ViewModels;
+using Sunrise.Client.Infrastructure.Binding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.ModelBinding;
 
 namespace Sunrise.Client
 {
@@ -19,6 +22,9 @@ namespace Sunrise.Client
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            var provider = new VillaModelBinderProvider(typeof(VillaViewModel), new VillaBinder());
+            config.Services.Insert(typeof(ModelBinderProvider), 0, provider);  
         }
     }
 }

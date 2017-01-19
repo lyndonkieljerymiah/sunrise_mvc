@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sunrise.Client.Helpers.Extension
+namespace Sunrise.Client.Infrastructure.Extension
 {
     public static class StringExtension
     {

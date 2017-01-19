@@ -30,7 +30,6 @@ namespace Sunrise.TransactionManagement.Model
                 Amount = amount,
                 Remarks = remarks
             };
-
             p.LogStamp(userId);
             return p;
         }

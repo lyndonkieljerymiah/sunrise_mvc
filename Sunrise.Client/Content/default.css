@@ -123,14 +123,6 @@ span[ng-hide] {
   color: #337ab7;
   border-left: 5px solid #337ab7;
 }
-/*Toaster*/
-.nb-toaster {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 50px;
-  height: 10px;
-}
 /*box*/
 .nb-card {
   font-family: 'Open Sans', sans-serif;
@@ -225,6 +217,13 @@ span[ng-hide] {
   display: table;
   content: "";
 }
+.nb-list-container {
+  overflow-y: auto;
+  -ms-overflow-y: auto;
+  overflow-x: hidden;
+  white-space: nowrap;
+  height: 650px;
+}
 /*slider*/
 .nb-slide {
   width: 497px;
@@ -313,20 +312,6 @@ span[ng-hide] {
   display: table;
   content: "";
 }
-/*override*/
-.navbar-nav > li > span > a {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  color: #666;
-  line-height: 23px;
-  text-decoration: none;
-}
-@media (min-width: 768px) {
-  .navbar-nav > li > span > a {
-    padding-top: 20.5px;
-    padding-bottom: 20.5px;
-  }
-}
 /*for payment status */
 table tr.clear {
   background-color: lightgreen;
@@ -344,3 +329,4 @@ table tr.hold {
   transition: all 0.5s ease;
   -webkit-transition: all 0.5s ease;
 }
+/*override*/

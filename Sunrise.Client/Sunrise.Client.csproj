@@ -271,14 +271,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\Extension\AngularBootstrap.cs" />
-    <Compile Include="Helpers\Extension\StringExtension.cs" />
-    <Compile Include="Helpers\Validations\CustomCurrencyValue.cs" />
-    <Compile Include="Helpers\Validations\CustomDateCurrentValidation.cs" />
-    <Compile Include="Helpers\Validations\CustomDateEndStartValidation.cs" />
-    <Compile Include="Helpers\Validations\CustomRequiredMatchToValidation.cs" />
-    <Compile Include="Helpers\Validations\CustomTenantRequire.cs" />
-    <Compile Include="Helpers\Validations\PropertyValidationAttribute.cs" />
+    <Compile Include="Infrastructure\Binding\VillaBinder.cs" />
+    <Compile Include="Infrastructure\Extension\AngularBootstrap.cs" />
+    <Compile Include="Infrastructure\Extension\StringExtension.cs" />
+    <Compile Include="Helpers\File\FileMediaFormatter.cs" />
+    <Compile Include="Infrastructure\Validations\CustomCurrencyValue.cs" />
+    <Compile Include="Infrastructure\Validations\CustomDateCurrentValidation.cs" />
+    <Compile Include="Infrastructure\Validations\CustomDateEndStartValidation.cs" />
+    <Compile Include="Infrastructure\Validations\CustomRequiredMatchToValidation.cs" />
+    <Compile Include="Infrastructure\Validations\CustomTenantRequire.cs" />
+    <Compile Include="Infrastructure\Validations\PropertyValidationAttribute.cs" />
     <Compile Include="Migrations\201701031413553_Initial.cs" />
     <Compile Include="Migrations\201701031413553_Initial.Designer.cs">
       <DependentUpon>201701031413553_Initial.cs</DependentUpon>
@@ -363,6 +365,7 @@
     <Content Include="Scripts\app\controller\billingController.js" />
     <Content Include="Scripts\app\controller\receivableController.js" />
     <Content Include="Scripts\app\controller\shopController.js" />
+    <Content Include="Scripts\app\controller\villaController.js" />
     <Content Include="Scripts\app\data\payment-manager.data.js" />
     <Content Include="Scripts\app\data\receivable-manager.data.js" />
     <Content Include="Scripts\app\data\contract-manager.data.js" />
@@ -376,8 +379,10 @@
     <Content Include="Scripts\app\helper\dialog.js" />
     <Content Include="Scripts\app\helper\extension.js" />
     <Content Include="Scripts\app\helper\router.js" />
-    <Content Include="Scripts\app\service\utility.service.js" />
-    <Content Include="Scripts\app\service\villaService.js" />
+    <Content Include="Scripts\app\service\transformRequestAsForm.js" />
+    <Content Include="Scripts\libs\fileupload\FileAPI.flash.swf" />
+    <Content Include="Scripts\libs\fileupload\FileAPI.js" />
+    <Content Include="Scripts\libs\fileupload\FileAPI.min.js" />
     <Content Include="Scripts\libs\angularjs\angular-animate.js" />
     <Content Include="Scripts\libs\angularjs\angular-animate.min.js" />
     <Content Include="Scripts\libs\angularjs\angular-aria.js" />
@@ -411,8 +416,6 @@
     <Content Include="Scripts\libs\angularjs\angular.min.js" />
     <Content Include="Scripts\app\app-bootstrap.js" />
     <Content Include="Scripts\app\directive\app-directives.js" />
-    <Content Include="Scripts\app\service\salesService.js" />
-    <Content Include="Scripts\app\service\tenantService.js" />
     <Content Include="Scripts\libs\bootstrap\bootstrap.js" />
     <Content Include="Scripts\libs\bootstrap\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -1198,6 +1201,12 @@
     <Content Include="Scripts\libs\other\respond.min.js" />
     <Content Include="Scripts\libs\toaster\toaster.js" />
     <Content Include="Scripts\libs\toaster\toaster.min.js" />
+    <Content Include="Scripts\libs\fileupload\ng-file-upload-all.js" />
+    <Content Include="Scripts\libs\fileupload\ng-file-upload-all.min.js" />
+    <Content Include="Scripts\libs\fileupload\ng-file-upload-shim.js" />
+    <Content Include="Scripts\libs\fileupload\ng-file-upload-shim.min.js" />
+    <Content Include="Scripts\libs\fileupload\ng-file-upload.js" />
+    <Content Include="Scripts\libs\fileupload\ng-file-upload.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -1251,9 +1260,11 @@
     <Content Include="Views\Home\MasterPage.cshtml" />
     <Content Include="Views\Contract\Search.cshtml" />
     <Content Include="Views\Villa\Create.cshtml" />
+    <Content Include="Views\Villa\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\imgs\upload\" />
     <Folder Include="Helpers\Filters\" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewBag.Title = "Villa Master File";
+}
+
+<div class="panel panel-default" ng-controller="villaListController as $ctrl" ng-init="$ctrl.list()">
+    <div class="panel-heading">
+
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6">
+                <search-box placeholder="Search Villa..." search-key="txtSearch"></search-box>
+            </div>
+            <div class="col-md-2 pull-right">
+                <button class="btn btn-success btn-block" ng-click="$ctrl.redirect()"><i class="fa fa-plus-circle"></i> Add Villa</button>
+            </div>
+        </div>
+        <hr />
+        <div class="nb-list-container">
+            <table class="table">
+                <tr>
+                    <th>Villa No</th>
+                    <th>Description</th>
+                    <th>Elec. No.</th>
+                    <th>Water No.</th>
+                    <th>QTel No.</th>
+                    <th>Capacity</th>
+                    <th>Rate per Month</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+                <tr ng-repeat="model in models | filter:txtSearch">
+                    <td>{{model.villaNo}}</td>
+                    <td>{{model.description}}</td>
+                    <td>{{model.elecNo}}</td>
+                    <td>{{model.waterNo}}</td>
+                    <td>{{model.qtelNo}}</td>
+                    <td>{{model.capacity}}</td>
+                    <td>{{model.ratePerMonth | currency: 'QR '}}</td>
+                    <td>{{model.status}}</td>
+                    <td>
+                        <button ng-click="$ctrl.redirect(model.id)"><i class="fa fa-pencil-square"></i></button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/app/data/villa-manager.data.js"></script>
+    <script src="~/Scripts/app/controller/villaController.js"></script>
+}

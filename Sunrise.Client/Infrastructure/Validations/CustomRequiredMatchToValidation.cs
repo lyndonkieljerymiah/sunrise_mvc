@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Web.WebPages;
 using Microsoft.Ajax.Utilities;
 
-namespace Sunrise.Client.Helpers.Validations
+namespace Sunrise.Client.Infrastructure.Validations
 {
     
     public class CustomRequiredMatchToValidation : PropertyValidationAttribute

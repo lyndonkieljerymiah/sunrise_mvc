@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace Sunrise.Client.Helpers.Extension
+namespace Sunrise.Client.Infrastructure.Extension
 {
     public static class AngularBootstrap
     {

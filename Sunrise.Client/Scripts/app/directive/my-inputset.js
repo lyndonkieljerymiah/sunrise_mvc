@@ -4,14 +4,16 @@
         restrict: "EA",
         scope: {
             searchKey: "=",
-            action: "&"
+            action: "&",
+            placeholder: "@"
         },
         template: ["<div class='input-group'>",
-                   "<input type='text' class='form-control' ng-model='searchKey' />",
+                   "<input type='text' class='form-control' ng-model='searchKey' placeholder='{{placeholder}}' />",
                    "<span class='input-group-btn'>",
                    "<button class='btn btn-default' ng-click='trigger()'><i class='fa fa-search'></i></button>",
                    "</span></div>"].join(''),
-        link: function (scope, element, attrs) {
+        link: function (scope, element, attrs)
+        {
             scope.trigger = function () {
                 scope.action();
             }
@@ -58,7 +60,8 @@ mainApp.directive("inputSet", function () {
             myBlur: "&",
             myRequired: "@",
             myNumeric: "@",
-            validState: "="
+            validState: "=",
+            errorMsg: "="
         },
         template: ["<div class='{{myClass}}'>",
                    "<input type='{{myType}}' class='form-control' ng-model='myModel' ng-blur='myBlur' ng-required='myRequired' />",
@@ -66,10 +69,10 @@ mainApp.directive("inputSet", function () {
                    "</div>"].join(''),
         link: function (scope, el, attrs) {
             var pattern;
-            if (scope.myNumeric)
-            {
-                var inp = el[0].childNodes[0].childNodes[0];
-                $(inp).on("change", function () {
+
+            var inp = el[0].childNodes[0].childNodes[0];
+            $(inp).on("change", function () {
+                if (scope.myNumeric) {
                     switch (scope.myNumeric) {
                         case "currency":
                             isValid = /^\d+$/.test(scope.myModel);
@@ -77,9 +80,14 @@ mainApp.directive("inputSet", function () {
                         default:
                             break;
                     }
+
                     scope.validState = isValid;
-                });
-            }
+                    if (!scope.validState) {
+                        scope.errorMsg = "Value must be numeric";
+                    }
+                }
+            });
+
         }
     }
 });

@@ -69,4 +69,14 @@ namespace Utilities.Enum
         }
     }
 
+    public class ImageBlob
+    {
+        public int Size { get; set; }
+        public string MimeType { get; set; }
+        public byte[] Blob { get; set; }
+        public string FileName { get; set; }
+        public string FileFormat { get; set; }
+    }
+
+
 }

@@ -36,7 +36,15 @@ namespace Sunrise.VillaManagement.Persistence.Repository
                 .Where(v => v.VillaNo.Contains(no) && v.StatusCode == "vsav")
                 .OrderBy(v => v.VillaNo)
                 .ToListAsync();
-            
+        }
+
+       
+
+        public void RemoveGallery(Villa parent,int childId)
+        {
+            var gallery = parent.Galleries.SingleOrDefault(c => c.Id == childId);
+            parent.Galleries.Remove(gallery);
+            _context.Galleries.Remove(gallery);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sunrise.Client.Helpers.Validations
+namespace Sunrise.Client.Infrastructure.Validations
 {
 
     /// <summary> 

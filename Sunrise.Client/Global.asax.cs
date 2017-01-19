@@ -10,6 +10,7 @@ using Sunrise.VillaManagement.Model;
 using Sunrise.TenantManagement.Model;
 using Sunrise.TransactionManagement.Model;
 using Sunrise.TransactionManagement.DTO;
+using Sunrise.Client.Infrastructure.Binding;
 
 namespace Sunrise.Client
 {
@@ -22,6 +23,18 @@ namespace Sunrise.Client
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.Formatters.JsonFormatter.UseDataContractJsonSerializer = false;
 
+            Mapping();
+           
+            AreaRegistration.RegisterAllAreas();
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
+        }
+
+
+        private void Mapping()
+        {
             //mapper configuration
             Mapper.Initialize(cfg =>
             {
@@ -53,13 +66,18 @@ namespace Sunrise.Client
                     .ForMember(dest => dest.Individual, opts => opts.Condition(src => (src.Individual != null)));
                 #endregion
 
-
                 cfg.CreateMap<Payment, PaymentViewModel>();
                 cfg.CreateMap<PaymentViewModel, Payment>()
                     .ForMember(dest => dest.Status, opts => opts.Ignore());
                 cfg.CreateMap<PaymentView, PaymentViewModel>().ReverseMap();
 
                 #region VillaView to ViewModel
+                cfg.CreateMap<VillaGallery, ImageGalleryViewModel>()
+                .ForMember(dest => dest.Blob, opts => opts.MapFrom(src => src.Blob));
+                cfg.CreateMap<Villa, VillaViewModel>()
+                .ForMember(dest => dest.ImageGalleries, opts => opts.MapFrom(src => src.Galleries))
+                .ReverseMap();
+
                 cfg.CreateMap<VillaView, VillaViewModel>().ReverseMap();
                 cfg.CreateMap<VillaManagement.DTO.VillaView, VillaViewModel>().ReverseMap();
                 #endregion
@@ -80,13 +98,6 @@ namespace Sunrise.Client
 
                 cfg.CreateMap<Transaction, TransactionRegisterViewModel>().ReverseMap();
             });
-
-            AreaRegistration.RegisterAllAreas();
-            GlobalConfiguration.Configure(WebApiConfig.Register);
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
-
 
         }
     }

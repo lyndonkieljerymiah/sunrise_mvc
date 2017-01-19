@@ -10,6 +10,7 @@ namespace Sunrise.Client.Controllers
     public class VillaController : Controller
     {
         // GET: Villa
+        [Route("")]
         public ActionResult Index()
         {
             return View();
@@ -20,5 +21,15 @@ namespace Sunrise.Client.Controllers
         {
             return View();
         }
+
+        [Route("edit/{id?}")]
+        public ActionResult Edit(string id)
+        {
+            ViewBag.Id = id;
+            return View("Create");
+        }
+
+
+
     }
 }

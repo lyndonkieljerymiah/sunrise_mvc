@@ -11,12 +11,16 @@ namespace Sunrise.VillaManagement.Model
     public class Villa
     {
 
+        #region Factory
         public static Villa Map(string villaNo,string elecNo,string waterNo,
             string qtelNo,string type,int capacity,string description,decimal ratePerMonth)
         {
-            return new Villa(villaNo, elecNo, waterNo, qtelNo, type, capacity, description,ratePerMonth);
+           return new Villa(villaNo, elecNo, waterNo, qtelNo, type, capacity, description,ratePerMonth);
         }
+        #endregion
 
+
+        #region Constructor
         internal Villa(string villaNo, string elecNo, string waterNo, string qtelNo, 
             string type, int capacity, string description,decimal ratePerMonth) : this()
         {
@@ -36,7 +40,10 @@ namespace Sunrise.VillaManagement.Model
             DateStamp = DateTime.Now;
             Id = Guid.NewGuid().ToString();
             this.Status = "vsav";
+            this.Galleries = new HashSet<VillaGallery>();
         }
+        #endregion
+
 
         public string Id { get; private set; }
         public DateTime DateStamp { get; private set; }
@@ -48,11 +55,22 @@ namespace Sunrise.VillaManagement.Model
         public string Type { get; set; }
         public int Capacity { get; set; }
         public string Description { get; set; }
-        public byte[] Picture { get; set; }
         public decimal RatePerMonth { get; set; }
-
         public virtual ICollection<VillaGallery> Galleries { get; set; }
-        
+
+        public void Update(string villaNo, string elecNo, string waterNo,
+            string qtelNo, string type, int capacity, 
+            string description, decimal ratePerMonth)
+        {
+            this.VillaNo = villaNo;
+            this.ElecNo = elecNo;
+            this.WaterNo = waterNo;
+            this.QtelNo = qtelNo;
+            this.Type = type;
+            this.Capacity = capacity;
+            this.Description = description;
+            this.RatePerMonth = ratePerMonth;
+        }
         public void SetStatus(VillaStatusEnum status)
         {
             var strStatus = "";
@@ -72,9 +90,10 @@ namespace Sunrise.VillaManagement.Model
             this.Status = strStatus;
         }
 
-        public void AddPrimaryPicture()
+        public void AddGallery(ImageBlob blob)
         {
-
+            var gallery = new VillaGallery(blob);
+            Galleries.Add(gallery);
         }
     }
 }

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Sunrise.Client.Infrastructure.Validations;
+using Sunrise.Maintenance.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
-using Sunrise.Client.Helpers.Validations;
-using Sunrise.Maintenance.Model;
 
 namespace Sunrise.Client.Domains.ViewModels
 {
@@ -15,6 +15,7 @@ namespace Sunrise.Client.Domains.ViewModels
             PaymentDate = DateTime.Today;
             CoveredPeriodFrom = DateTime.Today;
             CoveredPeriodTo = CoveredPeriodFrom.Date.AddMonths(1);
+
             this.BankCode = "";
             this.PaymentTypeCode = "ptcq";
             this.PaymentModeCode = "pmp";
@@ -62,7 +63,6 @@ namespace Sunrise.Client.Domains.ViewModels
 
         [Required]
         [CustomDateEndStartValidation("CoveredPeriodTo", ValueComparison.IsLessThan, ErrorMessage = "Start date must be earlier than end date")]
-        [CustomDateCurrentValidation(ErrorMessage = "Start date must be current or later date")]
         public DateTime CoveredPeriodFrom { get; set; }
         
         [Required]
