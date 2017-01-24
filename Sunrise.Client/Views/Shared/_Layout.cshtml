@@ -14,44 +14,40 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body ng-app="mainApp" ng-cloak>
-    <div class="container-fluid">
-        <div class="row">
-            <section class="col-md-2 nb-aside-menu">
-                <div class="nb-aside-heading">Sunrise Web Portal</div>
-                <ul class="nb-aside-nav">
-                    <li><a href="@Url.Action("Index","Contract")"><i class="fa fa-home"></i>Contract</a></li>
-                    <li><a href="@Url.Action("Index","Receivable")"><i class="fa fa-money"></i>Account</a></li>
-                    <li>
-                        <a href="@Url.Action("Index","Villa")"><i class="fa fa-money"></i>MasterFile</a>
-                    </li>
-                </ul>
-            </section>
-            <div class="col-md-10 page" style="padding-right:0;padding-left:0;">
-                <div class="navbar navbar-default">
-                    <div class="container-fluid">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                            @Html.ActionLink("Sunrise Web Portal", "Index", "Contract", new { area = "" }, new { @class = "navbar-brand" })
-                        </div>
-                        <div class="navbar-collapse collapse">
-                            @Html.Partial("_LoginPartial")
-                        </div>
-                    </div>
-                </div>
-                <div class="container">
-                    @RenderBody()
-                    <hr />
-                    <footer>
-                        <p>Sunrise Web Portal ver 1.0 - &copy; @DateTime.Now.Year</p>
-                    </footer>
-                </div>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Sunrise Web Portal", "Index", "Contract", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>
+    <div class="content-wrapper">
+        <section class="nb-aside-menu">
+            <ul class="nb-aside-nav">
+                <li><a href="@Url.Action("Index","Contract")"><i class="fa fa-file"></i>Contract</a></li>
+                <li><a href="@Url.Action("Index","Receivable")"><i class="fa fa-money"></i>Account</a></li>
+                <li><a href="@Url.Action("Index","Villa")"><i class="fa fa-tasks"></i>MasterFile</a></li>
+                <li><a href="@Url.Action("Index","Villa")"><i class="fa fa-money"></i>Support</a></li>
+            </ul>
+        </section>
+        <div class="page">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>Sunrise Web Portal ver 1.1 - &copy; @DateTime.Now.Year</p>
+            </footer>
+        </div>
+
+    </div>
+
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/angular")

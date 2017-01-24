@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Sunrise.Client.Domains.ViewModels;
 using Sunrise.Client.Persistence.Manager;
+using Sunrise.VillaManagement.Data.Villas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,8 +20,8 @@ namespace Sunrise.Client.Controllers.Api
     {
         private ContractDataManager _contractDataManager;
         private SelectionDataManager _selectionDataManager;
-        private VillaDataManager _villaDataManager;
         private TenantDataManager _tenantDataManager;
+        private VillaDataManager _villaDataManager;
 
         public BillingController(
             ContractDataManager contractDataManager,
@@ -30,8 +31,9 @@ namespace Sunrise.Client.Controllers.Api
         {
             _contractDataManager = contractDataManager;
             _selectionDataManager = selectionDataManager;
-            _villaDataManager = villaDataManager;
+
             _tenantDataManager = tenantDataManager;
+            _villaDataManager = villaDataManager;
         }
 
 
@@ -44,7 +46,7 @@ namespace Sunrise.Client.Controllers.Api
         [Route("{transactionId?}")]
         public async Task<IHttpActionResult> Billing(string transactionId)
         {
-            var transaction = await _contractDataManager.GetContractById(transactionId);
+            var transaction = await _contractDataManager.GetContractForBilling(transactionId);
             var selections = await _selectionDataManager
                 .GetLookup(new[] { "Bank", "PaymentTerm", "PaymentMode", "PaymentStatus" });
             transaction.Initialize(selections);
@@ -52,14 +54,6 @@ namespace Sunrise.Client.Controllers.Api
             return Ok(transaction);
         }
 
-        [HttpGet]
-        [Route("list")]
-        public async Task<IHttpActionResult> List()
-        {
-            var transactions = await _contractDataManager.GetContracts("ssp");
-            return Ok(transactions);
-        }
-        
         /// <summary>
         ///     TODO: Save Payment
         /// </summary>
@@ -67,39 +61,34 @@ namespace Sunrise.Client.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("save")]
-        public async Task<IHttpActionResult> Save(BillingViewModel vm) {
+        public async Task<IHttpActionResult> Save(BillingViewModel vm)
+        {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
+            
             //get current user 
             var userId = User.Identity.GetUserId();
-            var result = await _contractDataManager.AddPayment(vm,userId,
-                () =>
-                {
-                    _villaDataManager.UpdateVillaStatusNonAsync(vm.Villa.Id, VillaStatusEnum.NotAvailable);
-                });
+            var result = await _contractDataManager.AddPayment(
+                vm, userId, 
+                new Func<string,Task>(UpdateIfPaymentCleared));
 
             if (!result.Success)
             {
                 AddErrorResult(result);
                 return BadRequest(ModelState);
             }
-            
+
             return Ok(vm);
         }
-
+        
         [HttpPost]
         [Route("dismiss")]
-        public async Task<IHttpActionResult> Dismiss(BillingViewModel vm) {
-
-            var result = await _contractDataManager.RemoveContract(vm.Id,(tenantId,villaId)=> {
-                    _tenantDataManager.RemoveTenantNonAsync(tenantId);
-                    _villaDataManager.UpdateVillaStatusNonAsync(villaId, VillaStatusEnum.Available);
-                });
-
+        public async Task<IHttpActionResult> Dismiss(BillingViewModel vm)
+        {
+            var result = await _contractDataManager.RemoveContract(vm.Id,new Func<string,string,Task>(UpdateWhenContractRemove));
             return Ok(result);
         }
-        
+
         #region Private Method
         private void AddErrorResult(CustomResult result)
         {
@@ -107,6 +96,17 @@ namespace Sunrise.Client.Controllers.Api
                 ModelState.AddModelError(error.Key, error.Value);
         }
 
+        private async Task UpdateIfPaymentCleared(string id)
+        {
+            await _villaDataManager.UpdateVillaStatus(id, VillaStatusEnum.NotAvailable);
+        }
+
+        private async Task UpdateWhenContractRemove(string tenantId,string villaId)
+        {
+            //update status
+            await _tenantDataManager.RemoveTenant(tenantId);
+            await _villaDataManager.UpdateVillaStatus(villaId, VillaStatusEnum.Available);
+        }
         #endregion
     }
 }

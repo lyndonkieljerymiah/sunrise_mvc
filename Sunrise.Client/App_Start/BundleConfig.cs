@@ -36,6 +36,7 @@ namespace Sunrise.Client
                 "~/Scripts/app/app-bootstrap.js",
                 "~/Scripts/app/directive/my-spinner.js",
                 "~/Scripts/app/directive/my-inputset.js",
+                "~/Scripts/app/directive/my-slider.js",
                 "~/Scripts/app/helper/dialog.js",
                 "~/Scripts/app/helper/router.js"));
 

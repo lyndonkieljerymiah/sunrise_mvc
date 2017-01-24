@@ -264,10 +264,10 @@
     <Compile Include="Domains\ViewModels\PaymentViewModel.cs" />
     <Compile Include="Domains\ViewModels\ReceivableViewModel.cs" />
     <Compile Include="Domains\ViewModels\TransactionRegisterViewModel.cs" />
-    <Compile Include="Domains\ViewModels\ShopViewModel.cs" />
     <Compile Include="Domains\ViewModels\TenantRegisterViewModel.cs" />
-    <Compile Include="Domains\ViewModels\TransactionViewModel.cs" />
+    <Compile Include="Domains\ViewModels\ContractListViewModel.cs" />
     <Compile Include="Domains\ViewModels\VillaViewModel.cs" />
+    <Compile Include="Domains\ViewModels\VillaListViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -309,9 +309,23 @@
     </Content>
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\imgs\gears.gif" />
+    <Content Include="Content\imgs\login-background.jpg" />
+    <Content Include="Content\imgs\noise_lines.png" />
     <Content Include="Content\imgs\notavailable.png" />
+    <Content Include="Content\imgs\sample_1.jpg" />
+    <Content Include="Content\imgs\sample_2.jpg" />
+    <Content Include="Content\imgs\sample_3.jpg" />
     <Content Include="Content\imgs\spin.gif" />
-    <Content Include="Content\imgs\villa-spalletti-1.jpg" />
+    <Content Include="Content\imgs\villa_0.jpg" />
+    <Content Include="Content\imgs\villa_1.jpg" />
+    <Content Include="Content\imgs\villa_1_0.jpg" />
+    <Content Include="Content\imgs\villa_1_1.jpg" />
+    <Content Include="Content\imgs\villa_1_2.jpg" />
+    <Content Include="Content\imgs\villa_1_3.jpg" />
+    <Content Include="Content\imgs\villa_2.jpg" />
+    <Content Include="Content\imgs\villa_3.jpg" />
+    <Content Include="Content\imgs\villa_r_2.jpg" />
     <Content Include="Content\login.css">
       <DependentUpon>login.less</DependentUpon>
     </Content>
@@ -375,6 +389,7 @@
     <Content Include="Scripts\app\directive\my-file-upload.js" />
     <Content Include="Scripts\app\directive\my-inputset.js" />
     <Content Include="Scripts\app\directive\my-search.js" />
+    <Content Include="Scripts\app\directive\my-slider.js" />
     <Content Include="Scripts\app\directive\my-spinner.js" />
     <Content Include="Scripts\app\helper\dialog.js" />
     <Content Include="Scripts\app\helper\extension.js" />
@@ -458,6 +473,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\parts\nav.less" />
     <None Include="Properties\PublishProfiles\Intranet.pubxml" />
     <None Include="Scripts\libs\jquery\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\libs\angularjs\i18n\angular-locale_af-na.js" />
@@ -1261,6 +1277,7 @@
     <Content Include="Views\Contract\Search.cshtml" />
     <Content Include="Views\Villa\Create.cshtml" />
     <Content Include="Views\Villa\Index.cshtml" />
+    <Content Include="Views\Contract\Bill.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

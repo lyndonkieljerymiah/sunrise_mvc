@@ -10,6 +10,7 @@ body {
   font-family: 'Open Sans', sans-serif;
   background: #676a6d;
   height: 100%;
+  padding-top: 50px;
 }
 .body-content {
   padding: 15px;
@@ -18,9 +19,51 @@ body {
   padding-top: 10px;
   padding-bottom: 15px;
 }
-.page {
+.content-wrapper {
+  width: 100%;
+}
+.content-wrapper:after {
+  clear: both;
+  display: table;
+  content: '';
+}
+.content-wrapper .page {
   background: url('imgs/noise_lines.png') top repeat;
   min-height: 1200px;
+  width: 90%;
+  float: left;
+}
+.content-wrapper .nb-aside-menu {
+  background-color: #676a6d;
+  width: 10%;
+  float: left;
+  min-height: 1200px;
+  padding: 25px 0 0 0;
+}
+.content-wrapper .nb-aside-menu .nb-aside-heading {
+  background-color: #333D4A;
+  padding: 15px 10px;
+}
+.content-wrapper .nb-aside-menu ul.nb-aside-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.content-wrapper .nb-aside-menu ul.nb-aside-nav li a {
+  display: block;
+  padding: 15px 25px;
+  text-decoration: none;
+  color: whitesmoke;
+  line-height: 12px;
+  font-size: 14px;
+}
+.content-wrapper .nb-aside-menu ul.nb-aside-nav li a i {
+  margin-right: 10px;
+}
+.content-wrapper .nb-aside-menu ul.nb-aside-nav li a:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #337ab7;
+  border-left: 5px solid #337ab7;
 }
 /*spinner*/
 .spinner {
@@ -58,6 +101,41 @@ span[ng-hide] {
 }
 /* content */
 /*menu*/
+.nb-nav-toolbar {
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  border: solid 1px #cccccc;
+  display: block;
+  height: 54px;
+  padding: 5px 0;
+}
+.nb-nav-toolbar.nav-default {
+  background: #f5f5f5;
+}
+.nb-nav-toolbar .nav-menu-right {
+  float: right;
+  width: 450px;
+}
+.nb-nav-toolbar .nav-menu-right ul {
+  margin: 0px;
+  width: 100%;
+}
+.nb-nav-toolbar .nav-menu-right ul li {
+  float: left;
+  display: block;
+  margin-right: 2%;
+}
+.nb-nav-toolbar .nav-menu-right .input {
+  width: 60%;
+}
+.nb-nav-toolbar .nav-menu-right .button-add {
+  width: 40%;
+}
+.nb-nav-toolbar:after {
+  clear: both;
+  display: table;
+}
 .nb-nav-menu {
   width: 100%;
   background-color: #e6e6e6;
@@ -92,36 +170,6 @@ span[ng-hide] {
   clear: both;
   display: table;
   content: "";
-}
-.nb-aside-menu {
-  background-color: #676a6d;
-  min-height: 1200px;
-  padding: 0 !important;
-}
-.nb-aside-menu .nb-aside-heading {
-  background-color: #333D4A;
-  padding: 15px 10px;
-}
-.nb-aside-menu ul.nb-aside-nav {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.nb-aside-menu ul.nb-aside-nav li a {
-  display: block;
-  padding: 15px 25px;
-  text-decoration: none;
-  color: whitesmoke;
-  line-height: 12px;
-  font-size: 14px;
-}
-.nb-aside-menu ul.nb-aside-nav li a i {
-  margin-right: 10px;
-}
-.nb-aside-menu ul.nb-aside-nav li a:hover {
-  background-color: rgba(0, 0, 0, 0.3);
-  color: #337ab7;
-  border-left: 5px solid #337ab7;
 }
 /*box*/
 .nb-card {
@@ -161,6 +209,10 @@ span[ng-hide] {
   background-size: cover;
   position: absolute;
   z-index: 5;
+}
+.nb-card .nb-image .card__image img {
+  width: 100%;
+  height: 100%;
 }
 .nb-card .nb-image .nb-title {
   position: absolute;
@@ -224,9 +276,18 @@ span[ng-hide] {
   white-space: nowrap;
   height: 650px;
 }
+.nb-status-panel {
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  border: solid 1px #cccccc;
+}
+.nb-status-panel.nb-panel-default {
+  background: #f5f5f5;
+}
 /*slider*/
 .nb-slide {
-  width: 497px;
+  width: 575px;
   height: 342px;
   position: relative;
   overflow: hidden;

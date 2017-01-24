@@ -7,69 +7,63 @@ using Sunrise.TransactionManagement.Abstract;
 using Sunrise.Client.Domains.ViewModels;
 using AutoMapper;
 using Utilities.Enum;
+using Sunrise.TransactionManagement.Data.Factory;
 
 namespace Sunrise.Client.Persistence.Manager
 {
     public class ReceivableDataManager
     {
-        private IUnitOfWork _unitOfWork;
 
-        public ReceivableDataManager(IUnitOfWork unitOfWork)
+        private IContractDataFactory Factory { get; set; }
+
+        public ReceivableDataManager(IContractDataFactory factory)
         {
-            _unitOfWork = unitOfWork;
+            Factory = factory;
         }
 
-        public async Task<ReceivableViewModel> GetActiveContract(string billNo)
+        public async Task<ReceivableViewModel> GetActiveContract(string contractCode)
         {
-
-            var transaction = await _unitOfWork.Transactions
-                .GetTransactionView(c => c.Code == billNo && c.StatusCode == "sscn");
-
+            var transaction = await Factory.Contracts.GetActiveContract(contractCode);
             var vm = Mapper.Map<ReceivableViewModel>(transaction);
             vm.SetEditMode();
             return vm;
         }
 
-        public async Task<CustomResult> ReverseContract(string id,Action<string> updateStatus)
+        public async Task<CustomResult> ReverseContract(string id, Func<string,Task> callback)
         {
-            var result = new CustomResult();
-            try
+            var contract = await Factory.Contracts.GetContractById(id);
+            contract.ReversedContract();
+
+            var result = await Factory.Contracts.UpdateContract(contract);
+            if (result.Success)
             {
-                var contract = await _unitOfWork.Transactions.FindQueryAsync(c => c.Id == id, c => c.Payments);
-                contract.ReversedContract();
-                await _unitOfWork.SaveChanges();
-                result.Success = true;
-                updateStatus(contract.VillaId);
-            }
-            catch(Exception e)
-            {
-                result.AddError("InternalErrorException", e.Message);
+                if (callback != null) await callback(contract.VillaId);
             }
             return result;
         }
 
-        public async Task<CustomResult> ClearPayment(string transactionId, IEnumerable<PaymentViewModel> values,string userId,Action<string> updateStatus)
+        public async Task<CustomResult> ClearPayment(string transactionId, IEnumerable<PaymentViewModel> values, string userId, Func<string,Task> callback)
         {
             var result = new CustomResult();
             bool isTriggerUpdate = false;
             try
             {
-                var contract = await _unitOfWork.Transactions.GetContractById(transactionId);
+                var contract = await Factory.Contracts.GetContractById(transactionId);
                 if (contract == null)
                     throw new Exception("Invalid Contract");
 
                 foreach (var payment in values)
                 {
-                    contract.UpdatePaymentStatus(payment.Id, payment.StatusCode, payment.Remarks,userId);
-                    if(payment.Status == "psc")
+                    contract.UpdatePaymentStatus(payment.Id, payment.StatusCode, payment.Remarks, userId);
+                    if (payment.StatusCode == "psc")
                     {
                         isTriggerUpdate = true;
                     }
                 }
-                await _unitOfWork.SaveChanges();
-                result.Success = true;
+
+                result = await Factory.Contracts.UpdateContract(contract);
                 if (isTriggerUpdate)
-                    updateStatus(contract.VillaId);
+                    if(callback != null) await callback(contract.VillaId);
             }
             catch (Exception e)
             {

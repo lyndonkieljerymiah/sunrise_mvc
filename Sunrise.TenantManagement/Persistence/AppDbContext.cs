@@ -1,18 +1,14 @@
 ﻿using Sunrise.TenantManagement.Model;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure.Annotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Utilities.GeneralContext;
 
 namespace Sunrise.TenantManagement.Persistence
 {
-    public class AppContextDb : BaseDbContext
-    {   
+    public class AppDbContext : BaseDbContext
+    {
+
         public DbSet<Tenant> Tenants { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -32,7 +28,7 @@ namespace Sunrise.TenantManagement.Persistence
             modelBuilder.Entity<Tenant>()
                .Property(t => t.Code)
                .HasMaxLength(50)
-               .HasColumnAnnotation("Index", 
+               .HasColumnAnnotation("Index",
                new IndexAnnotation(new IndexAttribute("IX_TenantCode")));
 
             modelBuilder.Entity<Individual>()
@@ -53,5 +49,6 @@ namespace Sunrise.TenantManagement.Persistence
 
 
         }
+
     }
 }

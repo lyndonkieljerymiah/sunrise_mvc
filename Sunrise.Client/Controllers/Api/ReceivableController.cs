@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNet.Identity;
 using Sunrise.Client.Domains.ViewModels;
 using Sunrise.Client.Persistence.Manager;
+using Sunrise.VillaManagement.Data.Villas;
+using System;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Utilities.Enum;
@@ -24,19 +26,20 @@ namespace Sunrise.Client.Controllers.Api
         {
             _contractDataManager = contractDataManager;
             _selectionDataManager = selectionDataManager;
-            _villaDataManager = villaDataManager;
             _receivableDataManager = receivableDataManager;
+            _villaDataManager = villaDataManager;
         }
+
         /// <summary>
         /// TODO: Calls when creating receivable
         /// </summary>
         /// <param name="billNo"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("create/{billNo?}")]
-        public async Task<IHttpActionResult> Create(string billNo)
+        [Route("{contractCode?}")]
+        public async Task<IHttpActionResult> Create(string contractCode)
         {
-            var contract = await _receivableDataManager.GetActiveContract(billNo);
+            var contract = await _contractDataManager.GetContractForPaymentClearing(contractCode);
             if (contract == null)
             {
                 ModelState.AddModelError("NotFoundException", "Invalid or no existing contract");
@@ -48,7 +51,7 @@ namespace Sunrise.Client.Controllers.Api
             contract.Initialize((await _selectionDataManager.GetLookup(new string[] { "PaymentStatus" })));
             return Ok(contract);
         }
-        
+
         /// <summary>
         /// TODO: Update Payment
         /// </summary>
@@ -59,12 +62,10 @@ namespace Sunrise.Client.Controllers.Api
         public async Task<IHttpActionResult> ClearPayment(ReceivableViewModel vm)
         {
             var userId = User.Identity.GetUserId();
-            
+
             //update the payment
             //and call hookup to update the villa status
-            var result = await _receivableDataManager.ClearPayment(vm.Id,vm.Payments,userId,(villaId) => {
-                _villaDataManager.UpdateVillaStatusNonAsync(villaId, VillaStatusEnum.NotAvailable);
-            });
+            var result = await _receivableDataManager.ClearPayment(vm.Id, vm.Payments, userId,new Func<string,Task>(UpdateWhenClearingPayment));
             return Ok(result);
         }
 
@@ -72,26 +73,29 @@ namespace Sunrise.Client.Controllers.Api
         [Route("reverse")]
         public async Task<IHttpActionResult> ReverseContract(ReceivableViewModel vm)
         {
-
-            var result = await _receivableDataManager.ReverseContract(vm.Id,(villaId) => {
-                _villaDataManager.UpdateVillaStatusNonAsync(villaId, VillaStatusEnum.Reserved);
-            });
-
+            var result = await _receivableDataManager.ReverseContract(vm.Id, new Func<string, Task>(UpdateWhenContractReserved));
             if (!result.Success)
             {
                 var errors = result.Errors;
-                foreach(var error in result.Errors)
+                foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(error.Key, error.Value);
                     return BadRequest(ModelState);
                 }
-                
             }
-
             return Ok(result);
         }
-        
 
+        #region Private Method
+        public async Task UpdateWhenClearingPayment(string villaId)
+        {
+            await  _villaDataManager.UpdateVillaStatus(villaId, VillaStatusEnum.NotAvailable);
+        }
+        public async Task UpdateWhenContractReserved(string villaId)
+        {
+            await _villaDataManager.UpdateVillaStatus(villaId, VillaStatusEnum.Reserved);
+        }
+        #endregion
 
     }
 }

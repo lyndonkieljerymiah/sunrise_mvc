@@ -26,6 +26,26 @@ namespace Sunrise.TransactionManagement.Persistence
             modelBuilder.Entity<VillaView>().ToTable("VillaView", "dbo");
             modelBuilder.Entity<PaymentView>().ToTable("PaymentView", "dbo");
 
+
+            modelBuilder.Entity<TransactionView>().HasKey(t => t.Id);
+            modelBuilder.Entity<VillaView>().HasKey(v => v.Id);
+            modelBuilder.Entity<TenantView>().HasKey(v => v.Id);
+
+            modelBuilder.Entity<PaymentView>()
+                .HasRequired<TransactionView>(p => p.Transaction)
+                .WithMany(tr => tr.Payments)
+                .HasForeignKey(p => p.TransactionId);
+            
+            modelBuilder.Entity<TransactionView>()
+                .HasRequired(t => t.Tenant)
+                .WithMany()
+                .HasForeignKey(t => t.TenantId);
+
+            modelBuilder.Entity<TransactionView>()
+                .HasRequired(t => t.Villa)
+                .WithMany()
+                .HasForeignKey(t => t.VillaId);
+
         }
     }
 }

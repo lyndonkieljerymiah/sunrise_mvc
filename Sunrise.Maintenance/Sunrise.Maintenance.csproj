@@ -51,6 +51,10 @@
   <ItemGroup>
     <Compile Include="Abstract\ISelectionRepository.cs" />
     <Compile Include="Abstract\IUnitOfWork.cs" />
+    <Compile Include="Data\Factory\IMasterFileFactory.cs" />
+    <Compile Include="Data\Factory\MasterFileFactory.cs" />
+    <Compile Include="Data\MasterFile\ISelectionDataService.cs" />
+    <Compile Include="Data\MasterFile\SelectionDataService.cs" />
     <Compile Include="Migrations\201701021715465_Initial.cs" />
     <Compile Include="Migrations\201701021715465_Initial.Designer.cs">
       <DependentUpon>201701021715465_Initial.cs</DependentUpon>

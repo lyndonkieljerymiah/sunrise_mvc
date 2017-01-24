@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 namespace Sunrise.TransactionManagement.DTO
 {
     public class TenantView
-    {
-        [Key]
+    {   
         public string Id { get; set; }
 
         public DateTime DateRegistered { get; set; }
@@ -22,8 +21,7 @@ namespace Sunrise.TransactionManagement.DTO
         public string MobileNo { get; set; }
         public string FaxNo { get; set; }
         public bool IsActive { get; set; }
-
-
+        
         public AddressView Address { get; set; }
         public IndividualView Individual { get; set; }
         public CompanyView Company { get; set; }

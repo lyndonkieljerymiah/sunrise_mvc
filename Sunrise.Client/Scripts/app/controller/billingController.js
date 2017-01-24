@@ -213,7 +213,7 @@
                     action: function (response) {
                         paymentDataManager.dismiss($scope.sales,
                         function (response) {
-                            router.route("billing");
+                            router.route("contract","");
                         },
                         function (response) {
                             toaster.pop("error", "Failed to cancel unexpected error occured")

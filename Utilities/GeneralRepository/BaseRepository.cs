@@ -60,6 +60,15 @@ namespace Utilities.GeneralRepository
             return await _set.SingleOrDefaultAsync(clause);
         }
 
+        public T FindQuery(object id)
+        {
+            return _set.Find(id);
+        }
+        public T FindQuery(Expression<Func<T, bool>> clause)
+        {
+            return _set.SingleOrDefault(clause);
+        }
+
         public async Task<IEnumerable<T>> GetQueryAsync(Expression<Func<T,bool>> where = null)
         {
             return (where != null) ? await _set.Where(where).ToListAsync() : await _set.ToListAsync();
@@ -69,17 +78,10 @@ namespace Utilities.GeneralRepository
         {
             _set.AddRange(entities);
         }
-
-        public T FindQuery(object id)
-        {
-            return _set.Find(id);
-        }
-
-        public IEnumerable<T> GetQuery()
-        {
-            throw new NotImplementedException();
-        }
-
        
+        public IEnumerable<T> GetQuery(Expression<Func<T, bool>> where = null)
+        {
+            return (where != null) ? _set.Where(where).ToList() : _set.ToList();
+        }
     }
 }

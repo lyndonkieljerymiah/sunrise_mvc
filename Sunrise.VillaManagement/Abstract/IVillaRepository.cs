@@ -11,8 +11,8 @@ namespace Sunrise.VillaManagement.Abstract
 {
     public interface IVillaRepository : IBaseRepository<Villa>
     {
-        Task<IEnumerable<VillaView>> GetAllVilla(int currentPage,int pageSize);
+        Task<IEnumerable<VillaDTO>> GetAllVilla(string villaNo, string statusCode = "", int currentPage = 1, int pageSize = 20);
         Task<IEnumerable<VillaView>> GetVillaByNo(string no);
-        void RemoveGallery(Villa parent, int childId);
+        void RemoveGallery(Villa parent, IEnumerable<VillaGallery> galleries);
     }
 }

@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 namespace Sunrise.TransactionManagement.DTO
 {
     public class VillaView
-    {
-        [Key]
+    {   
         public string Id { get; private set; }
 
         public DateTime DateStamp { get; private set; }

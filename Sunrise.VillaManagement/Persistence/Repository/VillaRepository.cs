@@ -21,13 +21,24 @@ namespace Sunrise.VillaManagement.Persistence.Repository
             _referenceDbContext = referenceDbContext;
         }
 
-        public async Task<IEnumerable<VillaView>> GetAllVilla(int currentPage, int pageSize)
+        public async Task<IEnumerable<VillaDTO>> GetAllVilla(string villaNo="",string statusCode = "", int currentPage = 1, int pageSize = 20)
         {
-            var villas = await _referenceDbContext.Villas
-                            .Where(v => v.StatusCode == "vsav")
-                            .OrderBy(v => v.VillaNo)
-                            .ToPagedListAsync(currentPage, pageSize);
-            return villas;
+
+            var villas = _context.Villas.Select(v => new VillaDTO
+            {
+                Villa = v,
+                Profile = _context.Galleries.FirstOrDefault(g => g.Id == v.ProfileIndex)
+            });
+
+            if (statusCode != "" && villaNo != "")
+                villas = villas.Where(v => v.Villa.Status == statusCode && v.Villa.VillaNo.Contains(villaNo));
+            else if(statusCode != "")
+                villas = villas.Where(v => v.Villa.Status == statusCode);
+            else if(villaNo != "")
+                villas = villas.Where(v => v.Villa.VillaNo == villaNo);
+
+            return (await villas.OrderBy(v => v.Villa.VillaNo)
+                        .ToPagedListAsync(currentPage, pageSize)).ToList();
         }
 
         public async Task<IEnumerable<VillaView>> GetVillaByNo(string no)
@@ -37,14 +48,14 @@ namespace Sunrise.VillaManagement.Persistence.Repository
                 .OrderBy(v => v.VillaNo)
                 .ToListAsync();
         }
-
-       
-
-        public void RemoveGallery(Villa parent,int childId)
+     
+        public void RemoveGallery(Villa parent,IEnumerable<VillaGallery> galleries)
         {
-            var gallery = parent.Galleries.SingleOrDefault(c => c.Id == childId);
-            parent.Galleries.Remove(gallery);
-            _context.Galleries.Remove(gallery);
+            foreach(var gallery in galleries)
+            {
+                parent.Galleries.Remove(gallery);
+                _context.Galleries.Remove(gallery);
+            }
         }
     }
 }

@@ -5,14 +5,14 @@ namespace Sunrise.TenantManagement.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Sunrise.TenantManagement.Persistence.AppContextDb>
+    internal sealed class Configuration : DbMigrationsConfiguration<Sunrise.TenantManagement.Persistence.AppDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(Sunrise.TenantManagement.Persistence.AppContextDb context)
+        protected override void Seed(Sunrise.TenantManagement.Persistence.AppDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

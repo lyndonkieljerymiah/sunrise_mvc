@@ -8,7 +8,7 @@ using Utilities.Enum;
 namespace Sunrise.VillaManagement.Model
 {
     public class VillaGallery
-    {
+    {   
         public VillaGallery(ImageBlob blob)
         {
             this.Blob = blob;
@@ -22,5 +22,6 @@ namespace Sunrise.VillaManagement.Model
         public string VillaId { get; set; }
         public ImageBlob Blob { get; set; }
         public virtual Villa Villa { get; set; }
+        public bool IsMarkForDeletion { get; set; }
     }
 }

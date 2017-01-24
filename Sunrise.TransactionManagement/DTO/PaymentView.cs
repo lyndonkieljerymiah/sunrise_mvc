@@ -10,7 +10,7 @@ namespace Sunrise.TransactionManagement.DTO
 {
     public class PaymentView
     {
-        [Key]
+        
         public int Id { get; set; }
         public string TransactionId { get; set; }
         public string PaymentType { get; set; }
@@ -33,8 +33,7 @@ namespace Sunrise.TransactionManagement.DTO
         public DateTime? StatusDate { get; private set; }
 
         public string Remarks { get; set; }
-
-        [ForeignKey("TransactionId")]
+        
         public virtual TransactionView Transaction { get; set; }
     }
 }

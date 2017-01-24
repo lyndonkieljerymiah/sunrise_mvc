@@ -59,7 +59,15 @@
   <ItemGroup>
     <Compile Include="Abstract\IUnitOfWork.cs" />
     <Compile Include="Abstract\IVillaRepository.cs" />
+    <Compile Include="Data\Factory\IVillaDataFactory.cs" />
+    <Compile Include="Data\Factory\VillaDataFactory.cs" />
+    <Compile Include="Data\Villas\IVillaDataService.cs" />
+    <Compile Include="Data\Villas\VillaDataService.cs" />
+    <Compile Include="DTO\VillaDTO.cs" />
+    <Compile Include="DTO\VillaGalleryView.cs" />
     <Compile Include="DTO\VillaView.cs" />
+    <Compile Include="Infrastructure\State\IVillaState.cs" />
+    <Compile Include="Infrastructure\State\VillaState.cs" />
     <Compile Include="Migrations\201701021515301_Initial.cs" />
     <Compile Include="Migrations\201701021515301_Initial.Designer.cs">
       <DependentUpon>201701021515301_Initial.cs</DependentUpon>
@@ -75,6 +83,22 @@
     <Compile Include="Migrations\201701171305255_RemovePicture.cs" />
     <Compile Include="Migrations\201701171305255_RemovePicture.Designer.cs">
       <DependentUpon>201701171305255_RemovePicture.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701211300104_UpdateIsPrimary.cs" />
+    <Compile Include="Migrations\201701211300104_UpdateIsPrimary.Designer.cs">
+      <DependentUpon>201701211300104_UpdateIsPrimary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701211358356_UpdateProfileImage.cs" />
+    <Compile Include="Migrations\201701211358356_UpdateProfileImage.Designer.cs">
+      <DependentUpon>201701211358356_UpdateProfileImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701211403274_ChangeToProfileIndex.cs" />
+    <Compile Include="Migrations\201701211403274_ChangeToProfileIndex.Designer.cs">
+      <DependentUpon>201701211403274_ChangeToProfileIndex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701221306337_UpdateOnMarkDeletion.cs" />
+    <Compile Include="Migrations\201701221306337_UpdateOnMarkDeletion.Designer.cs">
+      <DependentUpon>201701221306337_UpdateOnMarkDeletion.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Villa.cs" />
@@ -110,6 +134,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701171305255_RemovePicture.resx">
       <DependentUpon>201701171305255_RemovePicture.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701211300104_UpdateIsPrimary.resx">
+      <DependentUpon>201701211300104_UpdateIsPrimary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701211358356_UpdateProfileImage.resx">
+      <DependentUpon>201701211358356_UpdateProfileImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701211403274_ChangeToProfileIndex.resx">
+      <DependentUpon>201701211403274_ChangeToProfileIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701221306337_UpdateOnMarkDeletion.resx">
+      <DependentUpon>201701221306337_UpdateOnMarkDeletion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

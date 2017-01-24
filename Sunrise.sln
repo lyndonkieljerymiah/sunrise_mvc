@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunrise.Client", "Sunrise.Client\Sunrise.Client.csproj", "{823D2C0A-1234-4996-952A-25457230BA84}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VillaSolution", "VillaSolution", "{BAEC446C-BD60-4C04-961F-53CE40618FB0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Villas", "Villas", "{BAEC446C-BD60-4C04-961F-53CE40618FB0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunrise.VillaManagement", "Sunrise.VillaManagement\Sunrise.VillaManagement.csproj", "{6D53D740-10BB-4C1C-9CF4-14F82FDED22B}"
 EndProject
@@ -15,11 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Util
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VillaManagement.Test", "VillaManagement.Test\VillaManagement.Test.csproj", "{C5E0AC6C-F86B-4A2C-AA78-29BDD131F4B6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TenantSolution", "TenantSolution", "{29004CAA-D86A-4CC4-80C8-0560E0F744FA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Customers", "Customers", "{29004CAA-D86A-4CC4-80C8-0560E0F744FA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SalesSolution", "SalesSolution", "{7755DCCF-0164-4884-804C-C3898DC251D1}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contracts", "Contracts", "{7755DCCF-0164-4884-804C-C3898DC251D1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MaintenanceSolution", "MaintenanceSolution", "{E90C77D0-6D62-4543-9818-516B0298F0F9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MasterFile", "MasterFile", "{E90C77D0-6D62-4543-9818-516B0298F0F9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunrise.Maintenance", "Sunrise.Maintenance\Sunrise.Maintenance.csproj", "{01863CDC-763A-4D73-AB52-0568E0433DFB}"
 EndProject

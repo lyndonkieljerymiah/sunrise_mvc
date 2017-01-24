@@ -18,10 +18,6 @@ namespace Sunrise.Client.Controllers.Api
         }
 
 
-      
-       
-
-
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

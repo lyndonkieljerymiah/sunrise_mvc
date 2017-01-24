@@ -20,8 +20,13 @@ namespace Sunrise.Client.Infrastructure.Binding
 
             var httpRequest = HttpContext.Current.Request;
             var form = httpRequest.Form;
-            
 
+            if(string.IsNullOrEmpty(form.Get("VillaNo")))
+            {
+                actionContext.ModelState.AddModelError("VillaNo", "Villa No is Required");
+                return false;
+            }
+            
 
             VillaViewModel vm = new VillaViewModel
             {
@@ -33,58 +38,66 @@ namespace Sunrise.Client.Infrastructure.Binding
                 Capacity = Convert.ToInt32(form.Get("capacity")),
                 Description = form.Get("description"),
                 Type = form.Get("type"),
-                RatePerMonth = Convert.ToDecimal(form.Get("ratePerMonth"))
+                RatePerMonth = Convert.ToDecimal(form.Get("ratePerMonth")),
+                ProfileIndex = Convert.ToInt32(form.Get("profileIndex"))
             };
 
-            //get gallery for deletion if any
-            var keys = string.IsNullOrEmpty(form.Get("forDeletion")) ? 
-                "" : 
-                form.Get("forDeletion").Substring(0, form.Get("forDeletion").Length - 1);
-
-            if (keys.Length > 0)
+            try
             {
-                //convert to array
-                var arrayKeys = keys.Split(',');
-                foreach (var key in arrayKeys)
-                {
-                    ImageGalleryViewModel gallery = new ImageGalleryViewModel
-                    {
-                        Id = Convert.ToInt32(key),
-                        MarkDeleted = true
-                    };
-                    vm.ImageGalleries.Add(gallery);
-                }
-            }
+                //get gallery for deletion if any
+                var keys = string.IsNullOrEmpty(form.Get("forDeletion")) ? "" :
+                    form.Get("forDeletion").Substring(0, form.Get("forDeletion").Length - 1);
 
-            //upload file transfer to
-            //image blob view model
-            foreach (string file in httpRequest.Files)
-            {
-                HttpPostedFile postedFile = httpRequest.Files[file];
-                if (postedFile != null && postedFile.ContentLength > 0)
+                if (keys.Length > 0)
                 {
-                    string ext = postedFile.FileName.Substring(postedFile.FileName.IndexOf(".") + 1);
-                    using (var reader = new BinaryReader(postedFile.InputStream))
+                    //convert to array
+                    var arrayKeys = keys.Split(',');
+                    foreach (var key in arrayKeys)
                     {
                         ImageGalleryViewModel gallery = new ImageGalleryViewModel
                         {
-                            Blob = new ImageBlob
-                            {
-                                Size = postedFile.ContentLength,
-                                MimeType = postedFile.ContentType,
-                                FileFormat = ext,
-                                FileName = postedFile.FileName,
-                                Blob = reader.ReadBytes(postedFile.ContentLength)
-                            },
-                            MarkDeleted = false
+                            Id = Convert.ToInt32(key),
+                            MarkDeleted = true
                         };
                         vm.ImageGalleries.Add(gallery);
                     }
                 }
-            }
 
-            bindingContext.Model = vm;
-            return true;
+                //upload file transfer to
+                //image blob view model
+                foreach (string file in httpRequest.Files)
+                {
+                    HttpPostedFile postedFile = httpRequest.Files[file];
+                    if (postedFile != null && postedFile.ContentLength > 0)
+                    {
+                        string ext = postedFile.FileName.Substring(postedFile.FileName.IndexOf(".") + 1);
+                        using (var reader = new BinaryReader(postedFile.InputStream))
+                        {
+                            ImageGalleryViewModel gallery = new ImageGalleryViewModel
+                            {
+                                Blob = new ImageBlob
+                                {
+                                    Size = postedFile.ContentLength,
+                                    MimeType = postedFile.ContentType,
+                                    FileFormat = ext,
+                                    FileName = postedFile.FileName,
+                                    Blob = reader.ReadBytes(postedFile.ContentLength)
+                                },
+                                MarkDeleted = false
+                            };
+                            vm.ImageGalleries.Add(gallery);
+                        }
+                    }
+                }
+
+                bindingContext.Model = vm;
+                return true;
+            }
+            catch(Exception e)
+            {
+                bindingContext.ModelState.AddModelError("InternalErrorException", e.Message);
+                return false;
+            }
         }
         
     }

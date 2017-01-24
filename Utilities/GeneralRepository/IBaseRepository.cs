@@ -17,10 +17,11 @@ namespace Utilities.GeneralRepository
         Task<T> FindQueryAsync(object id);
         Task<T> FindQueryAsync(Expression<Func<T,bool>> clause, params Expression<Func<T,object>>[] includeExpressions);
         Task<T> FindQueryAsync(Expression<Func<T, bool>> clause);
+
         T FindQuery(object id);
+        T FindQuery(Expression<Func<T, bool>> clause);
 
         Task<IEnumerable<T>> GetQueryAsync(Expression<Func<T,bool>> where = null);
-
-        IEnumerable<T> GetQuery();
+        IEnumerable<T> GetQuery(Expression<Func<T, bool>> where = null);
     }
 }

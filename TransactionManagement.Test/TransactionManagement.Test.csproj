@@ -61,9 +61,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Actual\ContractIntegration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TransactionTest.cs" />
-    <Compile Include="ContractUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sunrise.TransactionManagement\Sunrise.TransactionManagement.csproj">

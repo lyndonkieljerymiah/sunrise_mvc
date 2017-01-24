@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 namespace Sunrise.VillaManagement.DTO
 {
     public class VillaView
-    {
+    {   
         public string Id { get; set; }
         public DateTime DateStamp { get; set; }
         public string VillaNo { get; set; }
@@ -20,5 +21,7 @@ namespace Sunrise.VillaManagement.DTO
         public int Capacity { get; set; }
         public string Description { get; set; }
         public decimal RatePerMonth { get; set; }
+        public int ProfileIndex { get; set; }
+        public ICollection<VillaGalleryView> Galleries { get; set; }
     }
 }

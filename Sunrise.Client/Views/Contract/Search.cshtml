@@ -15,7 +15,9 @@
                 <div class="col-md-2" ng-repeat="villa in $ctrl.villas | orderBy : 'villaNo'" style="margin-bottom:10px">
                     <div class="nb-card">
                         <div class="nb-image">
-                            <div class="card__image" style="background-image: url('{{villa.image}}')"></div>
+                            <div class="card__image">
+                                <img src="{{villa.profileImage.imageConverted}}"/>
+                            </div>
                             <div class="nb-title">{{villa.villaNo}}</div>
                         </div>
                         <div class="nb-detail">

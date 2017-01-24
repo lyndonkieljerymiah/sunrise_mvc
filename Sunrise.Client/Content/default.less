@@ -1,5 +1,4 @@
-﻿
-@color-sidemenu: #676a6d;
+﻿@color-sidemenu: #676a6d;
 @color-heading: #333D4A;
 
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
@@ -17,21 +16,74 @@ body {
     font-family: 'Open Sans', sans-serif;
     background: @color-sidemenu;
     height: 100%;
-    
+    padding-top: 50px;
 }
 
 
 .body-content {
     padding: 15px;
 }
+
 .box-content {
     padding-top: 10px;
     padding-bottom: 15px;
 }
-.page {
-    background: url('imgs/noise_lines.png') top repeat;
-    min-height: 1200px;
+
+.content-wrapper {
+    width: 100%;
+    &:after {
+        clear:both;
+        display: table;
+        content: '';
+    }
+    .page {
+        background: url('imgs/noise_lines.png') top repeat;
+        min-height: 1200px;
+        width: 90%;
+        float:left;
+        
+    }
+    .nb-aside-menu {
+        background-color: @color-sidemenu;
+        width: 10%;
+        float: left;
+        min-height: 1200px;
+        padding: 25px 0 0 0;
+
+        .nb-aside-heading {
+            background-color: @color-heading;
+            padding: 15px 10px;
+        }
+
+        ul.nb-aside-nav {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            li {
+                a {
+                    display: block;
+                    padding: 15px 25px;
+                    text-decoration: none;
+                    color: whitesmoke;
+                    line-height: 12px;
+                    font-size: 14px;
+
+                    i {
+                        margin-right: 10px;
+                    }
+
+                    &:hover {
+                        background-color: rgba(0,0,0,0.3);
+                        color: #337ab7;
+                        border-left: 5px solid #337ab7;
+                    }
+                }
+            }
+        }
+    }
 }
+
 
 /*spinner*/
 .spinner {
@@ -75,6 +127,8 @@ span[ng-show], span[ng-hide] {
 }
 
 /*menu*/
+@import url("parts/nav.less");
+
 .nb-nav-menu {
     width: 100%;
     background-color: #e6e6e6;
@@ -117,44 +171,7 @@ span[ng-show], span[ng-hide] {
     }
 }
 
-.nb-aside-menu {
-    background-color: @color-sidemenu;
-    min-height: 1200px;
-    padding: 0 !important;
 
-    .nb-aside-heading {
-        background-color: @color-heading;
-        padding: 15px 10px;
-    }
-
-    ul.nb-aside-nav {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-
-        li {
-            a {
-                display: block;
-                padding: 15px 25px;
-                text-decoration: none;
-                color: whitesmoke;
-                line-height: 12px;
-                font-size: 14px;
-
-                i {
-                    margin-right: 10px;
-                }
-
-                &:hover {
-                    background-color: rgba(0,0,0,0.3);
-                    color: #337ab7;
-                    border-left: 5px solid #337ab7;
-                }
-            }
-        }
-    }
-}
-    
 /*box*/
 @import url("parts/box.less");
 
@@ -173,7 +190,7 @@ table {
 
         &.bounce {
             background-color: darkred;
-            color:whitesmoke;
+            color: whitesmoke;
             .transition();
         }
 
@@ -181,8 +198,6 @@ table {
             background-color: darkorange;
             .transition();
         }
-
-
     }
 }
 

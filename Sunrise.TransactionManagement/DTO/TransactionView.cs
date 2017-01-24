@@ -10,7 +10,7 @@ namespace Sunrise.TransactionManagement.DTO
 {
     public class TransactionView
     {
-        [Key]
+        
         public string Id { get; private set; }
         public string Code { get; set; }
         public DateTime DateCreated { get; private set; }
@@ -30,11 +30,9 @@ namespace Sunrise.TransactionManagement.DTO
         public string UserId { get; set; }
 
         public virtual ICollection<PaymentView> Payments { get; set; }
-
-        [ForeignKey("TenantId")]    
+                
         public virtual TenantView Tenant { get; set; }
-
-        [ForeignKey("VillaId")]
+        
         public virtual VillaView Villa { get; set; }
 
         public decimal GetBalanceDue()

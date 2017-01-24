@@ -136,7 +136,6 @@ namespace Sunrise.TransactionManagement.Model
             return false;
         }
 
-
         public void UpdatePaymentStatus(int id, string status, string remarks,string userId)
         {
             var payment = this.Payments.SingleOrDefault(p => p.Id == id);

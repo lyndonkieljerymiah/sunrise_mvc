@@ -4,7 +4,6 @@
     mainApp.controller("villaListController", VillaListController);
 
     VillaController.$inject = ['$scope', 'Upload', 'villaDataManager', 'toaster', 'spinnerManager', 'confirmationDialog'];
-
     VillaListController.$inject = ['$scope', 'villaDataManager', 'spinnerManager'];
 
     function VillaController($scope, Upload, villaDataManager, toaster, spinnerManager, confirmationDialog) {
@@ -31,6 +30,16 @@
                 villaDataManager.edit(id, function (data)
                 {
                     $scope.model = data;
+                    var hasChange = false;
+                    $scope.$watch("model.profileIndex", function (nv, ov, ob)
+                    {   
+                        angular.forEach($scope.model.imageGalleries, function (item) {
+                            if(item.id === nv) {
+                                $scope.model.profileImage = item;
+                                hasChange = true;
+                            }
+                        });
+                    }, true);
                     spinnerManager.stop();
                 });
             }
@@ -39,18 +48,23 @@
         function save()
         {
             spinnerManager.start();
-            villaDataManager.save($scope.model,
-                function (data)
-                {
-                    toaster.pop("success", "Save successfully");
-                    spinnerManager.stop();
-                    create(data.returnObject);
-                },
-                function (data)
-                {
-                    toaster.pop("error","Unexpected error occured");
-                    spinnerManager.stop();
-                });
+            if ($scope.model.id !== "") {
+                villaDataManager.update($scope.model, success, failure);
+            }
+            else {
+                villaDataManager.save($scope.model, success, failure);
+            }
+        }
+
+        function success(data) {
+            toaster.pop("success", "Save successfully");
+            spinnerManager.stop();
+            create(data.returnObject);
+        }
+
+        function failure(data) {
+            toaster.pop("error", "Unexpected error occured");
+            spinnerManager.stop();
         }
 
         function remove(gallery) {
@@ -72,10 +86,13 @@
         $scope.txtSearch = "";
         $ctrl.list = list;
         $ctrl.redirect = redirect;
-
+        spinnerManager.scope = $scope;
         function list(data) {
+            spinnerManager.start();
             villaDataManager.list("", function (data) {
-                $scope.models = data;
+                $scope.models = data.rows;
+                $scope.boards = data.boards;
+                spinnerManager.stop();
             });
         }
 

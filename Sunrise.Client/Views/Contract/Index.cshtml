@@ -14,7 +14,8 @@
                     <search-box search-key="txtSearch" placeholder="Search Contract"></search-box>
                 </div>
                 <div class="col-md-2 pull-right">
-                    <button class="btn btn-success btn-block" ng-click="$ctrl.add()"><i class="fa fa-plus"></i> New Contract</button>
+                    <button class="btn btn-success btn-block" 
+                            ng-click="$ctrl.add()"><i class="fa fa-plus"></i> New Contract</button>
                 </div>
             </div>
             <hr />
@@ -22,9 +23,10 @@
                 <div class="col-md-12">
                     <table class="table table-bordered table-condensed">
                         <tr class="active">
-                            <th>Date</th>
-                            <th>Contract No</th>
-                            <th>Villa No</th>
+                            <th style="width:2%;text-align:center">No</th>
+                            <th style="width:7%;text-align:center">Date</th>
+                            <th style="width:13%;text-align:center">Contract No</th>
+                            <th style="width:10%;text-align:center">Villa No</th>
                             <th>Tenant</th>
                             <th>Covered Period</th>
                             <th>Amount</th>
@@ -32,9 +34,10 @@
                             <th></th>
                         </tr>
                         <tr ng-repeat="contract in contracts | orderBy : 'code'">
-                            <td>{{contract.dateCreated | date : 'MM/dd/yyyy'}}</td>
-                            <td>{{contract.code}}</td>
-                            <td>{{contract.villaNo}}</td>
+                            <td class="text-center active">{{($index+1)}}</td>
+                            <td class="text-center">{{contract.dateCreated | date : 'MM/dd/yyyy'}}</td>
+                            <td class="text-center">{{contract.code}}</td>
+                            <td class="text-center">{{contract.villaNo}}</td>
                             <td>{{contract.tenant}}</td>
                             <td>
                                 {{contract.periodStart | date  : 'MM/dd/yyyy'}} -

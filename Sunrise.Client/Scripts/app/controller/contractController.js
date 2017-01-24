@@ -18,7 +18,7 @@ mainApp.controller("contractController",
         var templatePath = "/tenant/register/";
         var isPageLoad = false;
         spinnerManager.scope = $scope;
-
+        
         $scope.sales = {};
 
         function restart() {
@@ -33,8 +33,10 @@ mainApp.controller("contractController",
             isPageLoad = true;
             contractDataManager.createContract(villaId, tenantType,
                 function (data) {
+                    console.log(data.villa.imageGalleries);
+                    $scope.nbSlides.images = data.villa.imageGalleries
+                    console.log($scope.nbSlides);
                     $scope.sales = data;
-                    $scope.nbSlides.images = data.images;
                     $scope.template = templatePath + data.register.tenantType;
                     spinnerManager.stop(restart);
                 });
@@ -85,7 +87,8 @@ mainApp.controller("contractListController",
     {
 
         spinnerManager.scope = $scope;
-        function list() {
+        function list()
+        {
             spinnerManager.start();
             contractDataManager.list(
                 function (data) {
@@ -144,11 +147,13 @@ mainApp.controller("contractListController",
     });
 
 mainApp.controller("villaSearchController", function (villaDataManager, $uibModalInstance) {
+
     $ctrl = this;
     $ctrl.villas = [];
     $ctrl.txtSearch = "";
     $ctrl.search = search;
     $ctrl.select = select;
+
     function search() {
         villaDataManager
             .searchByNo($ctrl.txtSearch, function (data)

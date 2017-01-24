@@ -38,6 +38,14 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList.EntityFramework, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.EntityFramework.1.0.1\lib\net45\PagedList.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -52,9 +60,13 @@
     <Compile Include="Abstract\IPaymentRepository.cs" />
     <Compile Include="Abstract\ITransactionRepository.cs" />
     <Compile Include="Abstract\IUnitOfWork.cs" />
+    <Compile Include="Data\Contract\ContractDataService.cs" />
+    <Compile Include="Data\Contract\IContractDataService.cs" />
+    <Compile Include="Data\Factory\ContractFactory.cs" />
+    <Compile Include="Data\Factory\IContractFactory.cs" />
     <Compile Include="DTO\PaymentView.cs" />
     <Compile Include="DTO\TenantView.cs" />
-    <Compile Include="DTO\TransactionDTO.cs" />
+    <Compile Include="DTO\TransactionListDTO.cs" />
     <Compile Include="DTO\TransactionView.cs" />
     <Compile Include="DTO\VillaView.cs" />
     <Compile Include="Migrations\201701021644453_Initial.cs" />

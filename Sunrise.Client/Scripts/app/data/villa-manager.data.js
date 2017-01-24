@@ -13,6 +13,7 @@
                 $http.get(router.apiPath("villa", "create")).then(
                     function (response) {
                         var data = response.data;
+                        data.profileImage = { id: 0, imageConverted: data.defaultImageUrl };
                         data.validation = validation();
                         action(data);
                     });
@@ -56,7 +57,7 @@
                            angular.forEach(response.data, function (item) {
                                var row = {
                                    id: item.id,
-                                   image: item.images[0].imageUrl,
+                                   profileImage: item.imageGallery,
                                    description: item.description,
                                    capacity: item.capacity,
                                    ratePerMonth: item.ratePerMonth,
@@ -72,61 +73,76 @@
                    });
             },
             list: function (no, action, failure) {
-                $http.get(router.apiPath("villa", "search", no))
+                $http.get(router.apiPath("villa", "list"))
                    .then(
                        function (response) {
-                           var rows = [];
-                           if (response.data.length > 0) {
-                               angular.forEach(response.data, function (item) {
-                                   var row = {
-                                       id: item.id,
-                                       villaNo: item.villaNo,
-                                       description: item.description,
-                                       elecNo: item.elecNo,
-                                       waterNo: item.waterNo,
-                                       qtelNo: item.qtelNo,
-                                       ratePerMonth: item.ratePerMonth,
-                                       status: item.status
-                                   };
-                                   rows.push(row);
-                               });
-                           }
-                           action(rows);
+                           var data = {
+                               rows: response.data.listView,
+                               boards: response.data.boards
+                           };
+                           action(data);
                        },
                        function (response) {
 
                        });
 
             },
-            save: function (data, action, failure) {
+            update: function (data, action, failure) {
+                data.profileImage = null;
+                data.imageGalleries = null;
+                data.types = null;
+
                 var upload = Upload.upload(
                     {
-                        url: "/api/villa/save",
+                        url: "/api/villa/update",
+                        method: 'PUT',
                         data: data
                     });
                 upload.then(
+                    function (resp) {
+                        action(resp.data);
+                    },
+                    function (resp) {
+                        failure(resp);
+                    });
+
+            },
+            save: function (data, action, failure) {
+
+                data.profileImage = null;
+                data.imageGalleries = null;
+                data.types = null;
+
+                var upload = Upload.upload(
+                    {
+                        url: "/api/villa/save",
+                        method: 'POST',
+                        data: data
+                    });
+
+                upload.then(
                     function (resp)
                     {
-
-                    action(resp.data);
-                },
-                function (resp) {
-                    failure(resp);
+                        action(resp.data);
+                    },
+                    function (resp) {
+                        failure(resp);
                 });
             },
             edit: function (id, action, failure)
             {
                 $http.get(router.apiPath("villa", "edit", id)).then(
                     function (resp)
-                    {
+                    {  
                         var data = resp.data;
                         data.validation = validation();
                         data.forDeletion = "";
+                        data.profileImage = { id: 0, imageConverted: data.defaultImageUrl };
                         action(data);
                     },
                     function (resp)
                     {
-
+                        failure(resp.data);
                     });
             },
             redirect: function (id) {

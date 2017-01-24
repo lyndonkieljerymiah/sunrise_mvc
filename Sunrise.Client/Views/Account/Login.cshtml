@@ -23,7 +23,7 @@
     <div class="transparent-login">
         <section class="login">
             @using (Html.BeginForm("Login", "Account",
-                new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form" }))
+                new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form", autofocus="true" }))
             {
                 @Html.AntiForgeryToken()
                 <div class="input-group">
@@ -39,7 +39,7 @@
                 <button class="btn-login">Log in</button>
             }
         </section>
-        <p class="nb-text-version">Sunrise Rental Management ver 1.0</p>
+        <p class="nb-text-version">Sunrise Rental Management ver 1.1</p>
     </div>
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/angular")

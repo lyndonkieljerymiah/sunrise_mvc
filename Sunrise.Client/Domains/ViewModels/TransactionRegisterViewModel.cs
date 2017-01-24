@@ -24,9 +24,23 @@ namespace Sunrise.Client.Domains.ViewModels
 
         public string Status { get; set; }
         public string StatusCode { get; set; }
-        public bool EditState { get
+
+        public bool EditState
+        {
+            get
             {
-                if(StatusCode == "ssp")
+                if (StatusCode == "ssp")
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+        public bool UpdateState
+        {
+            get
+            {
+                if (StatusCode == "sscn")
                 {
                     return true;
                 }
@@ -43,10 +57,10 @@ namespace Sunrise.Client.Domains.ViewModels
         public DateTime? Birthday { get; set; }
         public DateTime? ValidityDate { get; set; }
         public string CrNo { get; set; }
-        
+
         public ICollection<PaymentViewModel> Payments { get; set; }
         public PaymentDictionary PaymentDictionary { get; private set; }
-        
+
         public decimal TotalPayment
         {
             get
@@ -62,11 +76,13 @@ namespace Sunrise.Client.Domains.ViewModels
             }
 
         }
-        public decimal TotalBalance { get
+        public decimal TotalBalance
+        {
+            get
             {
                 var totalBalance = AmountPayable - TotalPayment;
                 return totalBalance;
-            } 
+            }
 
         }
         public decimal TotalReceivedPayment
@@ -79,7 +95,6 @@ namespace Sunrise.Client.Domains.ViewModels
                 return totalPayment;
             }
         }
-
         
         public void Initialize(IEnumerable<Selection> selections)
         {
@@ -92,13 +107,13 @@ namespace Sunrise.Client.Domains.ViewModels
             this.PaymentDictionary.InitialValue = payment;
         }
     }
-  
+
     /// <summary>
     /// TODO: Register Sales - Write/Read
     /// </summary>
     public class TransactionRegisterViewModel
-    {   
-        
+    {
+
         public static TransactionRegisterViewModel CreateWithVilla(VillaViewModel vm)
         {
             var sales = new TransactionRegisterViewModel();
@@ -126,7 +141,7 @@ namespace Sunrise.Client.Domains.ViewModels
         public string ContractStatusDescription { get; set; }
 
         [Required]
-        [CustomDateEndStartValidation("PeriodEnd", ValueComparison.IsLessThan,ErrorMessage = "Start must be earlier than end date")]
+        [CustomDateEndStartValidation("PeriodEnd", ValueComparison.IsLessThan, ErrorMessage = "Start must be earlier than end date")]
         public DateTime PeriodStart { get; set; }
 
         [Required]
@@ -143,10 +158,10 @@ namespace Sunrise.Client.Domains.ViewModels
 
         public VillaViewModel Villa { get; set; }
         public TenantRegisterViewModel Register { get; set; }
-        
+
         public IEnumerable<SelectListItem> RentalTypes { get; private set; }
         public IEnumerable<SelectListItem> ContractStatuses { get; private set; }
-        
+
         public void SetContractStatuses(IEnumerable<Selection> selections)
         {
             this.ContractStatuses = selections
@@ -165,19 +180,19 @@ namespace Sunrise.Client.Domains.ViewModels
         public void ComputeTotalAmount()
         {
             var totalDays = (this.PeriodEnd.Date - this.PeriodStart.Date).TotalDays;
-            var totalMonth = Convert.ToInt16(totalDays)/30;
-            var totalAmountPerDay = this.Villa.RatePerMonth* (totalMonth);
+            var totalMonth = Convert.ToInt16(totalDays) / 30;
+            var totalAmountPerDay = this.Villa.RatePerMonth * (totalMonth);
             this.AmountPayable = totalAmountPerDay;
         }
-      
-       
+
+
     }
 
 
-    
 
 
-    
-    
+
+
+
 
 }

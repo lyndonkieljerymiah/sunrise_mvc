@@ -61,15 +61,16 @@ mainApp.directive("inputSet", function () {
             myRequired: "@",
             myNumeric: "@",
             validState: "=",
-            errorMsg: "="
+            errorMsg: "=",
+            myId : "@"
         },
         template: ["<div class='{{myClass}}'>",
-                   "<input type='{{myType}}' class='form-control' ng-model='myModel' ng-blur='myBlur' ng-required='myRequired' />",
+                   "<input type='{{myType}}' class='form-control' ng-model='myModel' ng-blur='myBlur' ng-required='myRequired' id='{{myId}}' name='{{myId}}' />",
                    "<ng-transclude></ng-transclude>",
                    "</div>"].join(''),
         link: function (scope, el, attrs) {
             var pattern;
-
+            //check input validation
             var inp = el[0].childNodes[0].childNodes[0];
             $(inp).on("change", function () {
                 if (scope.myNumeric) {

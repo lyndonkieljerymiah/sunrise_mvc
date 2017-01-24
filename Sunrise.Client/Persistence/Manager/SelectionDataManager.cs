@@ -2,22 +2,32 @@
 using System.Threading.Tasks;
 using Sunrise.Maintenance.Abstract;
 using Sunrise.Maintenance.Model;
+using System.Linq;
+using System;
+using Sunrise.Maintenance.Data.Factory;
 
 namespace Sunrise.Client.Persistence.Manager
 {
 
-    public class SelectionDataManager
+    public class SelectionDataManager : IDisposable
     {
-        private readonly IUnitOfWork _unitOfWork;
+        
+        private IMasterFileFactory Factory { get; set; }
 
-        public SelectionDataManager(IUnitOfWork unitOfWork)
+        public SelectionDataManager(IMasterFileFactory factory)
         {
-            _unitOfWork = unitOfWork;
+            this.Factory = factory;
         }
+
         public async Task<IEnumerable<Selection>> GetLookup(string[] parent)
         {
-            var selections = await _unitOfWork.Selections.GetSelectionByType(parent);
+            var selections = await Factory.Selections.GetLookup(parent);
             return selections;
-        } 
+        }
+
+        public void Dispose()
+        {
+            Factory.Dispose();
+        }
     }
 }

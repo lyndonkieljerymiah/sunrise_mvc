@@ -51,6 +51,10 @@
   <ItemGroup>
     <Compile Include="Abstract\ITenantRepository.cs" />
     <Compile Include="Abstract\IUnitOfWork.cs" />
+    <Compile Include="Data\Factory\ITenantDataFactory.cs" />
+    <Compile Include="Data\Factory\TenantDataFactory.cs" />
+    <Compile Include="Data\Tenants\ITenantDataService.cs" />
+    <Compile Include="Data\Tenants\TenantDataService.cs" />
     <Compile Include="Migrations\201701021808339_Initial.cs" />
     <Compile Include="Migrations\201701021808339_Initial.Designer.cs">
       <DependentUpon>201701021808339_Initial.cs</DependentUpon>
@@ -64,9 +68,7 @@
     <Compile Include="Model\Company.cs" />
     <Compile Include="Model\Individual.cs" />
     <Compile Include="Model\Tenant.cs" />
-    <Compile Include="Persistence\AppContextDb.cs" />
-    <Compile Include="Persistence\Repository\TenantRepository.cs" />
-    <Compile Include="Persistence\Repository\UnitOfWork.cs" />
+    <Compile Include="Persistence\AppDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

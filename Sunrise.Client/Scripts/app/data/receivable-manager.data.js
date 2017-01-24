@@ -2,7 +2,7 @@
     return {
         load: function (villaNo, success, failure) {
             //load data
-            $http.get("/api/receivable/create/" + villaNo)
+            $http.get("/api/receivable/" + villaNo)
                 .then(
                     function (response) {
                         var data = response.data;

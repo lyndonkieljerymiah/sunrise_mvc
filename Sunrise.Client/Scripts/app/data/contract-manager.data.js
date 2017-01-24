@@ -3,16 +3,16 @@
         return {
             list: function (action, failure) {
                 $http.get(router.apiPath("contract","list")).then(
-                    function (response) {
+                    function (response)
+                    {
                         var row = [];
                         if (response.data.length > 0) {
                             angular.forEach(response.data, function (item) {
-                                console.log(item);
                                 var col = {
                                     id: item.id,
                                     code: item.code,
-                                    villaNo: item.villa.villaNo,
-                                    tenant: item.name,
+                                    villaNo: item.villaNo,
+                                    tenant: item.tenantName,
                                     dateCreated: new Date(item.dateCreated),
                                     periodStart: new Date(item.periodStart),
                                     periodEnd: new Date(item.periodEnd),
@@ -33,24 +33,28 @@
                 router.route("contract", "", villaId);
             },
             createContract: function (villaId, tenantType, success, failure) {
-                var uriPath = (tenantType === null) ? router.apiPath("contract", "create", villaId) : router.apiPath("contract", "create", villaId + "/" + tenantType);
+                var uriPath = (tenantType === null) ?
+                    router.apiPath("contract", "create", villaId) :
+                    router.apiPath("contract", "create", villaId + "/" + tenantType);
+
                 $http.get(uriPath)
                   .then(
                       function (response) {
+
                           var data = response.data;
                           data.periodStart = new Date(data.periodStart);
                           data.periodEnd = new Date(data.periodEnd);
-
-                          //slides
-                          data.images = data.villa.images;
-                          if (data.register.individual) {
+                          if (data.register.individual)
+                          {
                               data.register.individual.gender = data.register.individual.gender.toString();
                               data.register.individual.birthday = new Date(data.register.individual.birthday);
                           }
                           else {
                               data.register.company.validityDate = new Date(data.register.company.validityDate);
                           }
+
                           data.template = data.register.tenantType;
+                          
                           success(data);
                       },
                       function (response) {
@@ -59,9 +63,11 @@
                     );
             },
             save: function (data, success, failure) {
+                data.villa.imageGalleries = null;
                 $http.post(router.apiPath("contract", "create"), data)
                 .then(
-                function (response) {
+                function (response)
+                {
                     //route data
                     var responseData = response.data;
                     success(responseData);

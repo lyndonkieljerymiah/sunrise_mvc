@@ -14,6 +14,13 @@ namespace Sunrise.Client.App_Start
 
     using Ninject;
     using Ninject.Web.Common;
+    using VillaManagement.Data.Villas;
+    using VillaManagement.Data.Factory;
+    using TransactionManagement.Data.Factory;
+    using TransactionManagement.Data.Contract;
+    using TenantManagement.Data.Tenants;
+    using Maintenance.Data.Factory;
+    using Maintenance.Data.MasterFile;
 
     public static class NinjectWebCommon 
     {
@@ -65,11 +72,24 @@ namespace Sunrise.Client.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<Sunrise.VillaManagement.Abstract.IUnitOfWork>().To<Sunrise.VillaManagement.Persistence.Repository.UnitOfWork>();
-            kernel.Bind<Sunrise.TenantManagement.Abstract.IUnitOfWork>().To<Sunrise.TenantManagement.Persistence.Repository.UnitOfWork>();
-            kernel.Bind<Sunrise.Maintenance.Abstract.IUnitOfWork>().To<Sunrise.Maintenance.Persistence.Repository.UnitOfWork>();
-            kernel.Bind<Sunrise.TransactionManagement.Abstract.IUnitOfWork>().To<Sunrise.TransactionManagement.Persistence.Repository.UnitOfWork>();
+            //villa setup ver 1.1
+            //masterfile
+            kernel.Bind<IMasterFileFactory>().To<MasterFileFactory>();
+            kernel.Bind<ISelectionDataService>().To<SelectionDataService>();
             
+            //contract
+            kernel.Bind<IContractDataService>().To<ContractDataService>();
+            kernel.Bind<IContractDataFactory>().To<ContractDataFactory>();
+            
+            //villa
+            kernel.Bind<IVillaDataService>().To<VillaDataService>();
+            kernel.Bind<IVillaDataFactory>().To<VillaDataFactory>();
+
+            //tenant
+            kernel.Bind<ITenantDataService>().To<TenantDataService>();
+            kernel.Bind<ITenantDataFactory>().To<TenantDataFactory>();
+            
+
             kernel.Bind<ContractDataManager>().To<ContractDataManager>();
             kernel.Bind<VillaDataManager>().To<VillaDataManager>();
             kernel.Bind<SelectionDataManager>().To<SelectionDataManager>();

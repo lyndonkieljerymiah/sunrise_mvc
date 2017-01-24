@@ -5,71 +5,46 @@ using System.Threading.Tasks;
 using Sunrise.TenantManagement.Abstract;
 using Sunrise.TenantManagement.Model;
 using Utilities.Enum;
+using Sunrise.VillaManagement.Data.Factory;
 
 namespace Sunrise.Client.Persistence.Manager
 {
     public class TenantDataManager
     {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public TenantDataManager(IUnitOfWork unitOfWork)
+        
+        private ITenantDataFactory Factory { get; set; }
+        public TenantDataManager(ITenantDataFactory factory)
         {
-            _unitOfWork = unitOfWork;
+            Factory = factory;
         }
 
-        public async Task<CustomResult> CreateAsync(TenantRegisterViewModel vmTenant)
+        public async Task<CustomResult> CreateTenant(TenantRegisterViewModel vmTenant)
         {
-            var result = new CustomResult();
-            try
+            //register tenant
+            var newTenant = Tenant.Map(
+                vmTenant.Name, vmTenant.EmailAddress,
+                vmTenant.TelNo, vmTenant.MobileNo,
+                vmTenant.FaxNo, vmTenant.Address1,
+                vmTenant.Address2, vmTenant.City, vmTenant.PostalCode);
+            if (vmTenant.Individual != null)
             {
-                //register tenant
-                var newTenant = Tenant.Map(
-                    vmTenant.Name, vmTenant.EmailAddress,
-                    vmTenant.TelNo, vmTenant.MobileNo, 
-                    vmTenant.FaxNo, vmTenant.Address1, 
-                    vmTenant.Address2, vmTenant.City, vmTenant.PostalCode);
-                if(vmTenant.Individual != null)
-                {
-                    var individual = vmTenant.Individual;
-                    newTenant.AddAttributeIndividual(individual.Birthday,individual.Gender, individual.QatarId, individual.Company);
-                }
-                else
-                {
-                    var company = vmTenant.Company;
-                    newTenant.AddAttributeCompany(company.CrNo, company.BusinessType, company.ValidityDate, company.Representative);
-                }
-                _unitOfWork.Tenants.Add(newTenant);
-                await _unitOfWork.SaveChanges();
-
-                result.ReturnObject = newTenant.Id;
-                result.Success = true;
+                var individual = vmTenant.Individual;
+                newTenant.AddAttributeIndividual(individual.Birthday, individual.Gender, individual.QatarId, individual.Company);
             }
-            catch (Exception e)
+            else
             {
-                result.Success = false;
-                result.AddError("InternalErrorException", e.Message);
+                var company = vmTenant.Company;
+                newTenant.AddAttributeCompany(company.CrNo, company.BusinessType, company.ValidityDate, company.Representative);
             }
-
+            var result = await Factory.Tenants.CreateTenant(newTenant);
             return result;
         }
 
-        public CustomResult RemoveTenantNonAsync(string id)
+        public async Task<CustomResult> RemoveTenant(string id)
         {
-            var result = new CustomResult();
-            try
-            {
-                var tenant = _unitOfWork.Tenants.FindQuery(id);
-                _unitOfWork.Tenants.Remove(tenant);
-                _unitOfWork.SaveChangesNonAsync();
-                result.Success = true;
-            }
-            catch(Exception e)
-            {
-                result.AddError("InternalErrorException", e.Message);
-            }
-
+            var result = await Factory.Tenants.RemoveTenant(id);
             return result;
         }
-       
+
     }
 }

@@ -10,7 +10,8 @@ namespace Utilities.Enum
     {
         Available,
         NotAvailable,
-        Reserved
+        Reserved,
+        All
     }
 
     public enum SearchByEnum
@@ -28,11 +29,11 @@ namespace Utilities.Enum
     public struct CustomResult
     {
         public bool Success { get; set; }
-        public IDictionary<string,string> Errors { get;private set; }
+        public IDictionary<string, string> Errors { get; private set; }
         public object ReturnObject { get; set; }
         public ICollection<object> ReturnObjects { get; set; }
-        
-        public CustomResult(IDictionary<string,string> errors)
+
+        public CustomResult(IDictionary<string, string> errors)
         {
             Success = false;
             Errors = errors;
@@ -44,14 +45,14 @@ namespace Utilities.Enum
         {
             if (Errors == null)
                 Errors = new Dictionary<string, string>();
-            Errors.Add(key,error);
+            Errors.Add(key, error);
         }
 
 
 
 
 
-       
+
     }
 
 

@@ -6,7 +6,7 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 
-namespace VillaManagement.Test
+namespace VillaManagement.Test.Real
 {
     [TestClass]
     public class VillaUnitTest
@@ -23,27 +23,8 @@ namespace VillaManagement.Test
             }
         }
 
-        [TestMethod]
-        public async Task Can_Get_All()
-        {
+       
 
-            using (var uow = new UnitOfWork())
-            {
-                var villas = await uow.Villas.GetAllVilla(1, 20);
-                Assert.AreEqual(1, villas.Count());
-            }
-        }
-
-        [TestMethod]
-        public async Task Can_Get_ByNo()
-        {
-
-            using (var uow = new UnitOfWork())
-            {
-                var villas = await uow.Villas.GetQueryAsync(v => v.VillaNo == "V102");
-                Assert.AreEqual(1, villas.Count());
-            }
-        }
 
         [TestMethod]
         public async Task Can_Save_BigData()

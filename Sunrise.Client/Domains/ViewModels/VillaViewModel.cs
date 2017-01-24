@@ -14,22 +14,20 @@ namespace Sunrise.Client.Domains.ViewModels
 {
     public class VillaViewModel
     {
-        
+
         public VillaViewModel(IEnumerable<Selection> selections) : this()
         {
             SetLookup(selections);
         }
         public VillaViewModel()
         {
-            Images = new HashSet<ViewImages>();
             DateStamp = DateTime.Today;
+            Id = "";
             this.ImageGalleries = new List<ImageGalleryViewModel>();
         }
 
         public string Id { get; set; }
-
         public DateTime DateStamp { get; private set; }
-
         [Required]
         public string VillaNo { get; set; }
 
@@ -43,40 +41,66 @@ namespace Sunrise.Client.Domains.ViewModels
         public string Status { get; set; }
 
         public string VillaStatus { get; set; }
+
         public string Type { get; set; }
+
         public string VillaType { get; set; }
+
         [Required]
         public int Capacity { get; set; }
+
         public string Description { get; set; }
 
         [Required]
-        [RegularExpression(@"\d+",ErrorMessage ="Value must be numeric")]
+        [RegularExpression(@"\d+", ErrorMessage = "Value must be numeric")]
         public decimal RatePerMonth { get; set; }
-
-        public string Label {
-            get { return this.VillaNo + " - " + this.VillaStatus; }
-        }
-
+        
         public IEnumerable<SelectListItem> Types { get; set; }
-        public ICollection<ViewImages> Images { get; private set; }
         public ICollection<ImageGalleryViewModel> ImageGalleries { get; set; }
-
         public void SetLookup(IEnumerable<Selection> selections)
         {
-            this.Types = selections.Select(s => new SelectListItem { Value = s.Code, Text = s.Description });
+            this.Types = selections
+                .Select(s => new SelectListItem { Value = s.Code, Text = s.Description });
         }
+
+        public int ProfileIndex { get; set; }
+        public string DefaultImageUrl { get; set; }
     }
 
     public class ImageGalleryViewModel
-    {
-        public ImageGalleryViewModel()
-        {
-            Blob = new ImageBlob();
-        }
+    {   
         public int Id { get; set; }
         public ImageBlob Blob { get; set; }
-        public string ImageConverted { get { return "data:image/png;base64," + Convert.ToBase64String(Blob.Blob); } }
+        public string ImageConverted {
+            get {
+                return (Blob.Blob == null) ? ImageUrl : 
+                    "data:image/jpg;base64," + Convert.ToBase64String(Blob.Blob);
+            }
+        }
+
+        public string ImageUrl { get; set; }
         public bool MarkDeleted { get; set; }
     }
-    
+
+    public class ImageGalleryReaderViewModel
+    {
+        
+        public int Id { get; set; }
+        public string FileName { get; set; }
+        public string ImageConverted { get; private set; }
+        public void SetImageBlob(byte[] blob,string noImageUrl = "")
+        {
+            if (blob == null)
+            {
+                ImageConverted = noImageUrl;
+            }
+            else
+            {
+                ImageConverted = "data:image/jpg;base64," + Convert.ToBase64String(blob);
+            }
+        }
+        public string ImageUrl { get; set; }
+        public bool MarkDeleted { get; set; }
+    }
+
 }
