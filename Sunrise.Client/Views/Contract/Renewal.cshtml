@@ -1,0 +1,67 @@
+﻿
+@{
+    ViewBag.Title = "Contract Renewal";
+}
+
+<div ng-controller="contractExpiryListController as $ctrl" ng-init="$ctrl.list()">
+    <spinner></spinner>
+    <div class="nb-nav-toolbar nav-default">
+        <div class="nav-header">@ViewBag.Title</div>
+    </div>
+    <div class="container-fluid">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <uib-tabset>
+                    <uib-tab heading="Contract for Renewal">
+                        <div class="body-content">
+                            <table class="table table-bordered table-condensed center-head">
+                                <tr class="active">
+                                    <th style="width:2%;">No</th>
+                                    <th style="width:7%;">Date</th>
+                                    <th style="width:13%;">Contract No</th>
+                                    <th style="width:10%;">Villa No</th>
+                                    <th>Tenant</th>
+                                    <th>Covered Period</th>
+                                    <th>Amount Balance</th>
+                                    <th>Status</th>
+                                    <th style="width:10%">Due</th>
+                                    <th></th>
+                                </tr>
+                                <tr ng-repeat="model in models">
+                                    <td class="text-center">{{($index+1)}}</td>
+                                    <td>{{model.dateCreated | date: 'MM/dd/yyyy'}}</td>
+                                    <td>{{model.code}}</td>
+                                    <td class="text-center">{{model.villaNo}}</td>
+                                    <td>{{model.tenant}}</td>
+                                    <td>{{model.periodStart | date: 'MM/dd/yyyy'}} - {{model.periodEnd | date: 'MM/dd/yyyy'}}</td>
+                                    <td>{{model.amountBalance | currency : "QR "}}</td>
+                                    <td class="text-center">{{model.status}}</td>
+                                    <td class="text-center">{{model.monthDue}} (Month(s))</td>
+                                    <td class="text-center">
+                                        <div class="btn-group" uib-dropdown>
+                                            <button class="btn btn-primary btn-sm" uib-dropdown-toggle>
+                                                Action
+                                                <i class="fa fa-caret-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+                                                <li role="menuitem"><a href="#" ng-click="$ctrl.openRenewDialog(model)">Renew</a></li>
+                                                <li role="menuitem"><a href="#">Terminate</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </uib-tab>
+                </uib-tabset>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+
+    <script src="~/Scripts/app/data/contract-manager.data.js"></script>    
+<script src="~/Scripts/app/controller/contractController.js"></script>
+}

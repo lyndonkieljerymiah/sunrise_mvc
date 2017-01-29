@@ -18,6 +18,7 @@ namespace Sunrise.VillaManagement.DTO
         public string Status { get; set; }
         public string StatusCode { get; set; }
         public string Type { get; set; }
+        public string TypeCode { get; set; }
         public int Capacity { get; set; }
         public string Description { get; set; }
         public decimal RatePerMonth { get; set; }

@@ -2,13 +2,14 @@
 
     return {
         restrict: "EA",
+        replace: true,
         scope: {
             searchKey: "=",
             action: "&",
             placeholder: "@"
         },
         template: ["<div class='input-group'>",
-                   "<input type='text' class='form-control' ng-model='searchKey' placeholder='{{placeholder}}' />",
+                   "<input type='text' class='form-control' ng-model='searchKey' placeholder='{{placeholder}}' ng-init='' />",
                    "<span class='input-group-btn'>",
                    "<button class='btn btn-default' ng-click='trigger()'><i class='fa fa-search'></i></button>",
                    "</span></div>"].join(''),
@@ -27,6 +28,7 @@ mainApp.directive("dateTimePicker", function () {
     return {
         restrict: "EA",
         transclude: true,
+        replace: false,
         scope: {
             format: "@",
             model: "=",
@@ -38,6 +40,7 @@ mainApp.directive("dateTimePicker", function () {
                 '<span class="input-group-btn">', '<button type="button" class="btn btn-default" ng-click="toggleDateTimePicker($event)"><i class="fa fa-calendar"></i></button></span>',
                 '</div>', '<ng-transclude></ng-transclude>'].join(''),
         link: function (scope, elem, attrs) {
+
             scope.opened = [];
             scope.toggleDateTimePicker = function ($event, index) {
                 $event.preventDefault();
@@ -45,8 +48,6 @@ mainApp.directive("dateTimePicker", function () {
                 scope.opened[scope.index] = scope.opened[scope.index] ? false : true;
             }
         }
-
-
     }
 });
 
@@ -65,30 +66,52 @@ mainApp.directive("inputSet", function () {
             myId : "@"
         },
         template: ["<div class='{{myClass}}'>",
-                   "<input type='{{myType}}' class='form-control' ng-model='myModel' ng-blur='myBlur' ng-required='myRequired' id='{{myId}}' name='{{myId}}' />",
+                   "<input type='{{myType}}' class='form-control' ng-model='myModel' ng-blur='myBlur' id='{{myId}}' name='{{myId}}' />",
                    "<ng-transclude></ng-transclude>",
                    "</div>"].join(''),
         link: function (scope, el, attrs) {
             var pattern;
             //check input validation
-            var inp = el[0].childNodes[0].childNodes[0];
-            $(inp).on("change", function () {
+            var inp = el.find("input");
+            inp.bind("change", function ()
+            {   
                 if (scope.myNumeric) {
-                    switch (scope.myNumeric) {
-                        case "currency":
-                            isValid = /^\d+$/.test(scope.myModel);
-                            break;
-                        default:
-                            break;
-                    }
-
-                    scope.validState = isValid;
+                    scope.validState = doValidation(scope.myNumeric);
                     if (!scope.validState) {
                         scope.errorMsg = "Value must be numeric";
                     }
                 }
+                else if (scope.myRequired) {
+                    if (scope.myModel.length === 0) {
+                        scope.validState = false;
+                        scope.errorMsg = "Field is required";
+                    }
+                    else {
+                        scope.validState = true;
+                    }
+                }
             });
 
+            function doValidation(numeric) {
+                var isValid = true;
+                switch (numeric) {
+                    case "currency":
+                        if (scope.myModel === null || scope.myModel.length == 0) {
+                            scope.myModel = 0;
+                        }
+                        isValid = /^(\d*?)(\.\d{1,2})?$/.test(scope.myModel);
+                        break;
+                    case "number":
+                        if (scope.myModel === null || scope.myModel.length == 0) {
+                            scope.myModel = 0;
+                        }
+                        isValid = /^\d+$/.test(scope.myModel);
+                    default:
+                        break;
+                }
+                return isValid;
+            }
         }
     }
 });
+

@@ -88,7 +88,7 @@ namespace Sunrise.Client.App_Start
             //tenant
             kernel.Bind<ITenantDataService>().To<TenantDataService>();
             kernel.Bind<ITenantDataFactory>().To<TenantDataFactory>();
-            
+
 
             kernel.Bind<ContractDataManager>().To<ContractDataManager>();
             kernel.Bind<VillaDataManager>().To<VillaDataManager>();

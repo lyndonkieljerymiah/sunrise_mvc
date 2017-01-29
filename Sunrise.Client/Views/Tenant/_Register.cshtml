@@ -60,7 +60,7 @@
     else
     {
         <div class="form-group">
-            <label for="businessName" class="col-md-3">Business Name:</label>
+            <label for="businessName" class="col-md-3 text-right">Business Name:</label>
             <div class="col-md-9">
                 <input type="text" name="businessName" id="businessName"
                        ng-model="sales.register.name"
@@ -76,7 +76,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-md-3 text-right">CR No</label>
+            <label class="col-md-3 text-right">CR No:</label>
             <div class="col-md-9">
                 <input type="text" class="form-control" ng-model="sales.register.company.crNo" />
                 <span ng-show="sales.register.company.crNo.length > 0">{{errorState['vm.register.company.crno']}}</span>
@@ -148,14 +148,14 @@
     </div>
 
     <div class="form-group">
-        <label class="col-md-3 text-right">City</label>
+        <label class="col-md-3 text-right">City:</label>
         <div class="col-md-9">
             <input type="text" ng-model="sales.register.city" class="form-control" />
             <span ng-hide="sales.register.city.length > 0">{{errorState['vm.register.city']}}</span>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-3 text-right">Postal Code</label>
+        <label class="col-md-3 text-right">Postal Code:</label>
         <div class="col-md-9">
             <input type="text" ng-model="sales.register.postalCode" class="form-control" />
             <span ng-hide="sales.register.postalCode">{{errorState['vm.register.postalcode']}}</span>

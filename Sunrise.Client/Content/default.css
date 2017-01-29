@@ -8,7 +8,7 @@ button,
 }
 body {
   font-family: 'Open Sans', sans-serif;
-  background: #676a6d;
+  background: rgba(0, 0, 0, 0.5);
   height: 100%;
   padding-top: 50px;
 }
@@ -33,37 +33,62 @@ body {
   width: 90%;
   float: left;
 }
-.content-wrapper .nb-aside-menu {
-  background-color: #676a6d;
+.content-wrapper .sidebar-menu {
+  background-color: rgba(0, 0, 0, 0.5);
   width: 10%;
   float: left;
   min-height: 1200px;
   padding: 25px 0 0 0;
 }
-.content-wrapper .nb-aside-menu .nb-aside-heading {
+.content-wrapper .sidebar-menu .nb-aside-heading {
   background-color: #333D4A;
   padding: 15px 10px;
 }
-.content-wrapper .nb-aside-menu ul.nb-aside-nav {
+.content-wrapper .sidebar-menu ul.nb-aside-nav {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.content-wrapper .nb-aside-menu ul.nb-aside-nav li a {
-  display: block;
+.content-wrapper .sidebar-menu ul.nb-aside-nav li > a {
   padding: 15px 25px;
   text-decoration: none;
   color: whitesmoke;
   line-height: 12px;
   font-size: 14px;
+  display: block;
+  border-left: 5px solid #337ab7;
+  -webkit-transition: background-color 0.25s, border-color 0.25s;
+  -moz-transition: background-color 0.25s, border-color 0.25s;
+  transition: background-color 0.25s, border-color 0.25s;
 }
-.content-wrapper .nb-aside-menu ul.nb-aside-nav li a i {
+.content-wrapper .sidebar-menu ul.nb-aside-nav li > a i {
   margin-right: 10px;
 }
-.content-wrapper .nb-aside-menu ul.nb-aside-nav li a:hover {
-  background-color: rgba(0, 0, 0, 0.3);
-  color: #337ab7;
-  border-left: 5px solid #337ab7;
+.content-wrapper .sidebar-menu ul.nb-aside-nav li > a:hover {
+  background-color: #337ab7;
+  -webkit-transition: background-color 0.25s, border-color 0.25s;
+  -moz-transition: background-color 0.25s, border-color 0.25s;
+  transition: background-color 0.25s, border-color 0.25s;
+}
+.content-wrapper .sidebar-menu ul.nb-aside-nav li > ul {
+  list-style: none;
+  margin-left: 15px;
+  padding: 0;
+}
+.content-wrapper .sidebar-menu ul.nb-aside-nav li > ul li a {
+  padding: 15px 25px;
+  text-decoration: none;
+  color: whitesmoke;
+  line-height: 12px;
+  font-size: 14px;
+  display: block;
+  border-left: none;
+}
+.content-wrapper .sidebar-menu ul.nb-aside-nav li > ul.collapse {
+  display: none;
+}
+.content-wrapper .sidebar-menu ul.nb-aside-nav li > ul.expand {
+  display: block;
 }
 /*spinner*/
 .spinner {
@@ -113,16 +138,22 @@ span[ng-hide] {
 .nb-nav-toolbar.nav-default {
   background: #f5f5f5;
 }
+.nb-nav-toolbar .nav-header {
+  float: left;
+  margin-left: 10px;
+  margin-top: 15px;
+  font-weight: bold;
+}
 .nb-nav-toolbar .nav-menu-right {
   float: right;
   width: 450px;
 }
 .nb-nav-toolbar .nav-menu-right ul {
-  margin: 0px;
+  margin-top: 5px;
   width: 100%;
 }
 .nb-nav-toolbar .nav-menu-right ul li {
-  float: left;
+  float: right;
   display: block;
   margin-right: 2%;
 }
@@ -194,9 +225,9 @@ span[ng-hide] {
   position: absolute;
   top: 3px;
   right: 3px;
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
+  -webkit-border-radius: 5px;
 }
 .nb-card .nb-image {
   position: relative;
@@ -219,9 +250,9 @@ span[ng-hide] {
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
   padding: 3px;
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
+  -webkit-border-radius: 5px;
   z-index: 6;
   top: 45%;
   left: 40%;
@@ -253,9 +284,9 @@ span[ng-hide] {
 }
 .nb-card .nb-footer .nb-btn:hover {
   background-color: #808080;
-  -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
+  -webkit-border-radius: 15px;
   cursor: pointer;
   transition: all 0.5s ease;
 }
@@ -287,10 +318,11 @@ span[ng-hide] {
 }
 /*slider*/
 .nb-slide {
-  width: 575px;
+  width: 100%;
   height: 342px;
   position: relative;
   overflow: hidden;
+  border: 5px solid #4b5973;
 }
 .nb-slide .nb-image-container {
   position: absolute;
@@ -311,7 +343,19 @@ span[ng-hide] {
   margin-top: -35px;
   outline: none;
   cursor: pointer;
+  color: #f5f5f5;
+  text-shadow: 2px 1px 2px #969696;
+}
+.nb-slide .caption {
+  width: 100%;
+  height: 90px;
+  background: rgba(0, 0, 0, 0.5);
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  z-index: 11;
   color: white;
+  font-size: 0.9em;
 }
 .nb-slide .prev {
   left: 5%;
@@ -321,8 +365,8 @@ span[ng-hide] {
 }
 .nb-slide .nb-bulletin {
   position: absolute;
-  bottom: 5%;
-  left: 0;
+  top: 5%;
+  right: 0;
   z-index: 5;
 }
 .nb-slide .nb-bulletin ul {
@@ -347,9 +391,9 @@ span[ng-hide] {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
+  -webkit-border-radius: 5px;
   -webkit-transition: background-color 0.25s, border-color 0.25s;
   -moz-transition: background-color 0.25s, border-color 0.25s;
   transition: background-color 0.25s, border-color 0.25s;
@@ -389,5 +433,8 @@ table tr.hold {
   background-color: darkorange;
   transition: all 0.5s ease;
   -webkit-transition: all 0.5s ease;
+}
+table.center-head tr th {
+  text-align: center !important;
 }
 /*override*/

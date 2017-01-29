@@ -9,6 +9,7 @@ namespace Sunrise.Client
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+
         }
     }
 }

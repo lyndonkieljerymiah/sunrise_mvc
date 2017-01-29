@@ -11,6 +11,7 @@ namespace Sunrise.Client.Infrastructure.Extension
 {
     public static class AngularBootstrap
     {
+
         public static MvcHtmlString NgInput(this HtmlHelper helper, string model,string type="text", string[] cssAttribute=null)
         {
             StringBuilder builder = new StringBuilder();
@@ -52,7 +53,6 @@ namespace Sunrise.Client.Infrastructure.Extension
 
             return new MvcHtmlString(tag.ToString(TagRenderMode.SelfClosing));
         }
-
         public static MvcHtmlString NgDropdownFor<TModel,TValue>(this HtmlHelper<TModel> html,Expression<Func<TModel,TValue>> expression, string options, object actions=null)
         {
             var fieldName = ExpressionHelper.GetExpressionText(expression);

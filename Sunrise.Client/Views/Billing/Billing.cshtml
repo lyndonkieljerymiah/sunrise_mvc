@@ -1,85 +1,77 @@
 ﻿<div ng-controller="billingController as $ctrl" ng-init="$ctrl.init('@ViewBag.Id')">
     <spinner></spinner>
     <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <div class="row">
-                <div class="col-md-6">
-                    <h4>Billing No: {{sales.code}}</h4>
-                </div>
-                <div class="col-md-1 pull-right" ng-show="sales.editState">
-                    <a href="#" class="text-info text-right" ng-click="$ctrl.dismiss()"><i class="fa fa-3x fa-trash-o"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="panel-body">
-            <!--- General Information -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Tenant Information</div>
-                        <div class="panel-body">
-                            <div class="col-md-9">
-                                <div class="body-content">
-                                    <div class="row">
-                                        <div class="col-md-2">Name:</div>
-                                        <div class="col-md-10">{{sales.name}}</div>
-                                    </div>
-                                    <div class="row" ng-show="sales.qatarId">
-                                        <div class="col-md-2">Qatar Id:</div>
-                                        <div class="col-md-10">{{sales.qatarId}}</div>
-                                    </div>
-                                    <div class="row" ng-show="sales.crNo">
-                                        <div class="col-md-2">CR No:</div>
-                                        <div class="col-md-4">{{sales.crNo}}</div>
-                                        <div class="col-md-2">Validity Date:</div>
-                                        <div class="col-md-4">{{sales.validityDate | date : 'MM/dd/yyyy'}}</div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-2">Address:</div>
-                                        <div class="col-md-10">{{sales.address}}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- status component -->
-                            <div class="panel panel-danger col-md-3">
-                                <div class="panel-body">
-                                    <strong class="text-success text-center">Status: {{sales.status}}</strong>
-                                </div>
-                            </div>
-                            <!--end component-->
 
-                            <table class="table">
-                                <tr>
-                                    <th>Villa No</th>
-                                    <th>Rental Type</th>
-                                    <th>Period Start</th>
-                                    <th>Period End</th>
-                                    <th>Amount</th>
-                                    <th>Monthly Payable</th>
-                                    <th>Status</th>
-                                </tr>
-                                <tr>
-                                    <td>{{sales.villa.villaNo}}</td>
-                                    <td>{{sales.rentalType}}</td>
-                                    <td>{{sales.periodStart | date: "MM/dd/yyyy"}}</td>
-                                    <td>{{sales.periodEnd | date: "MM/dd/yyyy"}}</td>
-                                    <td>{{sales.amountPayable | currency :"QR "}}</td>
-                                    <td>{{sales.villa.ratePerMonth | currency :"QR "}}</td>
-                                    <td>{{sales.villa.status}}</td>
-                                </tr>
-                            </table>
+    <div class="nb-nav-toolbar nav-default">
+        <div class="nav-header">Billing No: {{sales.code}}</div>
+        <div class="nav-menu-right">
+            <ul>
+                <li><a href="#" class="text-info text-right"><i class="fa fa-2x fa-print"></i></a></li>
+                <li><a href="#" class="text-info text-right" ng-click="$ctrl.dismiss()"><i class="fa fa-2x fa-trash-o"></i></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="panel panel-primary">
+                    <div class="panel-body">
+                        <!--- General Information -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Tenant Information</div>
+                                    <div class="panel-body">
+                                        <div class="col-md-9">
+                                            <div class="body-content">
+                                                <div class="row">
+                                                    <div class="col-md-2">Name:</div>
+                                                    <div class="col-md-10">{{sales.name}}</div>
+                                                </div>
+                                                <div class="row" ng-show="sales.qatarId">
+                                                    <div class="col-md-2">Qatar Id:</div>
+                                                    <div class="col-md-10">{{sales.qatarId}}</div>
+                                                </div>
+                                                <div class="row" ng-show="sales.crNo">
+                                                    <div class="col-md-2">CR No:</div>
+                                                    <div class="col-md-4">{{sales.crNo}}</div>
+                                                    <div class="col-md-2">Validity Date:</div>
+                                                    <div class="col-md-4">{{sales.validityDate | date : 'MM/dd/yyyy'}}</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-2">Address:</div>
+                                                    <div class="col-md-10">{{sales.address}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <table class="table">
+                                            <tr>
+                                                <th>Villa No</th>
+                                                <th>Rental Type</th>
+                                                <th>Period Start</th>
+                                                <th>Period End</th>
+                                                <th>Amount</th>
+                                                <th>Monthly Payable</th>
+                                                <th>Status</th>
+                                            </tr>
+                                            <tr>
+                                                <td>{{sales.villa.villaNo}}</td>
+                                                <td>{{sales.rentalType}}</td>
+                                                <td>{{sales.periodStart | date: "MM/dd/yyyy"}}</td>
+                                                <td>{{sales.periodEnd | date: "MM/dd/yyyy"}}</td>
+                                                <td>{{sales.amountPayable | currency :"QR "}}</td>
+                                                <td>{{sales.villa.ratePerMonth | currency :"QR "}}</td>
+                                                <td>{{sales.villa.status}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end general-->
-            <!-- payment details component -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Payment Details</div>
-                        <div class="panel-body">
+                        <!-- end general-->
+                        <!-- payment details component -->
+                        <div class="row">
                             <div class="col-md-12">
                                 <table class="table table-bordered table-condensed">
                                     <tr class="active">
@@ -134,24 +126,9 @@
                                     </tfoot>
                                 </table>
                             </div>
-                            <hr />
-                            <div class="col-md-4 pull-right">
-                                <div class="panel panel-danger">
-                                    <div class="panel-body">
-                                        <p class="text-danger text-left"><i class="fa fa-money"></i> Total Received: {{sales.totalReceivedPayment | currency : "QR "}}</p>
-                                        <p class="text-danger text-left"><i class="fa fa-money"></i> Total Payment: {{sales.totalPayment | currency : "QR "}}</p>
-                                        <p class="text-danger text-left"><i class="fa fa-money"></i> Remaining Balance: {{sales.totalBalance | currency : "QR "}}</p>
-                                    </div>
-                                </div>
+                            <div class="col-md-2 pull-right">
+                                <button class="btn btn-primary btn-block" ng-click="$ctrl.save()" ng-show="sales.editState"><i class="fa fa-save"></i> Save</button>
                             </div>
-                        </div>
-                        <div class="panel-footer">
-                            <div class="row">
-                                <div class="col-md-2 pull-right">
-                                    <button class="btn btn-primary btn-block" ng-click="$ctrl.save()" ng-show="sales.editState"><i class="fa fa-save"></i> Save</button>
-                                </div>
-                            </div>
-
                             <!-- template -->
                             <script type="text/ng-template" id="myModalContent.html">
                                 <form id="paymentForm" class="form-horizontal" name="paymentForm">
@@ -228,9 +205,9 @@
                                             <label class="col-md-2 text-right">Amount:</label>
                                             <div class="col-md-10">
                                                 <input type="text"
-                                                       name="amount" 
-                                                       id="amount" 
-                                                       class="form-control text-right" 
+                                                       name="amount"
+                                                       id="amount"
+                                                       class="form-control text-right"
                                                        placeholder="Amount"
                                                        ng-pattern="/^\d+/"
                                                        ng-model="$ctrl.payment.amount" required />
@@ -248,10 +225,26 @@
                             <!-- end -->
 
                         </div>
+                        <!-- end -->
                     </div>
                 </div>
             </div>
-            <!-- end -->
+            <div class="col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading"></div>
+                    <div class="panel-body">
+                        <!-- status component -->
+                        <div class="alert alert-danger">
+                            <strong class="text-success text-center">Status: {{sales.status}}</strong>
+                        </div>
+                        <hr />
+                        <p class="text-danger text-left"><i class="fa fa-money"></i> Total Received: {{sales.totalReceivedPayment | currency : "QR "}}</p>
+                        <p class="text-danger text-left"><i class="fa fa-money"></i> Total Payment: {{sales.totalPayment | currency : "QR "}}</p>
+                        <p class="text-danger text-left"><i class="fa fa-money"></i> Remaining Balance: {{sales.totalBalance | currency : "QR "}}</p>
+                        <!--end component-->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

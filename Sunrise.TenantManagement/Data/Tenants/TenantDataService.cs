@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data.Entity;
 using System.Threading.Tasks;
 using Utilities.Enum;
 
@@ -55,6 +56,21 @@ namespace Sunrise.TenantManagement.Data.Tenants
                 result.Success = false;
             }
             return result;
+        }
+
+        public async Task<Tenant> GetTenant(string id)
+        {
+            try
+            {
+                return await Context.Tenants
+                                .Include(t => t.Individual)
+                                .Include(t => t.Company)
+                                .SingleOrDefaultAsync(t => t.Id == id);
+            }
+            catch(Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
         }
     }
 }

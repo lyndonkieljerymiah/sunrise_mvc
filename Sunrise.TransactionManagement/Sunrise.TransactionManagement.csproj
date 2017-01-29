@@ -60,6 +60,7 @@
     <Compile Include="Abstract\IPaymentRepository.cs" />
     <Compile Include="Abstract\ITransactionRepository.cs" />
     <Compile Include="Abstract\IUnitOfWork.cs" />
+    <Compile Include="Data\Config\ContractConfig.cs" />
     <Compile Include="Data\Contract\ContractDataService.cs" />
     <Compile Include="Data\Contract\IContractDataService.cs" />
     <Compile Include="Data\Factory\ContractFactory.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="DTO\TransactionListDTO.cs" />
     <Compile Include="DTO\TransactionView.cs" />
     <Compile Include="DTO\VillaView.cs" />
+    <Compile Include="Infrastructure\Extension\EnumerableExtension.cs" />
     <Compile Include="Migrations\201701021644453_Initial.cs" />
     <Compile Include="Migrations\201701021644453_Initial.Designer.cs">
       <DependentUpon>201701021644453_Initial.cs</DependentUpon>
@@ -89,9 +91,23 @@
     <Compile Include="Migrations\201701141402358_AddReverseInContract.Designer.cs">
       <DependentUpon>201701141402358_AddReverseInContract.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701260745001_UpdateTerminateStatus.cs" />
+    <Compile Include="Migrations\201701260745001_UpdateTerminateStatus.Designer.cs">
+      <DependentUpon>201701260745001_UpdateTerminateStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701281315216_AddTermination.cs" />
+    <Compile Include="Migrations\201701281315216_AddTermination.Designer.cs">
+      <DependentUpon>201701281315216_AddTermination.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701291544042_ChangeTerminationDependency.cs" />
+    <Compile Include="Migrations\201701291544042_ChangeTerminationDependency.Designer.cs">
+      <DependentUpon>201701291544042_ChangeTerminationDependency.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Payment.cs" />
+    <Compile Include="Model\Terminate.cs" />
     <Compile Include="Model\Transaction.cs" />
+    <Compile Include="Model\TransactionBase.cs" />
     <Compile Include="Model\UpdateStamp.cs" />
     <Compile Include="Persistence\AppDbContext.cs" />
     <Compile Include="Persistence\ReferenceDbContext.cs" />
@@ -126,6 +142,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701141402358_AddReverseInContract.resx">
       <DependentUpon>201701141402358_AddReverseInContract.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701260745001_UpdateTerminateStatus.resx">
+      <DependentUpon>201701260745001_UpdateTerminateStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701281315216_AddTermination.resx">
+      <DependentUpon>201701281315216_AddTermination.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701291544042_ChangeTerminationDependency.resx">
+      <DependentUpon>201701291544042_ChangeTerminationDependency.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

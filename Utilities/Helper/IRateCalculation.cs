@@ -8,6 +8,7 @@ namespace Utilities.Helper
 {
     public interface IRateCalculation
     {   
+
         decimal Calculate(decimal rate,DateTime start,DateTime end);
     }
 }

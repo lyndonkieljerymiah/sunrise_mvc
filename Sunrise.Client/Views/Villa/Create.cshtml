@@ -25,8 +25,13 @@
                     <div class="col-md-7">
                         <div class="form-group">
                             <label class="col-md-2">Villa No:</label>
-                            <input-set my-class="col-md-9" my-model="model.villaNo" my-required="true" my-id="villaNo">
-                                <span ng-show="model.validation.villaNo.isValid">{{model.validation.villaNo.errorMessage}}</span>
+                            <input-set my-class="col-md-9" 
+                                my-model="model.villaNo" 
+                                my-required="true" 
+                                my-id="villaNo"
+                                valid-state="modelError.villaNo.isValid"
+                                error-msg="modelError.villaNo.errorMessage">
+                                <span ng-hide="modelError.villaNo.isValid">{{modelError.villaNo.errorMessage}}</span>
                             </input-set>
                         </div>
                         <div class="form-group">
@@ -54,16 +59,16 @@
                             <label class="col-md-2">Capacity:</label>
                             <input-set my-class="col-md-9"
                                        my-model="model.capacity"
-                                       my-numeric="currency"
-                                       valid-state="model.validation.capacity.isValid"
-                                       error-msg="model.validation.capacity.errorMessage">
-                                <span ng-hide="model.validation.capacity.isValid">{{model.validation.capacity.errorMessage}}</span>
+                                       my-numeric="number"
+                                       valid-state="modelError.capacity.isValid"
+                                       error-msg="modelError.capacity.errorMessage">
+                                <span ng-hide="modelError.capacity.isValid">{{modelError.capacity.errorMessage}}</span>
                             </input-set>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2">Rate Per Month</label>
                             <input-set my-class="col-md-9" my-model="model.ratePerMonth" my-numeric="currency" valid-state="model.validation.ratePerMonth.isValid" error-msg="model.validation.ratePerMonth.errorMessage">
-                                <span ng-hide="model.validation.ratePerMonth.isValid">{{model.validation.ratePerMonth.errorMessage}}</span>
+                                <span ng-hide="modelError.ratePerMonth.isValid">{{modelError.ratePerMonth.errorMessage}}</span>
                             </input-set>
                         </div>
                         <div class="form-group">

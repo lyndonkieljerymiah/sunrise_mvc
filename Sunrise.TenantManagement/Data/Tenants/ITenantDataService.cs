@@ -13,5 +13,7 @@ namespace Sunrise.TenantManagement.Data.Tenants
         Task<CustomResult> CreateTenant(Tenant tenant, Action<Tenant> callback = null);
 
         Task<CustomResult> RemoveTenant(string id, Action callback = null);
+
+        Task<Tenant> GetTenant(string id);
     }
 }

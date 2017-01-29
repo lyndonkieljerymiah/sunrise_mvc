@@ -25,7 +25,7 @@ namespace Sunrise.Client
             config.Formatters.JsonFormatter.UseDataContractJsonSerializer = false;
 
             Mapping();
-           
+
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -40,7 +40,6 @@ namespace Sunrise.Client
             Mapper.Initialize(cfg =>
             {
 
-                cfg.CreateMap<Villa, VillaViewModel>().ReverseMap();
 
                 #region TenantView to ViewModel Map
                 cfg.CreateMap<IndividualView, IndividualViewModel>().ReverseMap();
@@ -69,6 +68,7 @@ namespace Sunrise.Client
 
                 #region VillaView to ViewModel
                 cfg.CreateMap<VillaGallery, ImageGalleryViewModel>().ReverseMap();
+
                 cfg.CreateMap<Villa, VillaViewModel>()
                 .ForMember(dest => dest.ImageGalleries, opts => opts.MapFrom(src => src.Galleries))
                 .ReverseMap();
@@ -84,25 +84,35 @@ namespace Sunrise.Client
                 cfg.CreateMap<PaymentView, PaymentViewModel>().ReverseMap();
 
                 cfg.CreateMap<TransactionListDTO, ContractListViewModel>().ReverseMap();
-                
+
                 //transaction villa view
                 cfg.CreateMap<TransactionManagement.DTO.VillaView, VillaViewModel>().ReverseMap();
+                cfg.CreateMap<TransactionManagement.DTO.TenantView, TenantRegisterViewModel>()
+                    .ForMember(dest => dest.Address1, opts => opts.MapFrom(src => src.Address.Address1))
+                    .ForMember(dest => dest.Address2, opts => opts.MapFrom(src => src.Address.Address2))
+                    .ForMember(dest => dest.City, opts => opts.MapFrom(src => src.Address.City))
+                    .ForMember(dest => dest.PostalCode, opts => opts.MapFrom(src => src.Address.PostalCode));
+
+
                 cfg.CreateMap<TransactionView, BillingViewModel>()
-                 .ForMember(dest => dest.Villa, opts => opts.MapFrom(src => src.Villa))
-                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Tenant.Name))
-                 .ForMember(dest => dest.Address, opts => opts.MapFrom(src => src.Tenant.Address.ToString()))
-                 .ForMember(dest => dest.Payments, opts => opts.MapFrom(scr => scr.Payments))
-                 .ReverseMap();
+                    .ForMember(dest => dest.Villa, opts => opts.MapFrom(src => src.Villa))
+                    .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Tenant.Name))
+                    .ForMember(dest => dest.Address, opts => opts.MapFrom(src => src.Tenant.Address.ToString()))
+                    .ForMember(dest => dest.Payments, opts => opts.MapFrom(scr => scr.Payments))
+                    .ReverseMap();
 
                 cfg.CreateMap<TransactionView, ReceivableViewModel>()
-                 .ForMember(dest => dest.Villa, opts => opts.MapFrom(src => src.Villa))
-                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Tenant.Name))
-                 .ForMember(dest => dest.Address, opts => opts.MapFrom(src => src.Tenant.Address.ToString()))
-                 .ForMember(dest => dest.Payments, opts => opts.MapFrom(scr => scr.Payments))
-                 .ReverseMap();
+                    .ForMember(dest => dest.Villa, opts => opts.MapFrom(src => src.Villa))
+                    .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Tenant.Name))
+                    .ForMember(dest => dest.Address, opts => opts.MapFrom(src => src.Tenant.Address.ToString()))
+                    .ForMember(dest => dest.Payments, opts => opts.MapFrom(scr => scr.Payments))
+                    .ReverseMap();
 
                 cfg.CreateMap<Transaction, TransactionRegisterViewModel>().ReverseMap();
-
+                cfg.CreateMap<TransactionView, TransactionRegisterViewModel>()
+                    .ForMember(dest => dest.Register, opts => opts.MapFrom(src => src.Tenant))
+                    .ForMember(dest => dest.Villa, opts => opts.MapFrom(src => src.Villa))
+                    .ReverseMap();
 
                 #endregion
             });

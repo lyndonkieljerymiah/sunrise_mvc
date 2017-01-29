@@ -30,12 +30,32 @@
         </div>
     </div>
     <div class="content-wrapper">
-        <section class="nb-aside-menu">
+        <section class="sidebar-menu" collapse-nav>
             <ul class="nb-aside-nav">
-                <li><a href="@Url.Action("Index","Contract")"><i class="fa fa-file"></i>Contract</a></li>
-                <li><a href="@Url.Action("Index","Receivable")"><i class="fa fa-money"></i>Account</a></li>
-                <li><a href="@Url.Action("Index","Villa")"><i class="fa fa-tasks"></i>MasterFile</a></li>
-                <li><a href="@Url.Action("Index","Villa")"><i class="fa fa-money"></i>Support</a></li>
+                <li>
+                    <a href="#" class="top-menu">
+                        <i class="fa fa-file"></i>Contract
+                    </a>
+                    <ul class="sub-menu">
+                        <li><a href="@Url.Action("Index","Contract")">List</a></li>
+                        <li><a href="@Url.Action("Renewal","Contract")">Renewal</a></li>
+                        <li><a href="#">Reports</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="top-menu"><i class="fa fa-money" ></i>Account</a>
+                    <ul class="sub-menu">
+                        <li><a href="@Url.Action("Index","Receivable")">Clearing</a></li>
+                        <li><a href="#">Reports</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="top-menu"><i class="fa fa-tasks"></i>MasterFile</a>
+                    <ul class="sub-menu">
+                        <li><a href="@Url.Action("Index","Villa")">Villa</a></li>
+                    </ul>
+                </li>
+                <li><a href="@Url.Action("Index","Villa")" class="top-menu"><i class="fa fa-money"></i>Support</a></li>
             </ul>
         </section>
         <div class="page">

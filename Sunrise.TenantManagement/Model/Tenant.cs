@@ -55,7 +55,6 @@ namespace Sunrise.TenantManagement.Model
             this.DateRegistered = DateTime.Today;
             this.IsActive = true;
         }
-        
 
         public string Id { get; private set; }
         public DateTime DateRegistered { get; private set; }
@@ -72,8 +71,7 @@ namespace Sunrise.TenantManagement.Model
         public virtual Address Address { get; set; }
         public virtual Individual Individual { get; set; }
         public virtual Company Company { get; set; }
-
-
+        
         public void AddAttributeCompany(string crNo, string businessType, DateTime validityDate, string representative)
         {
             this.Individual = null;
@@ -81,7 +79,6 @@ namespace Sunrise.TenantManagement.Model
             this.Code = crNo;
             this.Company = new Company(this.Id,crNo, businessType, validityDate, representative);
         }
-        
 
         public void AddAttributeIndividual(DateTime bday, GenderEnum gender,string qatarId, string company)
         {

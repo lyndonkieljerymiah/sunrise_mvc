@@ -10,20 +10,30 @@ namespace Sunrise.TransactionManagement.Model
     public class Transaction
     {
 
-        private readonly IRateCalculation _rateCalculation;
-
+        private IRateCalculation _rateCalculation;
 
         #region Factory
-        public static Transaction CreateNew(int defaultMonthPeriod, decimal ratePerMonth, IRateCalculation rateCalculation)
+        public static Transaction CreateNew(string code,int defaultMonthPeriod = 0, decimal ratePerMonth = 0, DateTime periodStart = new DateTime(), IRateCalculation rateCalculation = null)
         {
-            return new Transaction(defaultMonthPeriod, ratePerMonth, rateCalculation);
+            var transaction = new Transaction(defaultMonthPeriod, ratePerMonth,periodStart, rateCalculation);
+            transaction.Code = "C" + code + DateTime.Today.Year.ToString();
+            return transaction;
         }
+        public static Transaction CreateRenew(string id,string code, int defaultMonthPeriod = 0, decimal ratePerMonth = 0, DateTime periodStart = new DateTime(), IRateCalculation rateCalculation = null)
+        {
+            var transaction = new Transaction(defaultMonthPeriod, ratePerMonth, periodStart, rateCalculation);
+            transaction.Id = id;
+            transaction.Code = code + "-R"+ DateTime.Today.Year;
+
+            return transaction;
+        }
+        
         public static Transaction Map(string code, string rentalType, string contractStatus, DateTime periodStart, DateTime periodEnd,
             decimal amountPayable, string villaId, string tenantId, string userId)
         {
             var transaction = new Transaction
             {
-                Code = "C" + code + DateTime.Today.Year.ToString(),
+                Code = code,
                 RentalType = rentalType,
                 ContractStatus = contractStatus,
                 PeriodStart = periodStart,
@@ -38,19 +48,13 @@ namespace Sunrise.TransactionManagement.Model
         }
         #endregion
 
-        internal Transaction(int defaultMonthPeriod, decimal ratePerMonth, IRateCalculation rateCalculation)
+        internal Transaction(int defaultMonthPeriod, decimal ratePerMonth,DateTime periodStart, IRateCalculation rateCalculation)
         {
             this.RentalType = "rtff";
             this.ContractStatus = "csl";
 
             this.DateCreated = DateTime.Today;
-            //set the default period
-            this.PeriodStart = DateTime.Today;
-            this.PeriodEnd = this.PeriodStart.AddMonths(defaultMonthPeriod);
-
-            _rateCalculation = rateCalculation;
-            this.ComputePayableAmount(ratePerMonth);
-
+            this.SetNewPeriod(periodStart, defaultMonthPeriod, ratePerMonth, rateCalculation);
         }
         public Transaction()
         {
@@ -58,11 +62,12 @@ namespace Sunrise.TransactionManagement.Model
             this.DateCreated = DateTime.Today;
             this.Status = "ssp";
             this.Payments = new HashSet<Payment>();
+            this.IsTerminated = false;
         }
         
         public string Id { get; private set; }
         public string Code { get; set; }
-        public DateTime DateCreated { get; private set; }
+        public DateTime DateCreated { get; set; }
 
         public string RentalType { get; set; }
         public string ContractStatus { get; set; }
@@ -76,12 +81,22 @@ namespace Sunrise.TransactionManagement.Model
         public string VillaId { get; set; }
         public string TenantId { get; set; }
         public string UserId { get; set; }
-        public bool IsReversed { get; set; }
-        public virtual ICollection<Payment> Payments { get; set; }
+        public bool IsReversed { get; private set; }
+        public bool IsTerminated { get; private set; }
         
-       
+        public virtual Terminate Terminate { get; set; }
+        public virtual ICollection<Payment> Payments { get; set; }
+              
 
         #region method
+        public void SetNewPeriod(DateTime startPeriod, int defaultMonthPeriod, decimal ratePerMonth, IRateCalculation rateCalculation)
+        {
+            this.PeriodStart = startPeriod;
+            this.PeriodEnd = startPeriod.AddMonths(defaultMonthPeriod);
+            this._rateCalculation = rateCalculation;
+            this.ComputePayableAmount(ratePerMonth);
+        }
+
         public void ComputePayableAmount(decimal rate)
         {
             this.AmountPayable = _rateCalculation.Calculate(rate, this.PeriodStart.Date, this.PeriodEnd.Date);
@@ -116,8 +131,8 @@ namespace Sunrise.TransactionManagement.Model
            DateTime paymentDate, string paymentType, string paymentMode, string chequeNo,
             string bank, DateTime coveredFrom, DateTime coveredTo,
             decimal amount, string remarks, string userId) {
-            var payment = Payments.SingleOrDefault(p => p.Id == id);
 
+            var payment = Payments.SingleOrDefault(p => p.Id == id);
             bool hasCollision = paymentMode == "ptcq" ? IsPaymentDateCovered(coveredFrom.Date) : false;
             if (!hasCollision)
             {
@@ -148,6 +163,13 @@ namespace Sunrise.TransactionManagement.Model
                 payment.SetStatus(status, remarks,userId);
 
         }
+        public void TerminateContract(string description,string userId)
+        {
+            if(this.Terminate == null) this.Terminate = new Terminate();
+            this.Terminate.Description = description;
+            this.Terminate.UserId = userId;
+            this.IsTerminated = true;
+        }
         public void ActivateStatus()
         {
             if (this.Status != "sscn")
@@ -167,6 +189,16 @@ namespace Sunrise.TransactionManagement.Model
             }
             return true;
         }
+        public bool ContractCompletion()
+        {
+            var unclearPayment = this.Payments.Where(p => p.Status != "psc").Sum(p => p.Amount);
+            if (unclearPayment != 0)
+                return false; //still has unclear payment
+
+            this.Status = "ssc"; //contract is completed
+            return true;
+        }
+
         public bool IsPaymentDateCovered(DateTime value,int id=0)
         {
             var existingDate = 0;

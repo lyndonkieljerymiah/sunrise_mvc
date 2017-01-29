@@ -40,10 +40,18 @@ namespace Sunrise.Client.Persistence.Manager
             return result;
         }
 
+
+
         public async Task<CustomResult> RemoveTenant(string id)
         {
             var result = await Factory.Tenants.RemoveTenant(id);
             return result;
+        }
+
+        public async Task<TenantRegisterViewModel> GetTenant(string id)
+        {
+            var tenant = await Factory.Tenants.GetTenant(id);
+            return Mapper.Map<TenantRegisterViewModel>(tenant);
         }
 
     }

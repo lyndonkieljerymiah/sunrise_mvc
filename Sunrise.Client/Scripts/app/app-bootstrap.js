@@ -1,4 +1,4 @@
-﻿var mainApp = angular.module("mainApp", ["ngRoute", "ui.bootstrap", "ngAnimate", "toaster", "ngFileUpload"]);
+﻿var mainApp = angular.module("mainApp", ["ngRoute", "ui.bootstrap", "ngAnimate", "toaster", "ngFileUpload","ui.calendar"]);
 
 
 mainApp.factory('modelStateValidation',

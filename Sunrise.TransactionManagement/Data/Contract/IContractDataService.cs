@@ -1,4 +1,5 @@
-﻿using Sunrise.TransactionManagement.DTO;
+﻿using PagedList;
+using Sunrise.TransactionManagement.DTO;
 using Sunrise.TransactionManagement.Model;
 using System;
 using System.Collections.Generic;
@@ -15,13 +16,14 @@ namespace Sunrise.TransactionManagement.Data.Contract
         Task<CustomResult> RemoveContract(string id);
         Task<CustomResult> UpdateContract(Transaction transaction);
 
-        Task<IEnumerable<TransactionView>> GetContracts(string contractNo, int pageNumber, int pageSize);
+        Task<Transaction> GetContractById(string id, bool isPaymentIncluded = true);
+
+        Task<IPagedList<TransactionView>> GetContracts(string contractNo, int pageNumber, int pageSize);
         Task<TransactionView> GetContractViewById(string id);
         Task<TransactionView> GetActiveContract(string code);
-        Task<Transaction> GetContractById(string id,bool isPaymentIncluded = true);
-        
         
 
-        Task<IEnumerable<TransactionListDTO>> GetContractsForListing(string contractNo, int pageNumber, int pageSize);
+        Task<IPagedList<TransactionListDTO>> GetExpiryContracts(int monthGracePeriod, int pageNumber, int pageSize);
+        Task<IPagedList<TransactionListDTO>> GetContractsForListing(string contractNo, int pageNumber, int pageSize);
     }
 }

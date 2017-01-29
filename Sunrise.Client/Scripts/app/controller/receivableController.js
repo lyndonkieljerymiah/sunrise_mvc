@@ -1,4 +1,4 @@
-﻿mainApp.controller("receivableController", function ($scope, receivableDataManager, alertDialog, confirmationDialog, toaster,spinnerManager) {
+﻿mainApp.controller("receivableController", function ($scope, receivableDataManager, alertDialog, confirmationDialog, toaster, spinnerManager) {
 
     var $ctrl = this;
     $ctrl.contract = {};
@@ -8,10 +8,10 @@
     $scope.showReverse = false;
 
 
-    $ctrl.search = function ()
-    {
+    $ctrl.search = function () {
         spinnerManager.start();
         $ctrl.currentIndex = -1;
+
         receivableDataManager.load($ctrl.txtSearch,
             function (data) {
                 $ctrl.contract = data;
@@ -27,25 +27,23 @@
             }
         );
     };
-    $ctrl.toggle = function (index)
-    {
+    $ctrl.toggle = function (index) {
         if ($ctrl.currentIndex != index)
             $ctrl.currentIndex = index;
         else
             $ctrl.currentIndex = -1;
     };
-    $ctrl.updateStatus = function (code) {
+    $ctrl.updateStatus = function (item) {
         var currentIndex = $ctrl.currentIndex;
-        if (currentIndex >= 0) {
-            $ctrl.contract.paymentDictionary.statuses.forEach(function (value) {
-                if (value.value == code) {
-                    $ctrl.contract.payments[currentIndex].status = value.text;
-                }
-            });
-        }
+        $ctrl.contract.paymentDictionary.statuses.forEach(function (value) {
+            if (value.value == item.statusCode) {
+                var index = $ctrl.contract.payments.indexOf(item);
+                $ctrl.contract.payments[index].status = value.text;
+            }
+        });
+
     };
-    $ctrl.update = function ()
-    {   
+    $ctrl.update = function () {
         confirmationDialog.open({
             title: 'Update Confirmation',
             description: 'Are you sure you want to update?',
@@ -63,14 +61,12 @@
             }
         });
     };
-    $ctrl.reverse = function ()
-    {
+    $ctrl.reverse = function () {
         confirmationDialog.open({
             title: 'Reverse Contract',
             description: 'Are you sure you want to reverse contract?',
             buttons: ['Yes', 'No'],
-            action: function (response)
-            {
+            action: function (response) {
                 spinnerManager.start();
                 receivableDataManager.reverse($ctrl.contract,
                     function () {
@@ -93,13 +89,10 @@
     function beginObserver() {
         $scope.payments = $ctrl.contract.payments;
         $scope.$watch("payments", function (nv, ov, ob) {
-            if (nv && nv.length > 0)
-            {
-                angular.forEach(nv, function (item)
-                {
+            if (nv && nv.length > 0) {
+                angular.forEach(nv, function (item) {
                     $scope.showReverse = true;
-                    if (item.statusCode !== "psv")
-                    {
+                    if (item.statusCode !== "psv") {
                         $scope.showReverse = false;
                         throw "Error";
                     }
@@ -108,7 +101,7 @@
             else {
                 $scope.showReverse = false;
             }
-        },true);
+        }, true);
     }
 
 });

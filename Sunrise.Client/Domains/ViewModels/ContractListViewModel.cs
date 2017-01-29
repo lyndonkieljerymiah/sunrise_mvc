@@ -17,10 +17,20 @@ namespace Sunrise.Client.Domains.ViewModels
         public DateTime PeriodEnd { get; set; }
         public string Status { get; set; }
         public string StatusCode { get; set; }
+
         public decimal AmountPayable { get; set; }
         public decimal CreditAmount { get; set; }
         public decimal AmountBalance { get; set; }
+
         public bool EditState { get { return StatusCode == "ssp" ? true : false; } }
+
+        public int MonthDue { get {
+                var totalDays = (PeriodEnd - DateTime.Today).TotalDays;
+                var monthDue = Convert.ToInt16(totalDays) / 30;
+
+                return monthDue;
+            }
+        }
 
     }
 }

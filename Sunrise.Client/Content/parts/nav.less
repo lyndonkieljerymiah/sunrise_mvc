@@ -1,4 +1,7 @@
-﻿.nb-nav-toolbar {
+﻿
+
+
+.nb-nav-toolbar {
     width: 100%;
     border-radius: 4px;
     margin-bottom: 15px;
@@ -10,14 +13,20 @@
         background: #f5f5f5;
         
     }
+    .nav-header {
+        float: left;
+        margin-left: 10px;
+        margin-top: 15px;
+        font-weight: bold;
+    }
     .nav-menu-right {
         float:right;
         width: 450px;
         ul {
-            margin: 0px;
+            margin-top: 5px;
             width: 100%;
             li {
-                float:left;
+                float:right;
                 display:block;
                 margin-right: 2%;
             }
@@ -33,5 +42,50 @@
     &:after {
         clear:both;
         display:table;
+    }
+}
+
+
+
+.nb-nav-menu {
+    width: 100%;
+    background-color: #e6e6e6;
+
+    .nb-module {
+        width: 60%;
+        margin: 0 auto;
+
+        ul {
+            list-style: none;
+            display: block;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0;
+
+            li {
+                float: left;
+                width: 28%;
+
+                a {
+                    display: block;
+                    padding: 15px 10px;
+                    text-decoration: none;
+                    margin-right: 2%;
+                    text-align: center;
+                    width: 98%;
+
+                    &:hover {
+                        background: rgba(0,0,0,0.4);
+
+                    }
+                }
+            }
+
+            &:after {
+                clear: both;
+                display: table;
+                content: "";
+            }
+        }
     }
 }

@@ -21,7 +21,9 @@ namespace Sunrise.Client
                         "~/Scripts/libs/other/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/ui-bootstrap").Include(
+                      "~/Scripts/libs/moment/moment.js",
                       "~/Scripts/libs/angular-ui/ui-bootstrap-tpls.js",
+                      "~/Scripts/libs/fullcalendar/dist/fullcalendar.js",
                       "~/Scripts/libs/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
@@ -29,6 +31,7 @@ namespace Sunrise.Client
                       "~/Scripts/libs/angularjs/angular-route.js",
                       "~/Scripts/libs/angularjs/angular-animate.js",
                       "~/Scripts/libs/toaster/toaster.js",
+                      "~/Scripts/libs/calendar/calendar.js",
                       "~/Scripts/libs/fileupload/ng-file-upload.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
@@ -37,11 +40,13 @@ namespace Sunrise.Client
                 "~/Scripts/app/directive/my-spinner.js",
                 "~/Scripts/app/directive/my-inputset.js",
                 "~/Scripts/app/directive/my-slider.js",
+                "~/Scripts/app/directive/my-collapse.js",
                 "~/Scripts/app/helper/dialog.js",
                 "~/Scripts/app/helper/router.js"));
 
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
+                      "~/Scripts/libs/fullcalendar/dist/fullcalendar.css",
                       "~/Content/font-awesome.css",
                       "~/Content/bootstrap-slate.css",
                       "~/Content/toaster.css",

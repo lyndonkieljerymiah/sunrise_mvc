@@ -31,6 +31,7 @@ namespace Sunrise.Client.Persistence.Manager
 
             //fetch existing villa
             villa = await Factory.Villas.GetVillaById(vm.Id);
+
             villa.Update(vm.VillaNo, vm.ElecNo,
             vm.WaterNo, vm.QtelNo, vm.Type,
             vm.Capacity, vm.Description, vm.RatePerMonth);

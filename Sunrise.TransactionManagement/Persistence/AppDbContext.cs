@@ -30,6 +30,9 @@ namespace Sunrise.TransactionManagement.Persistence
                 .IsRequired()
                 .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_TransactionCode")));
 
+            modelBuilder.Entity<Transaction>()
+                .HasOptional(t => t.Terminate)
+                .WithRequired(t => t.Transaction);
 
             modelBuilder.Entity<Transaction>()
                 .HasMany(t => t.Payments)

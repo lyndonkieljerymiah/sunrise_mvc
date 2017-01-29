@@ -47,13 +47,19 @@
 
         function save()
         {
-            spinnerManager.start();
-            if ($scope.model.id !== "") {
-                villaDataManager.update($scope.model, success, failure);
+            if (validation()) {
+                spinnerManager.start();
+                if ($scope.model.id !== "") {
+                    villaDataManager.update($scope.model, success, failure);
+                }
+                else {
+                    villaDataManager.save($scope.model, success, failure);
+                }
             }
             else {
-                villaDataManager.save($scope.model, success, failure);
+                toaster.pop("error", "Validation error");
             }
+
         }
 
         function success(data) {
@@ -78,8 +84,14 @@
                 }
             });
         }
-    }
 
+        function validation() {
+            if (!$scope.model.validation.capacity.isValid) {
+                return false;
+            }
+            return true;
+        }
+    }
 
     function VillaListController($scope, villaDataManager, spinnerManager) {
         var $ctrl = this;

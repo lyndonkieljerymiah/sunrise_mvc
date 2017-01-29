@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sunrise.TransactionManagement.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,7 +17,10 @@ namespace Sunrise.TransactionManagement.DTO
         public DateTime DateCreated { get; private set; }
 
         public string RentalType { get; set; }
+        public string RentalTypeCode { get; set; }
+
         public string ContractStatus { get; set; }
+        public string ContractStatusCode { get; set; }
 
         public DateTime PeriodStart { get; set; }
         public DateTime PeriodEnd { get; set; }
@@ -29,6 +33,8 @@ namespace Sunrise.TransactionManagement.DTO
         public string TenantId { get; set; }
         public string UserId { get; set; }
 
+        public bool IsTerminated { get; set; }
+
         public virtual ICollection<PaymentView> Payments { get; set; }
                 
         public virtual TenantView Tenant { get; set; }
@@ -40,5 +46,7 @@ namespace Sunrise.TransactionManagement.DTO
             var totalPayment = this.Payments.Sum(p => p.Amount);
             return AmountPayable - totalPayment;
         }
+
+
     }
 }

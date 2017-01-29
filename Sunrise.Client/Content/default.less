@@ -1,7 +1,8 @@
-﻿@color-sidemenu: #676a6d;
+﻿@color-sidemenu: rgba(0,0,0,0.5);
 @color-heading: #333D4A;
 
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url("parts/mixin.less");
 
 html {
     height: 100%;
@@ -31,19 +32,21 @@ body {
 
 .content-wrapper {
     width: 100%;
+
     &:after {
-        clear:both;
+        clear: both;
         display: table;
         content: '';
     }
+
     .page {
         background: url('imgs/noise_lines.png') top repeat;
         min-height: 1200px;
         width: 90%;
-        float:left;
-        
+        float: left;
     }
-    .nb-aside-menu {
+
+    .sidebar-menu {
         background-color: @color-sidemenu;
         width: 10%;
         float: left;
@@ -61,22 +64,49 @@ body {
             padding: 0;
 
             li {
-                a {
-                    display: block;
+
+                > a {
                     padding: 15px 25px;
                     text-decoration: none;
                     color: whitesmoke;
                     line-height: 12px;
                     font-size: 14px;
+                    display: block;
+                    border-left: 5px solid #337ab7;
+                    .background-transition();
 
                     i {
                         margin-right: 10px;
                     }
 
                     &:hover {
-                        background-color: rgba(0,0,0,0.3);
-                        color: #337ab7;
-                        border-left: 5px solid #337ab7;
+                        background-color: #337ab7;
+                        .background-transition();
+                    }
+                }
+
+                > ul {
+                    list-style: none;
+                    margin-left: 15px;
+                    padding: 0;
+
+                    li {
+                        a {
+                            padding: 15px 25px;
+                            text-decoration: none;
+                            color: whitesmoke;
+                            line-height: 12px;
+                            font-size: 14px;
+                            display: block;
+                            border-left: none;
+                        }
+                    }
+
+                    &.collapse {
+                        display:none;
+                    }
+                    &.expand {
+                        display:block;
                     }
                 }
             }
@@ -129,48 +159,6 @@ span[ng-show], span[ng-hide] {
 /*menu*/
 @import url("parts/nav.less");
 
-.nb-nav-menu {
-    width: 100%;
-    background-color: #e6e6e6;
-
-    .nb-module {
-        width: 60%;
-        margin: 0 auto;
-
-        ul {
-            list-style: none;
-            display: block;
-            width: 100%;
-            margin: 0 auto;
-            padding: 0;
-
-            li {
-                float: left;
-                width: 28%;
-
-                a {
-                    display: block;
-                    padding: 15px 10px;
-                    text-decoration: none;
-                    margin-right: 2%;
-                    text-align: center;
-                    width: 98%;
-
-                    &:hover {
-                        background: rgba(0,0,0,0.4);
-                    }
-                }
-            }
-
-            &:after {
-                clear: both;
-                display: table;
-                content: "";
-            }
-        }
-    }
-}
-
 
 /*box*/
 @import url("parts/box.less");
@@ -197,6 +185,13 @@ table {
         &.hold {
             background-color: darkorange;
             .transition();
+        }
+    }
+    &.center-head {
+        tr {
+            th {
+                text-align:center !important;
+            }
         }
     }
 }

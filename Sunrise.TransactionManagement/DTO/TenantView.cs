@@ -25,6 +25,8 @@ namespace Sunrise.TransactionManagement.DTO
         public AddressView Address { get; set; }
         public IndividualView Individual { get; set; }
         public CompanyView Company { get; set; }
+
+        
     }
 
     public class AddressView

@@ -8,137 +8,31 @@ using System.Web.Mvc;
 namespace Sunrise.Client.Domains.ViewModels
 {
 
-    /// <summary>
-    /// TODO: For Displaying Sales - Readonly 
-    /// </summary>
-    public class BillingViewModel
-    {
-        public string Id { get; set; }
-        public DateTime DateCreated { get; set; }
-        public string Code { get; set; }
-        public string RentalType { get; set; }
-        public string ContractStatus { get; set; }
-        public DateTime PeriodStart { get; set; }
-        public DateTime PeriodEnd { get; set; }
-        public Decimal AmountPayable { get; set; }
-
-        public string Status { get; set; }
-        public string StatusCode { get; set; }
-
-        public bool EditState
-        {
-            get
-            {
-                if (StatusCode == "ssp")
-                {
-                    return true;
-                }
-                return false;
-            }
-        }
-        public bool UpdateState
-        {
-            get
-            {
-                if (StatusCode == "sscn")
-                {
-                    return true;
-                }
-                return false;
-            }
-        }
-
-        public VillaViewModel Villa { get; set; }
-
-        //tenant
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string QatarId { get; set; }
-        public DateTime? Birthday { get; set; }
-        public DateTime? ValidityDate { get; set; }
-        public string CrNo { get; set; }
-
-        public ICollection<PaymentViewModel> Payments { get; set; }
-        public PaymentDictionary PaymentDictionary { get; private set; }
-
-        public decimal TotalPayment
-        {
-            get
-            {
-                decimal totalPayment = 0;
-                if (Payments != null && Payments.Count > 0)
-                {
-                    totalPayment = Payments
-                        .Where(p => p.StatusCode == "psc")
-                        .Sum(p => p.Amount);
-                }
-                return totalPayment;
-            }
-
-        }
-        public decimal TotalBalance
-        {
-            get
-            {
-                var totalBalance = AmountPayable - TotalPayment;
-                return totalBalance;
-            }
-
-        }
-        public decimal TotalReceivedPayment
-        {
-            get
-            {
-                decimal totalPayment = 0;
-                if (Payments != null)
-                    totalPayment = this.Payments.Sum(p => p.Amount);
-                return totalPayment;
-            }
-        }
-        
-        public void Initialize(IEnumerable<Selection> selections)
-        {
-            this.PaymentDictionary = new PaymentDictionary(selections);
-            var payment = new PaymentViewModel(true);
-
-            payment.TransactionId = this.Id;
-            payment.VillaId = this.Villa.Id;
-            payment.Amount = this.Villa.RatePerMonth;
-            this.PaymentDictionary.InitialValue = payment;
-        }
-    }
-
+   
     /// <summary>
     /// TODO: Register Sales - Write/Read
     /// </summary>
     public class TransactionRegisterViewModel
     {
 
-        public static TransactionRegisterViewModel CreateWithVilla(VillaViewModel vm)
-        {
-            var sales = new TransactionRegisterViewModel();
-            sales.Villa = vm;
-            return sales;
-        }
-
         public TransactionRegisterViewModel()
         {
             this.RentalTypes = new List<SelectListItem>();
             this.ContractStatuses = new List<SelectListItem>();
-            this.PeriodStart = DateTime.Today;
-            this.PeriodEnd = DateTime.Today.AddYears(1);
-
+            this.Villa = new VillaViewModel();
+            this.Register = new TenantRegisterViewModel();
         }
 
         public string Id { get; set; }
+        public string Code { get; set; }
 
         [Required]
         public string RentalType { get; set; }
-        public string RentalTypeDescription { get; set; }
+        public string RentalTypeCode { get; set; }
 
         [Required]
         public string ContractStatus { get; set; }
-        public string ContractStatusDescription { get; set; }
+        public string ContractStatusCode { get; set; }
 
         [Required]
         [CustomDateEndStartValidation("PeriodEnd", ValueComparison.IsLessThan, ErrorMessage = "Start must be earlier than end date")]
@@ -155,6 +49,12 @@ namespace Sunrise.Client.Domains.ViewModels
         public string Status { get; set; }
 
         public string UserId { get; set; }
+
+        public string VillaId { get; set; }
+
+        public string TenantId { get; set; }
+
+
 
         public VillaViewModel Villa { get; set; }
         public TenantRegisterViewModel Register { get; set; }

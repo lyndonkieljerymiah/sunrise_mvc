@@ -1,0 +1,64 @@
+﻿
+<div class="modal-heading">
+
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-5">
+
+        </div>
+        <div class="col-md-7">
+            <div class="panel panel-default">
+                <div class="panel-heading"></div>
+                <div class="panel-body">
+                    <h4>Tenant Name: <span class="label label-primary">{{$ctrl.model.register.name}}</span></h4>
+                    <h4>Address: <span class="label label-primary">{{$ctrl.model.register.fullAddress}}</span></h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel panel-body">
+                    <form id="newContractForm" name="newContractForm" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3">Contract No:</label>
+                            <div class="col-md-8">
+                                <span class="label label-primary">{{$ctrl.model.code}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Period Start:</label>
+                            <div class="col-md-8">
+                                <date-time-picker index="0" model="$ctrl.model.periodStart" name="periodStart">
+                                </date-time-picker>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Period End:</label>
+                            <div class="col-md-8">
+                                <date-time-picker index="1" model="$ctrl.model.periodEnd" name="periodEnd"></date-time-picker>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Amount:</label>
+                            <input-set my-class="col-md-8"
+                                       my-model="$ctrl.model.amountPayable"
+                                       my-numeric="currency"
+                                       valid-state="modelError.amount.isValid"
+                                       error-msg="modelError.amount.errorMessage"
+                                       name="amountPayable">
+                                <span ng-hide="modelError.amount.isValid">{{modelError.amount.errorMessage}}</span>
+                            </input-set>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="row">
+        <div class="col-md-3 pull-right">
+            <button class="btn btn-block btn-default" ng-click="$ctrl.save()">Save</button>
+        </div>
+    </div>
+</div>
+

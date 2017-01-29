@@ -1,19 +1,18 @@
-﻿using Sunrise.TransactionManagement.Abstract;
-using Sunrise.TransactionManagement.DTO;
-using Sunrise.TransactionManagement.Model;
-using Sunrise.TransactionManagement.Persistence;
-using Sunrise.TransactionManagement.Persistence.Repository;
+﻿using PagedList;
+using PagedList.EntityFramework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Data.Entity;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using Utilities.Enum;
-using PagedList.EntityFramework;
+
 
 namespace Sunrise.TransactionManagement.Data.Contract
 {
+    using DTO;
+    using Model;
+    using Persistence;
+    using Infrastructure.Extension;
 
     /// <summary>
     /// TODO: Contract Data Service abstract methods for Contract Db Operation
@@ -37,6 +36,7 @@ namespace Sunrise.TransactionManagement.Data.Contract
             {
                 Context.Transactions.Add(transaction);
                 await Context.SaveChangesAsync();
+                result.ReturnObject = transaction.Id;
                 result.Success = true;
             }
             catch (Exception e)
@@ -76,7 +76,6 @@ namespace Sunrise.TransactionManagement.Data.Contract
             var result = new CustomResult();
             try
             {
-
                 Context.Transactions.Attach(transaction);
                 Context.Entry(transaction).State = System.Data.Entity.EntityState.Modified;
                 await Context.SaveChangesAsync();
@@ -89,8 +88,12 @@ namespace Sunrise.TransactionManagement.Data.Contract
             }
             return result;
         }
-        public async Task<IEnumerable<TransactionView>> GetContracts(string contractNo, int pageNumber, int pageSize)
+        public async Task<IPagedList<TransactionView>> GetContracts(string contractNo, int pageNumber, int pageSize)
         {
+            /*****************************************  
+             * sql: Select * from transactionview 
+             *      inner join     
+             ****************************************/
             var contracts = ReferenceContext
                             .Transactions
                             .Include(t => t.Tenant)
@@ -102,11 +105,48 @@ namespace Sunrise.TransactionManagement.Data.Contract
                 contracts = contracts.Where(c => c.Code.Contains(contractNo));
             }
 
-            return (await contracts
+            return await contracts
                 .OrderBy(c => c.Code)
-                .ToPagedListAsync(pageNumber, pageSize)).ToList();
+                .ToPagedListAsync(pageNumber, pageSize);
         }
-        public async Task<IEnumerable<TransactionListDTO>> GetContractsForListing(string contractNo, int pageNumber, int pageSize)
+        
+        public async Task<TransactionView> GetActiveContract(string code)
+        {
+            var contract = await ReferenceContext
+                                .Transactions
+                                .Include(t => t.Tenant)
+                                .Include(v => v.Villa)
+                                .Include(v => v.Payments)
+                                .SingleOrDefaultAsync(c => c.Code == code);
+
+                return contract;
+        }
+        public async Task<TransactionView> GetContractViewById(string id)
+        {
+            var contract = await ReferenceContext
+                           .Transactions
+                           .Include(t => t.Tenant)
+                           .Include(v => v.Villa)
+                           .Include(v => v.Payments)
+                           .SingleOrDefaultAsync(c => c.Id == id);
+
+            return contract;
+        }
+        public async Task<Transaction> GetContractById(string id, bool isPaymentIncluded = true)
+        {
+            if (isPaymentIncluded)
+            {
+                return await Context.Transactions
+                    .Include(t => t.Payments)
+                    .SingleOrDefaultAsync(t => t.Id == id);
+            }
+            else
+            {
+                return await Context.Transactions.FindAsync(id);
+            }
+        }
+
+        public async Task<IPagedList<TransactionListDTO>> GetContractsForListing(string contractNo, int pageNumber, int pageSize)
         {
             var contracts = ReferenceContext
                             .Transactions
@@ -126,52 +166,46 @@ namespace Sunrise.TransactionManagement.Data.Contract
                                 StatusCode = t.StatusCode,
                                 AmountPayable = t.AmountPayable
                             });
+
             if (!string.IsNullOrEmpty(contractNo))
             {
                 contracts = contracts.Where(c => c.Code.Contains(contractNo));
             }
 
-            return (await contracts
+            return await contracts
                 .OrderBy(c => c.Code)
-                .ToPagedListAsync(pageNumber, pageSize)).ToList();
+                .ToPagedListAsync(pageNumber, pageSize);
         }
-       
-
-        public async Task<TransactionView> GetActiveContract(string code)
+        public async Task<IPagedList<TransactionListDTO>> GetExpiryContracts(int monthGracePeriod,int pageNumber, int pageSize)
         {
-            var contract = await ReferenceContext
-                                .Transactions
-                                .Include(t => t.Tenant)
-                                .Include(v => v.Villa)
-                                .Include(v => v.Payments)
-                                .SingleOrDefaultAsync(c => c.Code == code);
-            return contract;
-        }
+            DateTime dateOfExpiry = DateTime.Today.AddMonths(monthGracePeriod);
+            
+            var contracts = ReferenceContext
+                .Transactions
+                .Include(t => t.Tenant)
+                .Include(v => v.Villa)
+                .Include(v => v.Payments)
+                .Where(c => c.PeriodEnd <= dateOfExpiry && c.StatusCode == "sscn")
+                .Select(t => new TransactionListDTO
+                {
+                    Id = t.Id,
+                    Code = t.Code,
+                    PeriodStart = t.PeriodStart,
+                    PeriodEnd = t.PeriodEnd,
+                    DateCreated = t.DateCreated,
+                    TenantName = t.Tenant.Name,
+                    VillaNo = t.Villa.VillaNo,
+                    Status = t.Status,
+                    StatusCode = t.StatusCode,
+                    AmountPayable = t.AmountPayable,
+                    AmountBalance = t.Payments
+                                    .Where(p => p.StatusCode != "psc")
+                                    .Sum(p => (decimal?)p.Amount) ?? 0
+                });
 
-        public async Task<TransactionView> GetContractViewById(string id)
-        {
-            var contract = await ReferenceContext
-                           .Transactions
-                           .Include(t => t.Tenant)
-                           .Include(v => v.Villa)
-                           .Include(v => v.Payments)
-                           .SingleOrDefaultAsync(c => c.Id == id);
-
-            return contract;
-        }
-
-        public async Task<Transaction> GetContractById(string id, bool isPaymentIncluded = true)
-        {
-            if(isPaymentIncluded)
-            {
-                return await Context.Transactions
-                    .Include(t => t.Payments)
-                    .SingleOrDefaultAsync(t => t.Id == id);
-            }
-            else
-            {
-                return await Context.Transactions.FindAsync(id);
-            }
+            return await contracts
+                .OrderBy(c => c.Code)
+                .ToPagedListAsync(pageNumber, pageSize);
         }
     }
 }

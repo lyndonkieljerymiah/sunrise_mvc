@@ -1,8 +1,8 @@
 ﻿mainApp.factory("contractDataManager",
     function ($http, modelStateValidation, router) {
         return {
-            list: function (action, failure) {
-                $http.get(router.apiPath("contract","list")).then(
+            list: function (search, action, failure) {
+                $http.get(router.apiPath("contract", "list", search)).then(
                     function (response)
                     {
                         var row = [];
@@ -62,19 +62,23 @@
                       }
                     );
             },
-            save: function (data, success, failure) {
+            save: function (data, success, failure)
+            {
                 data.villa.imageGalleries = null;
-                $http.post(router.apiPath("contract", "create"), data)
-                .then(
-                function (response)
-                {
+                if (data.id === 0) {
+                    $http.post(router.apiPath("contract", "register"), data).then(responseCallback, errorCallback)
+                }
+                else {
+                    $http.put(router.apiPath("contract", "register"), data).then(responseCallback, errorCallback)
+                }
+                function responseCallback(response) {
                     //route data
                     var responseData = response.data;
                     success(responseData);
-                },
-                function errorCallback(response) {
+                }
+                function errorCallback() {
                     failure(modelStateValidation.parseError(response.data));
-                });
+                }
             },
             proceedToBilling: function (id) {
                 router.route("billing", "",id);
@@ -90,3 +94,77 @@
             }
         }
     });
+
+mainApp.factory("contractRenewalManager", function ($http, modelStateValidation,router) {
+
+    return {
+        expires: function (action, failure) {
+            $http.get(router.apiPath("contract", "expiries")).then(
+                function (response) {
+                    var row = [];
+                    if (response.data.length > 0) {
+                        angular.forEach(response.data, function (item) {
+                            var col = {
+                                id: item.id,
+                                code: item.code,
+                                villaNo: item.villaNo,
+                                tenant: item.tenantName,
+                                dateCreated: new Date(item.dateCreated),
+                                periodStart: new Date(item.periodStart),
+                                periodEnd: new Date(item.periodEnd),
+                                amountBalance: item.amountBalance,
+                                status: item.status,
+                                monthDue: item.monthDue
+                            }
+                            row.push(col);
+                        });
+                    }
+                    action(row);
+                },
+                function (response) {
+                    failure(modelStateValidation.parseError(response.data));
+                }
+            );
+        },
+        renewal: function (id, action, failure) {
+            $http.get(router.apiPath("contract", "renewal", id)).then(
+                function (response) {
+                    var data = response.data;
+                    data.periodStart = new Date(data.periodStart);
+                    data.periodEnd = new Date(data.periodEnd);
+                    action(data);
+                },
+                function (response) {
+                    modelStateValidation.parseError(response.data);
+                });
+        },
+        renew: function (value, action, failure) {
+
+            var data = {
+                id: value.id,
+                code: value.code,
+                periodStart: value.periodStart,
+                periodEnd: value.periodEnd,
+                rentalTypeCode: value.rentalTypeCode,
+                contractStatusCode: value.contractStatusCode,
+                amountPayable: value.amountPayable,
+                tenantId: value.tenantId,
+                villaId: value.villaId
+            };
+
+            //form
+            $http.post(router.apiPath("contract", "renewal"), data).then(
+                function (response) {
+                    action(response.data);
+                },
+                function (response) {
+                    failure(modelStateValidation.parseError(response.data));
+            });
+        },
+    }
+
+});
+
+
+
+

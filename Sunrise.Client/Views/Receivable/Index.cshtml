@@ -1,182 +1,193 @@
 ﻿@{
-    ViewBag.Title = "Receivable";
+    ViewBag.Title = "Payment Clearing";
 }
 
-<div class="panel panel-warning" ng-controller="receivableController as $ctrl">
+<div ng-controller="receivableController as $ctrl">
     <spinner></spinner>
     <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
-    <div class="panel-heading">
-        <div class="row">
-            <h4 class="col-md-4">Payment Clearing</h4>
-            <div class="col-md-1 pull-right text-left"><a href="#" ng-click="$ctrl.reverse()" ng-show="showReverse"><i class="fa fa-rotate-left fa-3x"></i></a></div>
+    <div class="nb-nav-toolbar nav-default">
+        <div class="nav-header">@ViewBag.Title</div>
+        <div class="nav-menu-right">
+            <ul>
+                <li><a href="#" class="text-info text-right"><i class="fa fa-2x fa-print"></i></a></li>
+                <li><a href="#" class="text-info text-right" ng-click="$ctrl.reverse()" ng-show="showReverse"><i class="fa fa-2x fa-trash-o"></i></a></li>
+            </ul>
         </div>
     </div>
-    <div class="panel-body">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-md-9">
-                <div class="row">
-                    <div class="form-group">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <input type="text"
-                                       name="villaNo" id="villaNo"
-                                       class="form-control" placeholder="Search Contract No..."
-                                       ng-model="$ctrl.txtSearch" />
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary" ng-click="$ctrl.search()">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                            </div>
-                            <span ng-show="errorState['notfoundexception']">{{errorState['notfoundexception']}}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <strong>Contract Status: {{$ctrl.contract.status}}</strong>
-            </div>
-        </div>
-        <!-- general information -->
-        <div class="row">
-            <div class="col-md-12">
-                <section class="panel panel-default">
-                    <div class="panel-heading">Tenant Information</div>
+                <div class="panel panel-warning">
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-2">Name:</div>
-                            <div class="col-md-10">{{$ctrl.contract.name}}</div>
-                        </div>
-                        <div class="row" ng-show="$ctrl.contract.qatarId">
-                            <div class="col-md-2">Qatar Id:</div>
-                            <div class="col-md-10">{{$ctrl.contract.qatarId}}</div>
-                        </div>
-                        <div class="row" ng-show="$ctrl.contract.crNo">
-                            <div class="col-md-2">CR No:</div>
-                            <div class="col-md-4">{{$ctrl.contract.crNo}}</div>
-                            <div class="col-md-2">Validity Date:</div>
-                            <div class="col-md-4">{{$ctrl.contract.validityDate | date : 'MM/dd/yyyy'}}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2">Address:</div>
-                            <div class="col-md-10">{{$ctrl.contract.address}}</div>
-                        </div>
-                        <hr />
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-condensed">
-                                    <tr>
-                                        <th>Villa</th>
-                                        <th>Period Start</th>
-                                        <th>Period End</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                    <tr>
-                                        <td>{{$ctrl.contract.villa.villaNo}}</td>
-                                        <td>{{$ctrl.contract.periodStart | date: 'MM/dd/yyyy'}}</td>
-                                        <td>{{$ctrl.contract.periodEnd | date: 'MM/dd/yyyy'}}</td>
-                                        <td>{{$ctrl.contract.amountPayable | currency: 'QR '}}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
-        <!-- end general-->
-        <!-- payment -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Details</div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-condensed table-bordered">
-                                    <tr class="active">
-                                        <th style="width:3%;text-align:center">No</th>
-                                        <th style="width:10%;text-align:center">Date</th>
-                                        <th style="width:10%;text-align:center">Cheque No</th>
-                                        <th style="width:10%;text-align:center">Bank</th>
-                                        <th style="width:20%;text-align:center">Covered Period</th>
-                                        <th style="width:10%">Amount</th>
-                                        <th style="width:10%;text-align:center">Mode</th>
-                                        <th style="width:10%;text-align:center">Status</th>
-                                        <th>Remarks</th>
-                                        <th></th>
-                                    </tr>
-                                    <tbody>
-                                        <tr ng-repeat="payment in $ctrl.contract.payments | orderBy : 'paymentDate'" class="{{payment.status.toLowerCase()}}">
-                                            <td class="text-center">{{($index+1)}}</td>
-                                            <td style="width:10%;text-align:center">{{payment.paymentDate | date: 'MM/dd/yyyy'}}</td>
-                                            <td style="width:10%;text-align:center">{{payment.chequeNo}}</td>
-                                            <td style="width:10%;text-align:center">{{payment.bank}}</td>
-                                            <td class="text-center">
-                                                {{payment.coveredPeriodFrom | date:'MM/dd/yyyy'}} - {{payment.coveredPeriodTo | date:'MM/dd/yyyy'}}
-                                            </td>
-                                            <td style="width:10%;text-align:center">{{payment.amount | currency : 'QR '}}</td>
-                                            <td style="width:10%;text-align:center">{{payment.paymentMode}}</td>
-                                            <td style="width:10%;text-align:center">
-                                                <p ng-hide="$ctrl.currentIndex == $index">{{payment.status}}</p>
-                                                <div class="form-group" ng-show="$ctrl.currentIndex == $index">
-                                                    <select ng-model="payment.statusCode" class="form-control" ng-change="$ctrl.updateStatus(payment.statusCode)">
-                                                        <option ng-repeat="status in $ctrl.contract.paymentDictionary.statuses" value="{{status.value}}">{{status.text}}</option>
-                                                    </select>
-                                                </div>
-                                            </td>
-
-                                            <td>
-                                                <p ng-hide="$ctrl.currentIndex == $index">{{payment.remarks}}</p>
-                                                <div class="form-group" ng-show="$ctrl.currentIndex == $index">
-                                                    <textarea name="remarks" id="remarks" class="form-control" ng-model="payment.remarks"></textarea>
-                                                </div>
-                                            </td>
-                                            <td style="width:5%;text-align:center">
-                                                <div class="btn-group"
-                                                     uib-dropdown ng-show="payment.writeState">
-                                                    <button class="btn btn-warning btn-sm" uib-dropdown-toggle>
-                                                        <span class="fa fa-caret-down"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
-                                                        <li><a href="#" ng-click="$ctrl.toggle($index)">Clear Cheque</a></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <hr />
+                            <div class="col-md-9">
                                 <div class="row">
-                                    <div class="col-md-3 pull-right">
-                                        <div class="panel panel-danger">
-                                            <div class="panel-body">
-                                                <p class="text-danger text-right"><i class="fa fa-money"></i> Received Amount: {{$ctrl.contract.totalReceivedPayment | currency : "QR "}}</p>
-                                                <p class="text-danger text-right"><i class="fa fa-money"></i> Payment: {{$ctrl.contract.totalPayment | currency : "QR "}}</p>
-                                                <p class="text-danger text-right"><i class="fa fa-money"></i> Balance: {{$ctrl.contract.totalBalance | currency : "QR "}}</p>
+                                    <div class="form-group">
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <input type="text"
+                                                       name="villaNo" id="villaNo"
+                                                       class="form-control" placeholder="Search Contract No..."
+                                                       ng-model="$ctrl.txtSearch" />
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-primary" ng-click="$ctrl.search()">
+                                                        <i class="fa fa-search"></i>
+                                                    </button>
+                                                </span>
                                             </div>
+                                            <span ng-show="errorState['notfoundexception']">{{errorState['notfoundexception']}}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <hr />
+                        <!-- general information -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <section class="panel panel-default">
+                                    <div class="panel-heading">Tenant Information</div>
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-2">Name:</div>
+                                            <div class="col-md-10">{{$ctrl.contract.name}}</div>
+                                        </div>
+                                        <div class="row" ng-show="$ctrl.contract.qatarId">
+                                            <div class="col-md-2">Qatar Id:</div>
+                                            <div class="col-md-10">{{$ctrl.contract.qatarId}}</div>
+                                        </div>
+                                        <div class="row" ng-show="$ctrl.contract.crNo">
+                                            <div class="col-md-2">CR No:</div>
+                                            <div class="col-md-4">{{$ctrl.contract.crNo}}</div>
+                                            <div class="col-md-2">Validity Date:</div>
+                                            <div class="col-md-4">{{$ctrl.contract.validityDate | date : 'MM/dd/yyyy'}}</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2">Address:</div>
+                                            <div class="col-md-10">{{$ctrl.contract.address}}</div>
+                                        </div>
+                                        <hr />
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table class="table table-condensed">
+                                                    <tr>
+                                                        <th>Villa</th>
+                                                        <th>Period Start</th>
+                                                        <th>Period End</th>
+                                                        <th>Amount</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{$ctrl.contract.villa.villaNo}}</td>
+                                                        <td>{{$ctrl.contract.periodStart | date: 'MM/dd/yyyy'}}</td>
+                                                        <td>{{$ctrl.contract.periodEnd | date: 'MM/dd/yyyy'}}</td>
+                                                        <td>{{$ctrl.contract.amountPayable | currency: 'QR '}}</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                        <!-- end general-->
+
+                        <uib-tabset>
+                            <uib-tab tabindex="0" heading="Cheque Payment">
+                                <!-- payment -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table table-condensed table-bordered">
+                                            <tr class="active">
+                                                <th style="width:3%;text-align:center">No</th>
+                                                <th style="width:10%;text-align:center">Date</th>
+                                                <th style="width:10%;text-align:center">Cheque No</th>
+                                                <th style="width:10%;text-align:center">Bank</th>
+                                                <th style="width:20%;text-align:center">Covered Period</th>
+                                                <th style="width:10%">Amount</th>
+                                                <th style="width:10%;text-align:center">Mode</th>
+                                                <th style="width:10%;text-align:center">Status</th>
+                                                <th>Remarks</th>
+                                                <th></th>
+                                            </tr>
+                                            <tbody>
+                                                <tr ng-repeat="payment in $ctrl.contract.payments | orderBy : 'paymentDate'" class="{{payment.status.toLowerCase()}}">
+                                                    <td class="text-center">{{($index+1)}}</td>
+                                                    <td style="width:10%;text-align:center">{{payment.paymentDate | date: 'MM/dd/yyyy'}}</td>
+                                                    <td style="width:10%;text-align:center">{{payment.chequeNo}}</td>
+                                                    <td style="width:10%;text-align:center">{{payment.bank}}</td>
+                                                    <td class="text-center">{{payment.coveredPeriodFrom | date:'MM/dd/yyyy'}} - {{payment.coveredPeriodTo | date:'MM/dd/yyyy'}}</td>
+                                                    <td style="width:10%;text-align:center">{{payment.amount | currency : 'QR '}}</td>
+                                                    <td style="width:10%;text-align:center">{{payment.paymentMode}}</td>
+                                                    <td style="width:10%;text-align:center">
+                                                        <p ng-hide="$ctrl.currentIndex == $index">{{payment.status}}</p>
+                                                        <div class="form-group" ng-show="$ctrl.currentIndex == $index">
+                                                            <select ng-model="payment.statusCode" class="form-control" ng-change="$ctrl.updateStatus(payment)">
+                                                                <option ng-repeat="status in $ctrl.contract.paymentDictionary.statuses" value="{{status.value}}">{{status.text}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <p ng-hide="$ctrl.currentIndex == $index">{{payment.remarks}}</p>
+                                                        <div class="form-group" ng-show="$ctrl.currentIndex == $index">
+                                                            <textarea name="remarks" id="remarks" class="form-control" ng-model="payment.remarks"></textarea>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:5%;text-align:center">
+                                                        <div class="btn-group"
+                                                             uib-dropdown ng-show="payment.writeState">
+                                                            <button class="btn btn-warning btn-sm" uib-dropdown-toggle>
+                                                                <span class="fa fa-caret-down"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                                                                <li>
+                                                                    <a href="#" ng-click="$ctrl.toggle($index)">Clear Cheque</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- end payment -->
+                            </uib-tab>
+                            <uib-tab index="1" heading="Reverse Payment">
+
+                            </uib-tab>
+                        </uib-tabset>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row" ng-show="$ctrl.contract.updateState">
+                            <div class="col-md-2 pull-right">
+                                <button class="btn btn-danger btn-block" ng-click="$ctrl.update()">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading"></div>
+                    <div class="panel-body">
+                        <!-- status component -->
+                        <div class="alert alert-danger">
+                            <strong class="text-success text-center">Contract Status: {{$ctrl.contract.status}}</strong>
+                        </div>
+                        <hr />
+                        <p class="text-danger text-right"><i class="fa fa-money"></i> Received Amount: {{$ctrl.contract.totalReceivedPayment | currency : "QR "}}</p>
+                        <p class="text-danger text-right"><i class="fa fa-money"></i> Payment: {{$ctrl.contract.totalPayment | currency : "QR "}}</p>
+                        <p class="text-danger text-right"><i class="fa fa-money"></i> Balance: {{$ctrl.contract.totalBalance | currency : "QR "}}</p>
+                        <!--end component-->
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="panel-footer">
-        <div class="row" ng-show="$ctrl.contract.updateState">
-            <div class="col-md-2 pull-right">
-                <button class="btn btn-danger btn-block" ng-click="$ctrl.update()">Update</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-@section scripts {
-    <script src="~/Scripts/app/data/receivable-manager.data.js"></script>
-    <script src="~/Scripts/app/controller/receivableController.js"></script>
-}
+    @section scripts {
+        <script src="~/Scripts/app/data/receivable-manager.data.js"></script>
+        <script src="~/Scripts/app/controller/receivableController.js"></script>
+    }
 
 
