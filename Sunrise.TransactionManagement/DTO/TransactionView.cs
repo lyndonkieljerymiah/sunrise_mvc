@@ -1,4 +1,5 @@
-﻿using Sunrise.TransactionManagement.Model;
+﻿using Sunrise.TransactionManagement.Enum;
+using Sunrise.TransactionManagement.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,8 +11,7 @@ using System.Threading.Tasks;
 namespace Sunrise.TransactionManagement.DTO
 {
     public class TransactionView
-    {
-        
+    {   
         public string Id { get; private set; }
         public string Code { get; set; }
         public DateTime DateCreated { get; private set; }
@@ -41,12 +41,14 @@ namespace Sunrise.TransactionManagement.DTO
         
         public virtual VillaView Villa { get; set; }
 
-        public decimal GetBalanceDue()
+        public bool HasRemainingBalance()
         {
-            var totalPayment = this.Payments.Sum(p => p.Amount);
-            return AmountPayable - totalPayment;
+            var paidAmount = this.Payments.Where(p => p.StatusCode == PaymentStatusSelection.Clear).Sum(p => p.Amount);
+            if(paidAmount >= this.AmountPayable)
+            {
+                return false;
+            }
+            return true;
         }
-
-
     }
 }

@@ -60,6 +60,8 @@
     <Compile Include="Abstract\IPaymentRepository.cs" />
     <Compile Include="Abstract\ITransactionRepository.cs" />
     <Compile Include="Abstract\IUnitOfWork.cs" />
+    <Compile Include="Compositor\ContractViewCollectionComposite.cs" />
+    <Compile Include="Compositor\ContractViewComposite.cs" />
     <Compile Include="Data\Config\ContractConfig.cs" />
     <Compile Include="Data\Contract\ContractDataService.cs" />
     <Compile Include="Data\Contract\IContractDataService.cs" />
@@ -69,7 +71,10 @@
     <Compile Include="DTO\TenantView.cs" />
     <Compile Include="DTO\TransactionListDTO.cs" />
     <Compile Include="DTO\TransactionView.cs" />
+    <Compile Include="DTO\VillaGalleryView.cs" />
     <Compile Include="DTO\VillaView.cs" />
+    <Compile Include="Enum\ContractStatusEnum.cs" />
+    <Compile Include="Enum\PaymentStatusEnum.cs" />
     <Compile Include="Infrastructure\Extension\EnumerableExtension.cs" />
     <Compile Include="Migrations\201701021644453_Initial.cs" />
     <Compile Include="Migrations\201701021644453_Initial.Designer.cs">
@@ -106,7 +111,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Payment.cs" />
     <Compile Include="Model\Terminate.cs" />
-    <Compile Include="Model\Transaction.cs" />
+    <Compile Include="Model\Contract.cs" />
     <Compile Include="Model\TransactionBase.cs" />
     <Compile Include="Model\UpdateStamp.cs" />
     <Compile Include="Persistence\AppDbContext.cs" />

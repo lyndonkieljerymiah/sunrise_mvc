@@ -256,6 +256,7 @@
     <Compile Include="Domains\Configuration\ContractConfig.cs" />
     <Compile Include="Domains\Models\Identity\User.cs" />
     <Compile Include="Domains\ViewModels\BillingViewModel.cs" />
+    <Compile Include="Domains\ViewModels\ContractTerminateViewModel.cs" />
     <Compile Include="Domains\ViewModels\Identity\ForgotPasswordViewModel.cs" />
     <Compile Include="Domains\ViewModels\Identity\ForgotViewModel.cs" />
     <Compile Include="Domains\ViewModels\Identity\ExternalLoginConfirmationViewModel.cs" />
@@ -299,6 +300,10 @@
     <Compile Include="Migrations\201701031413553_Initial.Designer.cs">
       <DependentUpon>201701031413553_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702021738205_entity.cs" />
+    <Compile Include="Migrations\201702021738205_entity.Designer.cs">
+      <DependentUpon>201702021738205_entity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Persistence\Context\AppDbContext.cs" />
     <Compile Include="Persistence\Manager\ContractDataManager.cs" />
@@ -310,19 +315,19 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-slate.css" />
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\vendor\bootstrap\bootstrap-slate.css" />
+    <Content Include="Content\vendor\bootstrap\bootstrap-theme.css" />
+    <Content Include="Content\vendor\bootstrap\bootstrap-theme.min.css" />
+    <Content Include="Content\vendor\bootstrap\bootstrap.css" />
+    <Content Include="Content\vendor\bootstrap\bootstrap.min.css" />
     <Content Include="Content\default.css">
       <DependentUpon>default.less</DependentUpon>
     </Content>
     <Content Include="Content\default.min.css">
       <DependentUpon>default.css</DependentUpon>
     </Content>
-    <Content Include="Content\font-awesome.css" />
-    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\vendor\font-awesome\font-awesome.css" />
+    <Content Include="Content\vendor\font-awesome\font-awesome.min.css" />
     <Content Include="Content\imgs\gears.gif" />
     <Content Include="Content\imgs\login-background.jpg" />
     <Content Include="Content\imgs\noise_lines.png" />
@@ -379,10 +384,11 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
-    <Content Include="Content\toaster.css" />
-    <Content Include="Content\toaster.min.css" />
-    <Content Include="Content\toastr-responsive.css" />
-    <Content Include="Content\toastr.css" />
+    <Content Include="Content\vendor\sb-admin\sb-admin2.css" />
+    <Content Include="Content\vendor\toaster\toaster.css" />
+    <Content Include="Content\vendor\toaster\toaster.min.css" />
+    <Content Include="Content\vendor\toaster\toastr-responsive.css" />
+    <Content Include="Content\vendor\toaster\toastr.css" />
     <Content Include="Content\ui-bootstrap-csp.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -406,6 +412,7 @@
     <Content Include="Scripts\app\directive\my-search.js" />
     <Content Include="Scripts\app\directive\my-slider.js" />
     <Content Include="Scripts\app\directive\my-spinner.js" />
+    <Content Include="Scripts\app\directive\my-utility.js" />
     <Content Include="Scripts\app\helper\dialog.js" />
     <Content Include="Scripts\app\helper\extension.js" />
     <Content Include="Scripts\app\helper\router.js" />
@@ -474,21 +481,21 @@
     <Content Include="Content\login.less" />
     <Content Include="Content\parts\box.less" />
     <Content Include="Content\parts\slider.less" />
-    <Content Include="fonts\FontAwesome.otf" />
-    <Content Include="fonts\fontawesome-webfont.woff2" />
-    <Content Include="fonts\fontawesome-webfont.woff" />
-    <Content Include="fonts\fontawesome-webfont.ttf" />
-    <Content Include="fonts\fontawesome-webfont.svg" />
-    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\vendor\fonts\FontAwesome.otf" />
+    <Content Include="Content\vendor\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\vendor\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\vendor\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\vendor\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\vendor\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\parts\mixin.less" />
-    <Content Include="Content\toaster.scss" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\vendor\toaster\toaster.scss" />
+    <Content Include="Content\vendor\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\vendor\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\vendor\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\vendor\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\vendor\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\vendor\bootstrap\bootstrap.css.map" />
+    <Content Include="Content\vendor\bootstrap\bootstrap-theme.css.map" />
     <Content Include="Content\parts\nav.less" />
     <None Include="Properties\PublishProfiles\Intranet.pubxml" />
     <Content Include="Scripts\libs\fullcalendar\.bower.json" />
@@ -1635,6 +1642,17 @@
     <Content Include="Scripts\libs\fileupload\ng-file-upload-shim.min.js" />
     <Content Include="Scripts\libs\fileupload\ng-file-upload.js" />
     <Content Include="Scripts\libs\fileupload\ng-file-upload.min.js" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\index.js" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\ui-grid.css" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\ui-grid.js" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\ui-grid.min.css" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\ui-grid.min.js" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular\angular-csp.css" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular\angular.js" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular\angular.min.js" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular\index.js" />
+    <Content Include="Scripts\libs\ui-grid\ui-grid.min.css" />
+    <Content Include="Scripts\libs\ui-grid\ui-grid.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -1685,7 +1703,6 @@
     <Content Include="Views\Receivable\Index.cshtml" />
     <Content Include="Views\Billing\List.cshtml" />
     <Content Include="Views\Receivable\List.cshtml" />
-    <Content Include="Views\Home\MasterPage.cshtml" />
     <Content Include="Views\Contract\Search.cshtml" />
     <Content Include="Views\Villa\Create.cshtml" />
     <Content Include="Views\Villa\Index.cshtml" />
@@ -1696,6 +1713,53 @@
     <Content Include="Scripts\libs\moment\LICENSE" />
     <Content Include="Scripts\libs\moment\README.md" />
     <Content Include="Views\Contract\RenewalTemplate.cshtml" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\.bower.json" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\bower.json" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\CHANGELOG.md" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\animation.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\body.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\bootstrap\bootstrap.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\cell.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\cellnav\less\cellNav.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\edit\less\edit.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\elements.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\empty-base-layer\less\emptyBaseLayer.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\expandable\less\expandable.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\exporter\less\exporter.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\footer.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\goups.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\grid.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\grouping\less\grouping.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\header.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\icons.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\importer\less\importer.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\main.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\menu.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\move-columns\less\colMovable.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\pagination\less\pagination.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\pinning\less\pinning.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\resize-columns\less\column-resizer.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\row-edit\less\rowEdit.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\rtl.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\selection\less\selection.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\sorting.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\tree-base\less\tree-base.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\tree-view\less\tree-view.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\validate\less\validate.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\less\variables.less" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\package.json" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\README.md" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\ui-grid.eot" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\ui-grid.svg" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\ui-grid.ttf" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular-ui-grid\ui-grid.woff" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular\.bower.json" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular\angular.min.js.gzip" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular\angular.min.js.map" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular\bower.json" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular\LICENSE.md" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular\package.json" />
+    <Content Include="Scripts\libs\ui-grid\bower_components\angular\README.md" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1733,6 +1797,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201701031413553_Initial.resx">
       <DependentUpon>201701031413553_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702021738205_entity.resx">
+      <DependentUpon>201702021738205_entity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

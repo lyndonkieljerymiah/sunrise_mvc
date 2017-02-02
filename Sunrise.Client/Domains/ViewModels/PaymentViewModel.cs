@@ -68,10 +68,8 @@ namespace Sunrise.Client.Domains.ViewModels
         [Required]
         [CustomDateEndStartValidation("CoveredPeriodFrom", ValueComparison.IsGreaterThan, ErrorMessage = "End date must be later than end date")]
         public DateTime CoveredPeriodTo { get; set; }
-        
     }
-
-
+    
     public class PaymentDictionary
     {
         private IEnumerable<Selection> _selections;

@@ -27,7 +27,6 @@
                         scope.nbSlides.currentIndex = index;
                     }
                 }
-
                 scope.$watch('nbSlides.currentIndex', function () {
                     scope.nbSlides.images.forEach(function (image) {
                         image.visible = false; // make every image invisible
@@ -51,3 +50,9 @@
             }
         }
     });
+
+mainApp.factory("sliderManager", function () {
+
+    
+
+});

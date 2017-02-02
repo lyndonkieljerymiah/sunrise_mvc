@@ -11,7 +11,7 @@ using System.Linq.Expressions;
 
 namespace Sunrise.TransactionManagement.Persistence.Repository
 {
-    public class TransactionRepository : BaseRepository<Transaction, AppDbContext>, ITransactionRepository
+    public class TransactionRepository : BaseRepository<Contract, AppDbContext>, ITransactionRepository
     {
         private ReferenceDbContext _referenceDbContext;
 
@@ -34,7 +34,7 @@ namespace Sunrise.TransactionManagement.Persistence.Repository
             return transaction;
         }
 
-        public async Task<Transaction> GetContractById(string id)
+        public async Task<Contract> GetContractById(string id)
         {
             var transaction = await _set
                                     .Include(t => t.Payments)

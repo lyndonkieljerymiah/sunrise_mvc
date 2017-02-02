@@ -10,9 +10,9 @@ using Utilities.GeneralRepository;
 
 namespace Sunrise.TransactionManagement.Abstract
 {
-    public interface ITransactionRepository : IBaseRepository<Transaction>
+    public interface ITransactionRepository : IBaseRepository<Contract>
     {
-        Task<Transaction> GetContractById(string id);
+        Task<Contract> GetContractById(string id);
         Task<TransactionView> GetContractByCode(string villaNo);
         Task<TransactionView> GetTransactionView(Expression<Func<TransactionView, bool>> clause);
         Task<IEnumerable<TransactionView>> GetContracts(Expression<Func<TransactionView,bool>> clause=null);

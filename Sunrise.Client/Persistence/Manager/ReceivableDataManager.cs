@@ -23,7 +23,7 @@ namespace Sunrise.Client.Persistence.Manager
 
         public async Task<ReceivableViewModel> GetActiveContract(string contractCode)
         {
-            var transaction = await Factory.Contracts.GetActiveContract(contractCode);
+            var transaction = await Factory.Contracts.FindContractViewByCode(contractCode, TransactionManagement.Enum.ContractStatusEnum.Active);
             var vm = Mapper.Map<ReceivableViewModel>(transaction);
             vm.SetEditMode();
             return vm;
@@ -31,7 +31,7 @@ namespace Sunrise.Client.Persistence.Manager
 
         public async Task<CustomResult> ReverseContract(string id, Func<string,Task> callback)
         {
-            var contract = await Factory.Contracts.GetContractById(id);
+            var contract = await Factory.Contracts.FindContractByKey(id);
             contract.ReversedContract();
 
             var result = await Factory.Contracts.UpdateContract(contract);
@@ -48,7 +48,7 @@ namespace Sunrise.Client.Persistence.Manager
             bool isTriggerUpdate = false;
             try
             {
-                var contract = await Factory.Contracts.GetContractById(transactionId);
+                var contract = await Factory.Contracts.FindContractByKey(transactionId);
                 if (contract == null)
                     throw new Exception("Invalid Contract");
 

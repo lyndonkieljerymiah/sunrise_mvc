@@ -1,64 +1,101 @@
 ﻿
-<div class="modal-heading">
-
+<div class="modal-header" ng-init="$ctrl.init()">
+    <h4><i class="fa fa-file-image-o "></i> Contract Renewal - {{$ctrl.model.code}} </h4>
 </div>
 <div class="modal-body">
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-12">
 
-        </div>
-        <div class="col-md-7">
-            <div class="panel panel-default">
-                <div class="panel-heading"></div>
-                <div class="panel-body">
-                    <h4>Tenant Name: <span class="label label-primary">{{$ctrl.model.register.name}}</span></h4>
-                    <h4>Address: <span class="label label-primary">{{$ctrl.model.register.fullAddress}}</span></h4>
+            <div class="row">
+                <label class="col-md-2 text-right">Tenant Name:</label> <label class="col-md-9">{{$ctrl.model.register.name}}</label>
+            </div>
+            <div ng-show="$ctrl.model.register.tenantType == 'ttin'">
+                <div class="row">
+                    <label class="col-md-2 text-right">Qatar ID:</label> <label class="col-md-9">{{$ctrl.model.register.individual.qatarId}}</label>
+                </div>
+                <div class="row">
+                    <label class="col-md-2 text-right">Birthday:</label> <label class="col-md-9"><span class="label label-primary">{{$ctrl.model.register.individual.birthday}}</span></label>
                 </div>
             </div>
-            <div class="panel panel-default">
-                <div class="panel panel-body">
-                    <form id="newContractForm" name="newContractForm" class="form-horizontal">
-                        <div class="form-group">
-                            <label class="col-md-3">Contract No:</label>
-                            <div class="col-md-8">
-                                <span class="label label-primary">{{$ctrl.model.code}}</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3">Period Start:</label>
-                            <div class="col-md-8">
-                                <date-time-picker index="0" model="$ctrl.model.periodStart" name="periodStart">
-                                </date-time-picker>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3">Period End:</label>
-                            <div class="col-md-8">
-                                <date-time-picker index="1" model="$ctrl.model.periodEnd" name="periodEnd"></date-time-picker>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3">Amount:</label>
-                            <input-set my-class="col-md-8"
-                                       my-model="$ctrl.model.amountPayable"
-                                       my-numeric="currency"
-                                       valid-state="modelError.amount.isValid"
-                                       error-msg="modelError.amount.errorMessage"
-                                       name="amountPayable">
-                                <span ng-hide="modelError.amount.isValid">{{modelError.amount.errorMessage}}</span>
-                            </input-set>
-                        </div>
-                    </form>
+            <div ng-show="$ctrl.model.register.tenantType == 'ttco'">
+                <div class="row">
+                    <label class="col-md-2 text-right">CR No:</label> <label class="col-md-9"><span class="label label-primary">{{$ctrl.model.register.company.crNo}}</span></label>
                 </div>
+                <div class="row">
+                    <label class="col-md-2 text-right">Validity Date:</label> <label class="col-md-9"><span class="label label-primary">{{$ctrl.model.register.company.validityDate | date: 'MM/dd/yyyy'}}</span></label>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-md-2 text-right">Address:</label> <label class="col-md-9"><span class="label label-primary">{{$ctrl.model.register.fullAddress}}</span></label>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-5">
+            <div class="thumbnail">
+                <!--slider-->
+                <slider>
+                    <div ng-repeat="slide in nbSlides.images" class="nb-image-container slide-animation" ng-show="slide.visible">
+                        <img src="{{slide.imageConverted}}" />
+                    </div>
+                    <a class="arrow prev" href="#" ng-click="nbSlides.prev()"><i class="fa fa-2x fa-chevron-left"></i></a>
+                    <a class="arrow next" href="#" ng-click="nbSlides.next();"><i class="fa fa-2x fa-chevron-right"></i></a>
+                    <nav class="nb-bulletin">
+                        <ul>
+                            <li ng-repeat="slide in nbSlides.images">
+                                <a href="#" ng-class="{active:nbSlides.currentIndex == $index}" ng-click="nbSlides.chooseIndex($index)"></a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="caption">
+                        <p>Descripton: {{$ctrl.model.villa.description}}</p>
+                        <p>
+                            <ul>
+                                <li>Capacity: {{$ctrl.model.villa.capacity}}</li>
+                                <li>Rate per Month: {{$ctrl.model.villa.ratePerMonth | currency : "QR "}}</li>
+                                <li>Type: {{$ctrl.model.villa.villaType}}</li>
+                            </ul>
+                        </p>
+                    </div>
+                </slider>
+                <!--end slider-->
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="thumbnail">
+                <form id="newContractForm" name="newContractForm" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-3 text-right">Period Start:</label>
+                        <div class="col-md-8 text-right">
+                            <date-time-picker index="0" model="$ctrl.model.periodStart" name="periodStart"></date-time-picker>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 text-right">Period End:</label>
+                        <div class="col-md-8">
+                            <date-time-picker index="1" model="$ctrl.model.periodEnd" name="periodEnd"></date-time-picker>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 text-right">Amount:</label>
+                        <input-set my-class="col-md-8"
+                                   my-model="$ctrl.model.amountPayable"
+                                   my-numeric="currency"
+                                   valid-state="modelError.amount.isValid"
+                                   error-msg="modelError.amount.errorMessage"
+                                   name="amountPayable">
+                            <span ng-hide="modelError.amount.isValid">{{modelError.amount.errorMessage}}</span>
+                        </input-set>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
 <div class="modal-footer">
-    <div class="row">
-        <div class="col-md-3 pull-right">
-            <button class="btn btn-block btn-default" ng-click="$ctrl.save()">Save</button>
-        </div>
-    </div>
+    <button class="btn btn-success btn-sm" ng-click="$ctrl.save()"><i class="fa fa-save"></i> Save</button>
+    <button class="btn btn-danger btn-sm" ng-click="$ctrl.dismiss()"><i class="fa fa-undo"></i> Cancel</button>
 </div>
 

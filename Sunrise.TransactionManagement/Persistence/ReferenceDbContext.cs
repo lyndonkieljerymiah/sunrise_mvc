@@ -24,11 +24,13 @@ namespace Sunrise.TransactionManagement.Persistence
             modelBuilder.Entity<TenantView>().ToTable("TenantView", "dbo");
             modelBuilder.Entity<TransactionView>().ToTable("TransactionView", "dbo");
             modelBuilder.Entity<VillaView>().ToTable("VillaView", "dbo");
+            modelBuilder.Entity<VillaGalleryView>().ToTable("VillaGalleryView", "dbo");
             modelBuilder.Entity<PaymentView>().ToTable("PaymentView", "dbo");
 
 
             modelBuilder.Entity<TransactionView>().HasKey(t => t.Id);
             modelBuilder.Entity<VillaView>().HasKey(v => v.Id);
+
             modelBuilder.Entity<TenantView>().HasKey(v => v.Id);
 
             modelBuilder.Entity<PaymentView>()
@@ -45,6 +47,11 @@ namespace Sunrise.TransactionManagement.Persistence
                 .HasRequired(t => t.Villa)
                 .WithMany()
                 .HasForeignKey(t => t.VillaId);
+
+            modelBuilder.Entity<VillaGalleryView>()
+                .HasRequired(v => v.Villa)
+                .WithMany(v=> v.Galleries)
+                .HasForeignKey(v => v.VillaId);
 
         }
     }

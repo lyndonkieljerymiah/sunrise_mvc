@@ -36,7 +36,7 @@ namespace Sunrise.Client.Controllers.Api
         /// <param name="billNo"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{contractCode?}")]
+        [Route("{contractCode}")]
         public async Task<IHttpActionResult> Create(string contractCode)
         {
             var contract = await _contractDataManager.GetContractForPaymentClearing(contractCode);
@@ -59,7 +59,7 @@ namespace Sunrise.Client.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("update")]
-        public async Task<IHttpActionResult> ClearPayment(ReceivableViewModel vm)
+        public async Task<IHttpActionResult> Update(ReceivableViewModel vm)
         {
             var userId = User.Identity.GetUserId();
 

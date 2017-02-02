@@ -63,7 +63,7 @@ namespace Sunrise.TransactionManagement.Model
         public string Remarks { get; set; }
         public bool IsReverse { get; set; }
         public virtual UpdateStamp UpdateStamp { get; set; }
-        public virtual Transaction Transaction { get; set; }
+        public virtual Contract Transaction { get; set; }
         public void SetStatus(string status,string remarks,string userId)
         {   
             this.Status = status;

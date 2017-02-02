@@ -18,7 +18,7 @@ namespace Sunrise.TransactionManagement.Model
         public string Description { get; set; }
         public string UserId { get; set; }
 
-        public Transaction Transaction { get; set; }
+        public Contract Transaction { get; set; }
 
     }
 }

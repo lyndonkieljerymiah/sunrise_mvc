@@ -13,7 +13,7 @@ namespace Sunrise.TransactionManagement.Persistence
 {
     public class AppDbContext : BaseDbContext
     {
-        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Contract> Transactions { get; set; }
         public DbSet<Payment> Payments { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -21,20 +21,20 @@ namespace Sunrise.TransactionManagement.Persistence
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.HasDefaultSchema("stm");
-            modelBuilder.Entity<Transaction>().ToTable("Transaction");
+            modelBuilder.Entity<Contract>().ToTable("Transaction");
             modelBuilder.Entity<Payment>().ToTable("Payment");
             
-            modelBuilder.Entity<Transaction>()
+            modelBuilder.Entity<Contract>()
                 .Property(t => t.Code)
                 .HasMaxLength(50)
                 .IsRequired()
                 .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_TransactionCode")));
 
-            modelBuilder.Entity<Transaction>()
+            modelBuilder.Entity<Contract>()
                 .HasOptional(t => t.Terminate)
                 .WithRequired(t => t.Transaction);
 
-            modelBuilder.Entity<Transaction>()
+            modelBuilder.Entity<Contract>()
                 .HasMany(t => t.Payments)
                 .WithRequired(p => p.Transaction);
 

@@ -14,11 +14,7 @@ namespace Sunrise.Client.Controllers
             return View();
         }
 
-        public ActionResult MasterPage()
-        {
-            return View();
-        }
-
+        
       
     }
 }

@@ -33,9 +33,10 @@
                 router.route("contract", "", villaId);
             },
             createContract: function (villaId, tenantType, success, failure) {
+
                 var uriPath = (tenantType === null) ?
-                    router.apiPath("contract", "create", villaId) :
-                    router.apiPath("contract", "create", villaId + "/" + tenantType);
+                    router.apiPath("contract", "register", villaId) :
+                    router.apiPath("contract", "register", villaId + "/" + tenantType);
 
                 $http.get(uriPath)
                   .then(
@@ -65,12 +66,7 @@
             save: function (data, success, failure)
             {
                 data.villa.imageGalleries = null;
-                if (data.id === 0) {
-                    $http.post(router.apiPath("contract", "register"), data).then(responseCallback, errorCallback)
-                }
-                else {
-                    $http.put(router.apiPath("contract", "register"), data).then(responseCallback, errorCallback)
-                }
+                $http.post(router.apiPath("contract", "register"), data).then(responseCallback, errorCallback)
                 function responseCallback(response) {
                     //route data
                     var responseData = response.data;
@@ -135,7 +131,7 @@ mainApp.factory("contractRenewalManager", function ($http, modelStateValidation,
                     action(data);
                 },
                 function (response) {
-                    modelStateValidation.parseError(response.data);
+                    failure(modelStateValidation.parseError(response.data));
                 });
         },
         renew: function (value, action, failure) {
@@ -155,12 +151,19 @@ mainApp.factory("contractRenewalManager", function ($http, modelStateValidation,
             //form
             $http.post(router.apiPath("contract", "renewal"), data).then(
                 function (response) {
-                    action(response.data);
+                    if(response.data.success)
+                        action(response.data);
+                    else
+                        failure(modelStateValidation.parseError(response.data));
                 },
                 function (response) {
                     failure(modelStateValidation.parseError(response.data));
-            });
+                });
         },
+        proceedToBilling: function (id) {
+            router.route("billing", "", id);
+        }
+        
     }
 
 });

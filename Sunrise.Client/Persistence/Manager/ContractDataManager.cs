@@ -1,18 +1,17 @@
 ﻿using AutoMapper;
+using PagedList;
+using Sunrise.Client.Domains.Configuration;
 using Sunrise.Client.Domains.ViewModels;
-using System;
-using System.Threading.Tasks;
-using Sunrise.TransactionManagement.Abstract;
-using Sunrise.TransactionManagement.Model;
-using Utilities.Enum;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using Sunrise.Client.Infrastructure.Extension;
 using Sunrise.TransactionManagement.Data.Factory;
 using Sunrise.TransactionManagement.DTO;
-using PagedList;
-using Sunrise.Client.Infrastructure.Extension;
-using Sunrise.Client.Domains.Configuration;
+using Sunrise.TransactionManagement.Enum;
+using Sunrise.TransactionManagement.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Utilities.Enum;
 using Utilities.Helper;
 
 namespace Sunrise.Client.Persistence.Manager
@@ -35,7 +34,7 @@ namespace Sunrise.Client.Persistence.Manager
         #region contract
         public TransactionRegisterViewModel CreateNewContract(string villaNo,DateTime periodStart, decimal ratePerMonth)
         {
-            var newContract = Transaction.CreateNew(villaNo,Config.DefaultMonth, ratePerMonth, periodStart, new MonthRateCalculation());
+            var newContract = Contract.CreateNewEmpty(villaNo,Config.DefaultMonth, ratePerMonth, periodStart, new MonthRateCalculation());
             var viewModel = Mapper.Map<TransactionRegisterViewModel>(newContract);
 
             return viewModel;
@@ -45,7 +44,7 @@ namespace Sunrise.Client.Persistence.Manager
         {
             //create code
             var code = "C" + vmTransaction.Villa.VillaNo + DateTime.Today.Year;
-            var transaction = Transaction.Map(code,
+            var transaction = Contract.Map(code,
                 vmTransaction.RentalType,
                 vmTransaction.ContractStatus,
                 vmTransaction.PeriodStart,
@@ -63,7 +62,7 @@ namespace Sunrise.Client.Persistence.Manager
             var result = await Factory.Contracts.RemoveContract(id);
             if (result.Success)
             {
-                var contract = (Transaction)result.ReturnObject;
+                var contract = (Contract)result.ReturnObject;
                 if (callback != null) await callback(contract.TenantId, contract.VillaId);
             }
             return result;
@@ -73,16 +72,14 @@ namespace Sunrise.Client.Persistence.Manager
             var result = new CustomResult();
             try
             {
-                var contract = await Factory.Contracts.GetContractById(model.Id, true);
+                var contract = await Factory.Contracts.FindContractByKey(model.Id, true);
                 if (contract == null)
                     throw new Exception("Invalid Contract");
 
                 //activate contract
                 contract.ActivateStatus();
-                contract.ReversedContract();
                 bool isOk = false;
                 bool isTriggerUpdate = false;
-
                 foreach (var payment in model.Payments)
                 {
                     //insert only new 
@@ -137,7 +134,7 @@ namespace Sunrise.Client.Persistence.Manager
             var result = new CustomResult();
             try
             {
-                var contract = await Factory.Contracts.GetContractById(transactionId);
+                var contract = await Factory.Contracts.FindContractByKey(transactionId);
                 if (contract == null)
                     throw new Exception("Invalid Contract");
 
@@ -157,29 +154,48 @@ namespace Sunrise.Client.Persistence.Manager
 
             return result;
         }
-        public async Task<IPagedList<ContractListViewModel>> GetContracts(string code, int pageNumber, int pageSize)
+        
+        public async Task<IPagedList<ContractListViewModel>> GetContracts(string code = "", int pageNumber = 0, int pageSize = 20, ContractStatusEnum contractStatusEnum = ContractStatusEnum.All)
         {
-            var transactions = await Factory.Contracts.GetContractsForListing(code, pageNumber, pageSize);
-            return transactions.ToMappedPagedList<TransactionListDTO, ContractListViewModel>();
+
+            var contracts = Factory.Contracts.GetViewContracts();
+
+            if (contractStatusEnum == ContractStatusEnum.Active)
+                contracts = contracts.GetActiveContracts();
+            else if (contractStatusEnum == ContractStatusEnum.Official)
+                contracts = contracts.GetOfficialContracts();
+
+            if (string.IsNullOrEmpty(code))
+                contracts = contracts.FilterByCode(code);
+
+            return (await contracts.ToDTOPageListAsync(pageNumber,pageSize))
+                .ToMappedPagedList<TransactionListDTO, ContractListViewModel>();
         }
         
         #region renewal
-        public async Task<IPagedList<ContractListViewModel>> GetContractExpiry(int pageNumber, int pageSize)
-        {
-            var contracts = await Factory.Contracts.GetExpiryContracts(12, pageNumber, pageSize);
+        public async Task<IPagedList<ContractListViewModel>> GetExpiryContracts(int pageNumber, int pageSize)
+        {   
+            var contracts = await Factory.Contracts.GetViewContracts()
+                                    .GetActiveContracts()
+                                    .ToDTOPageListAsync(pageNumber, pageSize);
+
             return contracts.ToMappedPagedList<TransactionListDTO, ContractListViewModel>();
         }
+
         public async Task<TransactionRegisterViewModel> GetContractForRenewal(string contractId)
         {
             try
             {
                 //take the old contract
-                var oldContract = await Factory.Contracts.GetContractViewById(contractId);
+                var oldContract = await Factory.Contracts.FindContractViewByKey(contractId);
                 
+                if (oldContract.HasRemainingBalance())
+                    return null;
+
                 //copy to new
-                var newContract = Transaction.CreateRenew(oldContract.Id, oldContract.Code,Config.DefaultMonth, oldContract.Villa.RatePerMonth, oldContract.PeriodEnd, new MonthRateCalculation());
+                var rateCalculation = new MonthRateCalculation(oldContract.Villa.RatePerMonth);
+                var newContract = Contract.CreateRenewEmpty(oldContract.Id, oldContract.Code,Config.DefaultMonth, oldContract.Villa.RatePerMonth, oldContract.PeriodEnd, rateCalculation);
                 var vmNewContract = Mapper.Map<TransactionRegisterViewModel>(newContract);
-                
                 
                 //take the tenant and villa
                 vmNewContract.Register = Mapper.Map<TenantRegisterViewModel>(oldContract.Tenant);
@@ -199,26 +215,27 @@ namespace Sunrise.Client.Persistence.Manager
                 throw new Exception(e.Message, e);
             }
         }
+
         public async Task<CustomResult> RenewContract(TransactionRegisterViewModel register,string userId, Func<string, Task> callback = null)
         {
             var result = new CustomResult();
             
             //take the old one and update
-            var oldContract = await Factory.Contracts.GetContractById(register.Id);
+            var oldContract = await Factory.Contracts.FindContractByKey(register.Id);
+            
+
+
             var isSuccess = oldContract.ContractCompletion();
             
             //make sure the contract is completed before creating new one
             if (isSuccess)
-            {
-                
+            {   
                 //create new one
-                var transaction = Transaction.Map(
+                var transaction = Contract.Map(
                     register.Code, register.RentalTypeCode,
                     register.ContractStatusCode, register.PeriodStart, register.PeriodEnd,
                     register.AmountPayable,
                     register.VillaId, register.TenantId, userId);
-
-                var tuple = Tuple.Create(oldContract, transaction);
                 
                 result = await Factory.Contracts.CreateContract(transaction);
                 
@@ -236,7 +253,7 @@ namespace Sunrise.Client.Persistence.Manager
         public async Task<CustomResult> TerminateContract(string contractId, string description, string userId, Func<string, Task> callback)
         {
             var result = new CustomResult();
-            var contract = await Factory.Contracts.GetContractById(contractId);
+            var contract = await Factory.Contracts.FindContractByKey(contractId);
             contract.TerminateContract(description, userId);
             result = await Factory.Contracts.UpdateContract(contract);
             return result;
@@ -246,7 +263,7 @@ namespace Sunrise.Client.Persistence.Manager
         #region billing module
         public async Task<BillingViewModel> GetContractForBilling(string contractId)
         {
-            var contract = await Factory.Contracts.GetContractViewById(contractId);
+            var contract = await Factory.Contracts.FindContractViewByKey(contractId);
             var viewModel = Mapper.Map<BillingViewModel>(contract);
 
             viewModel.QatarId = contract.Tenant.Individual.QatarId;
@@ -262,7 +279,7 @@ namespace Sunrise.Client.Persistence.Manager
         #region receivable module
         public async Task<CustomResult> ReverseContract(string id, Func<string, Task> callback = null)
         {
-            var contract = await Factory.Contracts.GetContractById(id);
+            var contract = await Factory.Contracts.FindContractByKey(id);
             contract.ReversedContract();
             var result = await Factory.Contracts.UpdateContract(contract);
             if (result.Success)
@@ -273,7 +290,7 @@ namespace Sunrise.Client.Persistence.Manager
         }
         public async Task<BillingViewModel> GetContractForPaymentClearing(string contractCode)
         {
-            var contract = await Factory.Contracts.GetActiveContract(contractCode);
+            var contract = await Factory.Contracts.FindContractViewByCode(contractCode, ContractStatusEnum.Active);
             var viewModel = Mapper.Map<BillingViewModel>(contract);
 
             viewModel.QatarId = contract.Tenant.Individual.QatarId;

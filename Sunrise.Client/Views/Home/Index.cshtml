@@ -1,44 +1,16 @@
 ﻿@{
     ViewBag.Title = "Index";
 }
-<div ng-controller="shopController as $ctrl" ng-init="$ctrl.init()">
-    <spinner></spinner>
-    <div class="page-header">
-        <h1>Villa</h1>
-        <small class="lead">Choose Villa</small>
-    </div>
 
-    <div class="row">
-        <div class="col-lg-4" ng-repeat="villas in villaGroups" style="padding-left: 0px; padding-right: 0px">
-            <div class="col-md-4 col-lg-4 box-content" ng-repeat="villa in villas track by villa.id" ng-show="villas" style="padding-left: 5px; padding-right: 5px">
-                <div class="nb-card">
-                    <div class="nb-image">
-                        <div class="card__image" style="background-image: url('@Url.Content("~/Content/imgs/villa_0.jpg")')"></div>
-                        <div class="nb-title">{{villa.villaNo}}</div>
-                    </div>
-                    <div class="nb-detail">
-                        <ul>
-                            <li>Elec. No.{{villa.elecNo}}</li>
-                            <li>Water No.{{villa.waterNo}}</li>
-                            <li>Rate: {{villa.ratePerMonth | currency : 'QR '}}</li>
-                        </ul>
-                    </div>
-                    <div class="nb-footer">
-                        <button class="nb-btn text-success" 
-                                ng-click="$ctrl.select(villa.id)" 
-                                uib-tooltip="Click here to select villa {{villa.villaNo}}">{{villa.status}}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
+
 
 @section scripts {
+    
     <!--service-->
     <script src="~/Scripts/app/data/villa-manager.data.js"></script>
     <script src="~/Scripts/app/data/contract-manager.data.js"></script>
 
     <!--controller-->
-    <script src="~/Scripts/app/controller/shopController.js"></script>
+    <script src="~/Scripts/app/controller/homeController.js"></script>
 }

@@ -1,255 +1,252 @@
-﻿<div ng-controller="billingController as $ctrl" ng-init="$ctrl.init('@ViewBag.Id')">
+﻿
+<div ng-controller="billingController as $ctrl" ng-init="$ctrl.init('@ViewBag.Id')">
     <spinner></spinner>
     <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
-
-    <div class="nb-nav-toolbar nav-default">
-        <div class="nav-header">Billing No: {{sales.code}}</div>
-        <div class="nav-menu-right">
-            <ul>
-                <li><a href="#" class="text-info text-right"><i class="fa fa-2x fa-print"></i></a></li>
-                <li><a href="#" class="text-info text-right" ng-click="$ctrl.dismiss()"><i class="fa fa-2x fa-trash-o"></i></a></li>
-            </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h4>Billing - {{sales.code}}</h4>
+            </div>
         </div>
-    </div>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-9">
-                <div class="panel panel-primary">
-                    <div class="panel-body">
-                        <!--- General Information -->
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">Tenant Information</div>
-                                    <div class="panel-body">
-                                        <div class="col-md-9">
-                                            <div class="body-content">
-                                                <div class="row">
-                                                    <div class="col-md-2">Name:</div>
-                                                    <div class="col-md-10">{{sales.name}}</div>
-                                                </div>
-                                                <div class="row" ng-show="sales.qatarId">
-                                                    <div class="col-md-2">Qatar Id:</div>
-                                                    <div class="col-md-10">{{sales.qatarId}}</div>
-                                                </div>
-                                                <div class="row" ng-show="sales.crNo">
-                                                    <div class="col-md-2">CR No:</div>
-                                                    <div class="col-md-4">{{sales.crNo}}</div>
-                                                    <div class="col-md-2">Validity Date:</div>
-                                                    <div class="col-md-4">{{sales.validityDate | date : 'MM/dd/yyyy'}}</div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-2">Address:</div>
-                                                    <div class="col-md-10">{{sales.address}}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <table class="table">
-                                            <tr>
-                                                <th>Villa No</th>
-                                                <th>Rental Type</th>
-                                                <th>Period Start</th>
-                                                <th>Period End</th>
-                                                <th>Amount</th>
-                                                <th>Monthly Payable</th>
-                                                <th>Status</th>
-                                            </tr>
-                                            <tr>
-                                                <td>{{sales.villa.villaNo}}</td>
-                                                <td>{{sales.rentalType}}</td>
-                                                <td>{{sales.periodStart | date: "MM/dd/yyyy"}}</td>
-                                                <td>{{sales.periodEnd | date: "MM/dd/yyyy"}}</td>
-                                                <td>{{sales.amountPayable | currency :"QR "}}</td>
-                                                <td>{{sales.villa.ratePerMonth | currency :"QR "}}</td>
-                                                <td>{{sales.villa.status}}</td>
-                                            </tr>
-                                        </table>
+        <div class="col-md-2 pull-right">
+            <div class="pull-right">
+                <div class="btn-group my-group">
+                    <button class="btn btn-default btn-xs dropdown-toggle" nav-toggle>
+                        <i class="fa fa-gear"></i> <i class="fa fa-caret-down"></i>
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li><a href="#"><i class="fa fa-print"></i> Print</a></li>
+                        <li><a href="#" ng-click="$ctrl.dismiss()"><i class="fa fa-trash-o"></i> Dismiss</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12" style="margin:10px 0"></div>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Tenant Information</div>
+                        <div class="panel-body">
+                            <div class="col-md-9">
+                                <div class="body-content">
+                                    <div class="row">
+                                        <div class="col-md-2">Name:</div>
+                                        <div class="col-md-10">{{sales.name}}</div>
+                                    </div>
+                                    <div class="row" ng-show="sales.qatarId">
+                                        <div class="col-md-2">Qatar Id:</div>
+                                        <div class="col-md-10">{{sales.qatarId}}</div>
+                                    </div>
+                                    <div class="row" ng-show="sales.crNo">
+                                        <div class="col-md-2">CR No:</div>
+                                        <div class="col-md-4">{{sales.crNo}}</div>
+                                        <div class="col-md-2">Validity Date:</div>
+                                        <div class="col-md-4">{{sales.validityDate | date : 'MM/dd/yyyy'}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">Address:</div>
+                                        <div class="col-md-10">{{sales.address}}</div>
                                     </div>
                                 </div>
                             </div>
+                            <table class="table">
+                                <tr>
+                                    <th>Villa No</th>
+                                    <th>Rental Type</th>
+                                    <th>Period Start</th>
+                                    <th>Period End</th>
+                                    <th>Amount</th>
+                                    <th>Monthly Payable</th>
+                                    <th>Status</th>
+                                </tr>
+                                <tr>
+                                    <td>{{sales.villa.villaNo}}</td>
+                                    <td>{{sales.rentalType}}</td>
+                                    <td>{{sales.periodStart | date: "MM/dd/yyyy"}}</td>
+                                    <td>{{sales.periodEnd | date: "MM/dd/yyyy"}}</td>
+                                    <td>{{sales.amountPayable | currency :"QR "}}</td>
+                                    <td>{{sales.villa.ratePerMonth | currency :"QR "}}</td>
+                                    <td>{{sales.villa.status}}</td>
+                                </tr>
+                            </table>
                         </div>
-                        <!-- end general-->
-                        <!-- payment details component -->
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-bordered table-condensed">
-                                    <tr class="active">
-                                        <th class="active" style="width:3%;">No</th>
-                                        <th style="width:10%;" class="text-center">Date</th>
-                                        <th style="width:10%;" class="text-center">Cheque No</th>
-                                        <th style="width:15%;" class="text-center">Payment Mode</th>
-                                        <th class="text-center">Covered Period</th>
-                                        <th style="width:12%;text-align:center">Amount</th>
-                                        <th style="width:10%;text-align:center">Status</th>
-                                        <th></th>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-condensed">
+                                <tr class="active">
+                                    <th class="active" style="width:3%;">No</th>
+                                    <th style="width:10%;" class="text-center">Date</th>
+                                    <th style="width:10%;" class="text-center">Cheque No</th>
+                                    <th style="width:15%;" class="text-center">Payment Mode</th>
+                                    <th class="text-center">Covered Period</th>
+                                    <th style="width:12%;text-align:center">Amount</th>
+                                    <th style="width:10%;text-align:center">Status</th>
+                                    <th></th>
+                                </tr>
+                                <tbody>
+                                    <tr ng-repeat="payment in sales.payments | orderBy : 'paymentDate':reverse track by $index"
+                                        ng-class="{danger: sales.selectedRow == $index}">
+                                        <td class="active text-center">{{($index+1)}}</td>
+                                        <td class="text-center">{{payment.paymentDate | date: 'MM/dd/yyyy'}}</td>
+                                        <td class="text-center">{{payment.chequeNo}}</td>
+                                        <td class="text-center">{{payment.paymentMode}}</td>
+                                        <td class="text-left">
+                                            {{payment.coveredPeriodFrom | date : 'MM/dd/yyyy'}} -
+                                            {{payment.coveredPeriodTo | date : 'MM/dd/yyyy'}}
+                                        </td>
+                                        <td class="text-right">{{payment.amount | currency:"QR "}}</td>
+                                        <td class="text-center">{{payment.status}}</td>
+                                        <th style="width:5%;text-align:center">
+                                            <!-- Single button -->
+                                            <div class="btn-group"
+                                                 uib-dropdown
+                                                 ng-show="payment.writeState">
+                                                <button id="single-button" type="button" class="btn btn-primary btn-sm"
+                                                        uib-dropdown-toggle
+                                                        ng-disabled="disabled">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                                                    <li role="menuitem"><a href="#" ng-click="$ctrl.edit($index,payment,$event)">Edit</a></li>
+                                                    <li role="menuitem"><a href="#" ng-click="$ctrl.remove($index,payment)">Remove</a></li>
+                                                </ul>
+                                            </div>
+                                        </th>
                                     </tr>
-                                    <tbody>
-                                        <tr ng-repeat="payment in sales.payments | orderBy : 'paymentDate':reverse track by $index"
-                                            ng-class="{danger: sales.selectedRow == $index}">
-                                            <td class="active text-center">{{($index+1)}}</td>
-                                            <td class="text-center">{{payment.paymentDate | date: 'MM/dd/yyyy'}}</td>
-                                            <td class="text-center">{{payment.chequeNo}}</td>
-                                            <td class="text-center">{{payment.paymentMode}}</td>
-                                            <td class="text-left">
-                                                {{payment.coveredPeriodFrom | date : 'MM/dd/yyyy'}} -
-                                                {{payment.coveredPeriodTo | date : 'MM/dd/yyyy'}}
-                                            </td>
-                                            <td class="text-right">{{payment.amount | currency:"QR "}}</td>
-                                            <td class="text-center">{{payment.status}}</td>
-                                            <th style="width:5%;text-align:center">
-                                                <!-- Single button -->
-                                                <div class="btn-group"
-                                                     uib-dropdown
-                                                     ng-show="payment.writeState">
-                                                    <button id="single-button" type="button" class="btn btn-primary btn-sm"
-                                                            uib-dropdown-toggle
-                                                            ng-disabled="disabled">
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
-                                                        <li role="menuitem"><a href="#" ng-click="$ctrl.edit($index,payment,$event)">Edit</a></li>
-                                                        <li role="menuitem"><a href="#" ng-click="$ctrl.remove($index,payment)">Remove</a></li>
-                                                    </ul>
-                                                </div>
-                                            </th>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr class="active">
-                                            <td colspan="7"></td>
-                                            <td class="text-center">
-                                                <button ng-show="sales.statusCode=='ssp'" class="btn btn-sm btn-primary" ng-click="$ctrl.addNewPayment()"><i class="fa fa-plus-circle"></i></button>
-                                            </td>
+                                </tbody>
+                                <tfoot>
+                                    <tr class="active">
+                                        <td colspan="7"></td>
+                                        <td class="text-center">
+                                            <button ng-show="sales.statusCode=='ssp'" class="btn btn-sm btn-primary" ng-click="$ctrl.addNewPayment()"><i class="fa fa-plus-circle"></i></button>
+                                        </td>
 
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <div class="col-md-2 pull-right">
-                                <button class="btn btn-primary btn-block" ng-click="$ctrl.save()" ng-show="sales.editState"><i class="fa fa-save"></i> Save</button>
-                            </div>
-                            <!-- template -->
-                            <script type="text/ng-template" id="myModalContent.html">
-                                <form id="paymentForm" class="form-horizontal" name="paymentForm">
-                                    <div class="modal-header">
-                                        <h3 class="modal-title" id="modal-title">Payment</h3>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="col-md-2 pull-right">
+                            <button class="btn btn-primary btn-block" ng-click="$ctrl.save()" ng-show="sales.editState"><i class="fa fa-save"></i> Save</button>
+                        </div>
+                        <!-- template -->
+                        <script type="text/ng-template" id="myModalContent.html">
+                            <form id="paymentForm" class="form-horizontal" name="paymentForm">
+                                <div class="modal-header">
+                                    <h3 class="modal-title" id="modal-title">Payment</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <!--type -->
+                                    <div class="form-group">
+                                        <label class="col-md-2 text-right">Type:</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control" placheholder="Term" ng-model="$ctrl.payment.paymentTypeCode" ng-change="$ctrl.changeBehaviourWhenSelectingTerm()">
+                                                <option ng-repeat="term in $ctrl.paymentObject.terms" value="{{term.value}}">{{term.text}}</option>
+                                            </select>
+                                        </div>
+                                        <div ng-hide="$ctrl.payment.chequeFieldDisabled">
+                                            <label class="col-md-2 text-right">Mode:</label>
+                                            <div class="col-md-4">
+                                                <select class="form-control" ng-model="$ctrl.payment.paymentModeCode">
+                                                    <option ng-repeat="mode in $ctrl.paymentObject.modes" value="{{mode.value}}">{{mode.text}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="modal-body">
-                                        <!--type -->
-                                        <div class="form-group">
-                                            <label class="col-md-2 text-right">Type:</label>
-                                            <div class="col-md-4">
-                                                <select class="form-control" placheholder="Term" ng-model="$ctrl.payment.paymentTypeCode" ng-change="$ctrl.changeBehaviourWhenSelectingTerm()">
-                                                    <option ng-repeat="term in $ctrl.paymentObject.terms" value="{{term.value}}">{{term.text}}</option>
-                                                </select>
-                                            </div>
-                                            <div ng-hide="$ctrl.payment.chequeFieldDisabled">
-                                                <label class="col-md-2 text-right">Mode:</label>
-                                                <div class="col-md-4">
-                                                    <select class="form-control" ng-model="$ctrl.payment.paymentModeCode">
-                                                        <option ng-repeat="mode in $ctrl.paymentObject.modes" value="{{mode.value}}">{{mode.text}}</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+                                    <!--end type-->
+                                    <div class="form-group">
+                                        <label class="col-md-2 text-right">Date:</label>
+                                        <div class="col-md-10">
+                                            <date-time-picker format="MM/dd/yyyy" index="0" model="$ctrl.payment.paymentDate" required="true"></date-time-picker>
                                         </div>
-                                        <!--end type-->
-                                        <div class="form-group">
-                                            <label class="col-md-2 text-right">Date:</label>
-                                            <div class="col-md-10">
-                                                <date-time-picker format="MM/dd/yyyy" index="0" model="$ctrl.payment.paymentDate" required="true"></date-time-picker>
-                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 text-right">Cheque No:</label>
+                                        <div class="col-md-10">
+                                            <input type="text"
+                                                   name="chequeNo"
+                                                   id="chequeNo"
+                                                   class="form-control"
+                                                   ng-disabled="$ctrl.payment.chequeFieldDisabled"
+                                                   ng-model="$ctrl.payment.chequeNo"
+                                                   required />
+                                            <span ng-show="errorState.chequeNo">{{errorState.chequeNo}}</span>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-md-2 text-right">Cheque No:</label>
-                                            <div class="col-md-10">
-                                                <input type="text"
-                                                       name="chequeNo"
-                                                       id="chequeNo"
-                                                       class="form-control"
-                                                       ng-disabled="$ctrl.payment.chequeFieldDisabled"
-                                                       ng-model="$ctrl.payment.chequeNo"
-                                                       required />
-                                                <span ng-show="errorState.chequeNo">{{errorState.chequeNo}}</span>
-                                            </div>
+                                    </div>
+                                    <div class="form-group" ng-hide="$ctrl.payment.paymentTypeCode == 'ptcs'">
+                                        <label class="col-md-2 text-right">Bank:</label>
+                                        <div class="col-md-10">
+                                            <select ng-model="$ctrl.payment.bankCode" class="form-control" ng-required="$ctrl.payment.paymentTypeCode == 'ptcq'">
+                                                <option value="">--Select Bank--</option>
+                                                <option ng-repeat="bank in $ctrl.paymentObject.banks" value="{{bank.value}}">{{bank.text}}</option>
+                                            </select>
                                         </div>
-                                        <div class="form-group" ng-hide="$ctrl.payment.paymentTypeCode == 'ptcs'">
-                                            <label class="col-md-2 text-right">Bank:</label>
-                                            <div class="col-md-10">
-                                                <select ng-model="$ctrl.payment.bankCode" class="form-control" ng-required="$ctrl.payment.paymentTypeCode == 'ptcq'">
-                                                    <option value="">--Select Bank--</option>
-                                                    <option ng-repeat="bank in $ctrl.paymentObject.banks" value="{{bank.value}}">{{bank.text}}</option>
-                                                </select>
-                                            </div>
+                                    </div>
+                                    <div class="page-header">
+                                        <strong>Covered Period</strong>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 text-right">Start:</label>
+                                        <div class="col-md-4">
+                                            <date-time-picker format="MM/dd/yyyy" index="1" model="$ctrl.payment.coveredPeriodFrom" required="true">
+                                                <span ng-show="errorState['periodFromException']">{{errorState['periodFromException']}}</span>
+                                            </date-time-picker>
                                         </div>
-                                        <div class="page-header">
-                                            <strong>Covered Period</strong>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-2 text-right">Start:</label>
-                                            <div class="col-md-4">
-                                                <date-time-picker format="MM/dd/yyyy" index="1" model="$ctrl.payment.coveredPeriodFrom" required="true">
-                                                    <span ng-show="errorState['periodFromException']">{{errorState['periodFromException']}}</span>
+                                        <label class="col-md-2 text-right">End:</label>
+                                        <div class="col-md-4">
+                                            <div class="input-group">
+                                                <date-time-picker format="MM/dd/yyyy" index="2" model="$ctrl.payment.coveredPeriodTo" required="true">
+                                                    <span ng-show="errorState['periodToException']">{{errorState['periodToException']}}</span>
                                                 </date-time-picker>
                                             </div>
-                                            <label class="col-md-2 text-right">End:</label>
-                                            <div class="col-md-4">
-                                                <div class="input-group">
-                                                    <date-time-picker format="MM/dd/yyyy" index="2" model="$ctrl.payment.coveredPeriodTo" required="true">
-                                                        <span ng-show="errorState['periodToException']">{{errorState['periodToException']}}</span>
-                                                    </date-time-picker>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-2 text-right">Amount:</label>
-                                            <div class="col-md-10">
-                                                <input type="text"
-                                                       name="amount"
-                                                       id="amount"
-                                                       class="form-control text-right"
-                                                       placeholder="Amount"
-                                                       ng-pattern="/^\d+/"
-                                                       ng-model="$ctrl.payment.amount" required />
-                                                <span ng-show="paymentForm.amount.$invalid">Please enter numeric value</span>
-                                            </div>
                                         </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-primary" ng-click="$ctrl.save()"><i class="fa fa-save"></i> Save</button>
-                                        <button class="btn btn-danger" ng-click="$ctrl.cancel()"><i class="fa fa-undo"></i> Cancel</button>
+                                    <div class="form-group">
+                                        <label class="col-md-2 text-right">Amount:</label>
+                                        <div class="col-md-10">
+                                            <input type="text"
+                                                   name="amount"
+                                                   id="amount"
+                                                   class="form-control text-right"
+                                                   placeholder="Amount"
+                                                   ng-pattern="/^\d+/"
+                                                   ng-model="$ctrl.payment.amount" required />
+                                            <span ng-show="paymentForm.amount.$invalid">Please enter numeric value</span>
+                                        </div>
                                     </div>
-                                </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-primary" ng-click="$ctrl.save()"><i class="fa fa-save"></i> Save</button>
+                                    <button class="btn btn-danger" ng-click="$ctrl.cancel()"><i class="fa fa-undo"></i> Cancel</button>
+                                </div>
+                            </form>
 
-                            </script>
-                            <!-- end -->
-
-                        </div>
+                        </script>
                         <!-- end -->
+
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="panel panel-default">
-                    <div class="panel-heading"></div>
-                    <div class="panel-body">
-                        <!-- status component -->
-                        <div class="alert alert-danger">
-                            <strong class="text-success text-center">Status: {{sales.status}}</strong>
+                <div class="col-md-3">
+                    <!-- status component -->
+                    <div class="well well-sm">
+                        <strong class="text-success text-center">Status: {{sales.status}}</strong>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading"></div>
+                        <div class="panel-body">
+                            <p class="text-danger text-left"><i class="fa fa-money"></i> Total Received: {{sales.totalReceivedPayment | currency : "QR "}}</p>
+                            <p class="text-danger text-left"><i class="fa fa-money"></i> Total Payment: {{sales.totalPayment | currency : "QR "}}</p>
+                            <p class="text-danger text-left"><i class="fa fa-money"></i> Remaining Balance: {{sales.totalBalance | currency : "QR "}}</p>
+                            <!--end component-->
                         </div>
-                        <hr />
-                        <p class="text-danger text-left"><i class="fa fa-money"></i> Total Received: {{sales.totalReceivedPayment | currency : "QR "}}</p>
-                        <p class="text-danger text-left"><i class="fa fa-money"></i> Total Payment: {{sales.totalPayment | currency : "QR "}}</p>
-                        <p class="text-danger text-left"><i class="fa fa-money"></i> Remaining Balance: {{sales.totalBalance | currency : "QR "}}</p>
-                        <!--end component-->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
 
 
 

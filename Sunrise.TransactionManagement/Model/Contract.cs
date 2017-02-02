@@ -1,37 +1,41 @@
-﻿using System;
+﻿using Sunrise.TransactionManagement.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Utilities.Helper;
 
 namespace Sunrise.TransactionManagement.Model
 {
-    public class Transaction
-    {
-
-        private IRateCalculation _rateCalculation;
+    public class Contract
+    {   
 
         #region Factory
-        public static Transaction CreateNew(string code,int defaultMonthPeriod = 0, decimal ratePerMonth = 0, DateTime periodStart = new DateTime(), IRateCalculation rateCalculation = null)
-        {
-            var transaction = new Transaction(defaultMonthPeriod, ratePerMonth,periodStart, rateCalculation);
+        public static Contract CreateNewEmpty(string code,int defaultMonthPeriod = 0, decimal ratePerMonth = 0, DateTime periodStart = new DateTime(), IRateCalculation rateCalculation = null)
+        {   
+            var transaction = new Contract();
             transaction.Code = "C" + code + DateTime.Today.Year.ToString();
-            return transaction;
-        }
-        public static Transaction CreateRenew(string id,string code, int defaultMonthPeriod = 0, decimal ratePerMonth = 0, DateTime periodStart = new DateTime(), IRateCalculation rateCalculation = null)
-        {
-            var transaction = new Transaction(defaultMonthPeriod, ratePerMonth, periodStart, rateCalculation);
-            transaction.Id = id;
-            transaction.Code = code + "-R"+ DateTime.Today.Year;
+            transaction.PeriodStart = periodStart;
+            transaction.PeriodEnd = periodStart.AddMonths(defaultMonthPeriod);
+            transaction.AmountPayable = rateCalculation.Calculate(ratePerMonth, transaction.PeriodStart.Date, transaction.PeriodEnd.Date);
 
             return transaction;
         }
-        
-        public static Transaction Map(string code, string rentalType, string contractStatus, DateTime periodStart, DateTime periodEnd,
+        public static Contract CreateRenewEmpty(string id,string code, int defaultMonthPeriod = 0, decimal ratePerMonth = 0, DateTime periodStart = new DateTime(), IRateCalculation rateCalculation = null)
+        {
+            var transaction = new Contract();
+
+            transaction.Id = id;
+            transaction.Code = code + "-R"+ DateTime.Today.Year;
+            transaction.PeriodStart = periodStart;
+            transaction.PeriodEnd = periodStart.AddMonths(defaultMonthPeriod);
+            transaction.AmountPayable = rateCalculation.Calculate(ratePerMonth, transaction.PeriodStart.Date, transaction.PeriodEnd.Date);
+
+            return transaction;
+        }
+        public static Contract Map(string code, string rentalType, string contractStatus, DateTime periodStart, DateTime periodEnd,
             decimal amountPayable, string villaId, string tenantId, string userId)
         {
-            var transaction = new Transaction
+            var transaction = new Contract
             {
                 Code = code,
                 RentalType = rentalType,
@@ -47,22 +51,17 @@ namespace Sunrise.TransactionManagement.Model
             return transaction;
         }
         #endregion
-
-        internal Transaction(int defaultMonthPeriod, decimal ratePerMonth,DateTime periodStart, IRateCalculation rateCalculation)
-        {
-            this.RentalType = "rtff";
-            this.ContractStatus = "csl";
-
-            this.DateCreated = DateTime.Today;
-            this.SetNewPeriod(periodStart, defaultMonthPeriod, ratePerMonth, rateCalculation);
-        }
-        public Transaction()
+                
+        public Contract()
         {
             this.Id = Guid.NewGuid().ToString();
             this.DateCreated = DateTime.Today;
-            this.Status = "ssp";
+            this.Status = ContractStatusSelection.Pending;
             this.Payments = new HashSet<Payment>();
             this.IsTerminated = false;
+            this.RentalType = "rtff";
+            this.ContractStatus = "csl";
+            this.DateCreated = DateTime.Today;
         }
         
         public string Id { get; private set; }
@@ -89,19 +88,14 @@ namespace Sunrise.TransactionManagement.Model
               
 
         #region method
-        public void SetNewPeriod(DateTime startPeriod, int defaultMonthPeriod, decimal ratePerMonth, IRateCalculation rateCalculation)
+     
+        public decimal GetBalanceDue()
         {
-            this.PeriodStart = startPeriod;
-            this.PeriodEnd = startPeriod.AddMonths(defaultMonthPeriod);
-            this._rateCalculation = rateCalculation;
-            this.ComputePayableAmount(ratePerMonth);
+            return this.Payments.Where(p => p.Status != PaymentStatusSelection.Clear).Sum(p => p.Amount);
         }
 
-        public void ComputePayableAmount(decimal rate)
-        {
-            this.AmountPayable = _rateCalculation.Calculate(rate, this.PeriodStart.Date, this.PeriodEnd.Date);
-        }
 
+        #region crud payment
         public bool AddPayment(
            DateTime paymentDate, string paymentType, string paymentMode, string chequeNo,
             string bank, DateTime coveredFrom, DateTime coveredTo,
@@ -110,7 +104,6 @@ namespace Sunrise.TransactionManagement.Model
 
             //no  existing covered date
             Payment payment = null;
-            //do date validation here
 
             bool hasCollision = paymentMode == "ptcq" ? IsPaymentDateCovered(coveredFrom.Date) : false;
             if (!hasCollision)
@@ -163,42 +156,52 @@ namespace Sunrise.TransactionManagement.Model
                 payment.SetStatus(status, remarks,userId);
 
         }
+        #endregion
+
+
+        #region contract status operation
         public void TerminateContract(string description,string userId)
         {
+
             if(this.Terminate == null) this.Terminate = new Terminate();
+
             this.Terminate.Description = description;
             this.Terminate.UserId = userId;
+            this.Status = ContractStatusSelection.Cancelled;
             this.IsTerminated = true;
         }
         public void ActivateStatus()
         {
-            if (this.Status != "sscn")
-                this.Status = "sscn";
+            if (this.Status == ContractStatusSelection.Pending)
+                this.Status = ContractStatusSelection.Active;
         }
         public bool ReversedContract()
         {
-            var clearPaymentCount = this.Payments.Where(p => p.Status == "psc").Count();
+            //make sure no clear payment
+            var clearPaymentCount = this.Payments.Where(p => p.Status == PaymentStatusSelection.Clear).Count();
             if (clearPaymentCount > 0)
                 return false;
-
+            
             IsReversed = IsReversed ? false : true;
             if(IsReversed)
             {
                 if (IsActive())
-                    this.Status = "ssp";
+                    this.Status = ContractStatusSelection.Pending;
             }
             return true;
         }
         public bool ContractCompletion()
         {
-            var unclearPayment = this.Payments.Where(p => p.Status != "psc").Sum(p => p.Amount);
+            var unclearPayment = this.Payments.Where(p => p.Status != PaymentStatusSelection.Clear).Sum(p => p.Amount);
             if (unclearPayment != 0)
                 return false; //still has unclear payment
-
-            this.Status = "ssc"; //contract is completed
+            this.Status = ContractStatusSelection.Completed; //contract is completed
             return true;
         }
+        #endregion
+        
 
+        #region conditional 
         public bool IsPaymentDateCovered(DateTime value,int id=0)
         {
             var existingDate = 0;
@@ -231,6 +234,23 @@ namespace Sunrise.TransactionManagement.Model
                 return true;
             return false;
         }
+        public bool HasRemainingBalance()
+        {
+            var paidAmount = this.Payments.Where(p => p.Status == PaymentStatusSelection.Clear).Sum(p => p.Amount);
+            if (paidAmount >= this.AmountPayable)
+            {
+                return false;
+            }
+            return true;
+        }
         #endregion
+
+
+        #endregion
+
+
     }
+
+
+   
 }

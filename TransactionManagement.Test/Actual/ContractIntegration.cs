@@ -6,6 +6,8 @@ using System.Linq;
 using Sunrise.TransactionManagement.Model;
 using Utilities.Helper;
 using Sunrise.TransactionManagement.Data.Config;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace TransactionManagement.Test.Actual
 {
@@ -27,7 +29,8 @@ namespace TransactionManagement.Test.Actual
         [TestMethod]
         public async Task Can_Get_Contracts()
         {
-            var contracts = await _factory.Contracts.GetContracts("", 1, 1);
+            var contracts = await _factory.Contracts.GetViewContracts()
+                                    .ToPageListAsync(1, 100);
             int count = contracts.PageCount;
 
             Assert.IsNotNull(contracts);
@@ -39,7 +42,10 @@ namespace TransactionManagement.Test.Actual
         public async Task Can_Get_ContractList()
         {
 
-            var contracts = await _factory.Contracts.GetContractsForListing("", 1, 100);
+            var contracts = await _factory.Contracts.GetViewContracts()
+                .GetOfficialContracts()
+                .ToPageListAsync(1, 100);
+            
             Assert.IsNotNull(contracts);
             Assert.AreNotEqual(0, contracts.Count());
             Assert.AreNotEqual(0, contracts.FirstOrDefault().AmountPayable);
@@ -48,7 +54,7 @@ namespace TransactionManagement.Test.Actual
         [TestMethod]
         public async Task Can_Get_ContractByCode()
         {
-            var contract = await _factory.Contracts.GetActiveContract("CV00112017");
+            var contract = await _factory.Contracts.FindContractViewByCode("CV00112017");
 
             Assert.IsNotNull(contract);
             Assert.IsNotNull(contract.Tenant);
@@ -58,39 +64,49 @@ namespace TransactionManagement.Test.Actual
         [TestMethod]
         public async Task Can_Get_ContractExpiry()
         {
-            var contracts = await _factory.Contracts.GetExpiryContracts(12, 1, 5);
+            var contracts = await _factory.Contracts.GetViewContracts()
+                .GetActiveContracts()
+                .ThoseExpiryIn(DateTime.Today.AddMonths(12))
+                .ToDTOPageListAsync(1, 5);
 
             Assert.AreNotEqual(0,contracts.PageCount);
             Assert.AreEqual(0, contracts.FirstOrDefault().AmountBalance);
         }
-
-        [TestMethod]
-        public async Task Can_Get_ContractStillValid()
-        {
-            var contracts = await _factory.Contracts.GetExpiryContracts(6, 1, 5);
-            Assert.AreEqual(0, contracts.PageCount);
-        }
+        
 
         [TestMethod]
         public async Task Can_Renew_Contract()
         {
-            //assumes
+            //assumption
             string contractId = "76aef48d-4420-4d81-8c55-5ca1e1dcdc08";
 
             //take another
-            var oldContract = await _factory.Contracts.GetContractViewById(contractId);
+            var oldContract = await _factory.Contracts.FindContractViewByKey(contractId);
             
             //create new contract
             var calculationRate = new MonthRateCalculation(oldContract.Villa.RatePerMonth);
-            var newContract = Transaction.CreateRenew(oldContract.Id,oldContract.Id, ContractConfig.DefaultMonth, oldContract.Villa.RatePerMonth, oldContract.PeriodEnd,calculationRate);
+            var newContract = Contract.CreateRenewEmpty(oldContract.Id,oldContract.Code, ContractConfig.DefaultMonth, oldContract.Villa.RatePerMonth, oldContract.PeriodEnd,calculationRate);
 
             //entry
-            
+
 
             Assert.IsNotNull(newContract);
+            Assert.AreEqual(contractId, newContract.Id);
 
         }
 
+        [TestMethod]
+        public async Task Can_Validate_Remaining_Balance()
+        {
+            string contractId = "67b82869-f522-43cc-aa0c-3f1d7e7ddf6a";
+            string contractIdCompleted = "76aef48d-4420-4d81-8c55-5ca1e1dcdc08";
+            
+            //take another
+            var contractWithRemainingBalance = await _factory.Contracts.FindContractViewByKey(contractId);
+            var contractFullyPaid = await _factory.Contracts.FindContractViewByKey(contractIdCompleted);
 
+            Assert.AreEqual(true, contractWithRemainingBalance.HasRemainingBalance());
+            Assert.AreEqual(false, contractFullyPaid.HasRemainingBalance());
+        }
     }
 }

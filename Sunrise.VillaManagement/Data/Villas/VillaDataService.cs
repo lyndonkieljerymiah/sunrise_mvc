@@ -176,7 +176,6 @@ namespace Sunrise.VillaManagement.Data.Villas
         }
         public async Task<Villa> GetVillaByNo(string villaNo)
         {
-
             var villa = await Context
                 .Villas
                 .Include(v => v.Galleries).SingleOrDefaultAsync(v => v.VillaNo == villaNo);

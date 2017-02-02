@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity;
 using Sunrise.Client.Domains.ViewModels;
 using Sunrise.Client.Persistence.Manager;
 using Sunrise.TenantManagement.Model;
+using Sunrise.TransactionManagement.Enum;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace Sunrise.Client.Controllers.Api
         [Route("list/{search?}")]
         public async Task<IHttpActionResult> List(string search = "")
         {
-            var contracts = await _contractDataManager.GetContracts(search,1,100);
+            var contracts = await _contractDataManager.GetContracts(search,1,100, ContractStatusEnum.Official);
             return Ok(contracts);
         }
 
@@ -55,7 +56,8 @@ namespace Sunrise.Client.Controllers.Api
         [Route("expiries")]
         public async Task<IHttpActionResult> Expiries()
         {
-            var contracts = await _contractDataManager.GetContractExpiry(1, 100);
+            var contracts = await _contractDataManager.GetExpiryContracts(1, 100);
+
             return Ok(contracts);
         }
 
@@ -63,18 +65,30 @@ namespace Sunrise.Client.Controllers.Api
         [HttpGet]
         [Route("renewal/{contractId?}")]
         public async Task<IHttpActionResult> Renewal(string contractId)
-        {
+        {   
             var currentContract = await _contractDataManager.GetContractForRenewal(contractId);
+            if (currentContract == null)
+            {
+                ModelState.AddModelError("ErrorNullException", new Exception("Cannot renew the contract. Need to settle payment"));
+                return BadRequest(ModelState);
+            }
+
             return Ok(currentContract);
         }
-
-
+        
         [HttpPost]
         [Route("renewal")]
         public async Task<IHttpActionResult> Renewal(TransactionRegisterViewModel viewModel)
         {
             var userId = User.Identity.GetUserId();
             var result = await _contractDataManager.RenewContract(viewModel,userId);
+
+            if (!result.Success)
+            {
+                AddResult(result);
+                return BadRequest(ModelState);
+            }
+
             return Ok(result);
         }
 
@@ -87,12 +101,14 @@ namespace Sunrise.Client.Controllers.Api
         [HttpGet]
         [Route("register/{villaId?}/{tenantType?}")]
         public async Task<IHttpActionResult> Register(string villaId, string tenantType = "ttin")
-        {
-            
+        {   
             var villaViewModel = await _villaDataManager.GetVilla(villaId);
             villaViewModel.DefaultImageUrl = Url.Content("~/Content/imgs/notavailable.png");
 
             var selections = await _selectionDataManager.GetLookup(new[] {"TenantType", "RentalType", "ContractStatus"});
+            if (villaViewModel.Type == null)
+                villaViewModel.Type = "vsav";
+
             villaViewModel.VillaType = selections.SingleOrDefault(s => s.Code == villaViewModel.Type).Description;
             
             var vmRegister = Mapper.Map<TenantRegisterViewModel>(Tenant.CreateNew(tenantType));
@@ -100,6 +116,7 @@ namespace Sunrise.Client.Controllers.Api
             
             //create and map
             var vmTransaction = _contractDataManager.CreateNewContract(villaViewModel.VillaNo,DateTime.Today, villaViewModel.RatePerMonth);
+
             vmTransaction.RentalType = villaViewModel.Type;
             vmTransaction.Register = vmRegister;
             vmTransaction.SetContractStatuses(selections);
@@ -184,7 +201,17 @@ namespace Sunrise.Client.Controllers.Api
         }
         
         
+        [HttpPost]
+        [Route("terminate")]
+        public async Task<IHttpActionResult> Terminate(ContractTerminateViewModel mv)
+        {
+            string userId = User.Identity.GetUserId();
+            var result = await _contractDataManager
+                                .TerminateContract(mv.Id,userId,mv.Description,new Func<string,Task>(UpdateWhenTermination));
 
+            return Ok(result);
+        }
+        
         #region Private Method
         private void AddResult(CustomResult result, string key="")
         {
@@ -206,7 +233,6 @@ namespace Sunrise.Client.Controllers.Api
         {
             await _villaDataManager.UpdateVillaStatus(id, VillaStatusEnum.NotAvailable);
         }
-        
         private async Task<TransactionRegisterViewModel> UpdateContractProperties(TransactionRegisterViewModel contract)
         {
             //get the villa
@@ -220,6 +246,11 @@ namespace Sunrise.Client.Controllers.Api
                 Villa = villa,
                 Register = tenant
             };
+        }
+        private async Task UpdateWhenTermination(string id)
+        {
+            //reset back 
+            await _villaDataManager.UpdateVillaStatus(id, VillaStatusEnum.Available);
         }
         #endregion
 

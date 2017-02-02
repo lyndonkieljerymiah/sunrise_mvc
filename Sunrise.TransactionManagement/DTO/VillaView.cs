@@ -10,27 +10,18 @@ namespace Sunrise.TransactionManagement.DTO
     public class VillaView
     {   
         public string Id { get; private set; }
-
         public DateTime DateStamp { get; private set; }
+        public string VillaNo { get; private set; }
+        public string ElecNo { get; private set; }
+        public string WaterNo { get; private set; }
+        public string QtelNo { get; private set; }
+        public string Status { get; private set; }
+        public string StatusCode { get; private set; }
+        public string Type { get; private set; }
+        public int Capacity { get; private set; }
+        public string Description { get; private set; }
+        public decimal RatePerMonth { get; private set; }
 
-        public string VillaNo { get; set; }
-
-        public string ElecNo { get; set; }
-
-        public string WaterNo { get; set; }
-
-        public string QtelNo { get; set; }
-
-        public string Status { get; set; }
-
-        public string StatusCode { get; set; }
-
-        public string Type { get; set; }
-
-        public int Capacity { get; set; }
-
-        public string Description { get; set; }
-        
-        public decimal RatePerMonth { get; set; }
+        public ICollection<VillaGalleryView> Galleries { get; set; }
     }
 }

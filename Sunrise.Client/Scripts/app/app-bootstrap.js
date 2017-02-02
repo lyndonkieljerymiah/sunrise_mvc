@@ -1,4 +1,7 @@
-﻿var mainApp = angular.module("mainApp", ["ngRoute", "ui.bootstrap", "ngAnimate", "toaster", "ngFileUpload","ui.calendar"]);
+﻿var mainApp = angular.module("mainApp",
+    ["ngRoute", "ui.bootstrap", 
+    "ngAnimate", "toaster",
+    "ngFileUpload", "ui.grid", "ui.grid.selection","ui.grid.edit", "ui.grid.rowEdit", "ui.grid.cellNav"]);
 
 
 mainApp.factory('modelStateValidation',
@@ -6,6 +9,7 @@ mainApp.factory('modelStateValidation',
 
         function parseError(response) {
             var error = {};
+            console.log(response);
             for (var key in response.modelState) {
                 error[key.toLowerCase()] = response.modelState[key][0];
             }

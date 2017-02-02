@@ -1,10 +1,7 @@
-﻿using PagedList;
+﻿using Sunrise.TransactionManagement.Compositor;
 using Sunrise.TransactionManagement.DTO;
+using Sunrise.TransactionManagement.Enum;
 using Sunrise.TransactionManagement.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Utilities.Enum;
 
@@ -12,18 +9,16 @@ namespace Sunrise.TransactionManagement.Data.Contract
 {
     public interface IContractDataService
     {
-        Task<CustomResult> CreateContract(Transaction transaction);
+        //command
+        Task<CustomResult> CreateContract(Model.Contract transaction);
         Task<CustomResult> RemoveContract(string id);
-        Task<CustomResult> UpdateContract(Transaction transaction);
+        Task<CustomResult> UpdateContract(Model.Contract transaction);
 
-        Task<Transaction> GetContractById(string id, bool isPaymentIncluded = true);
+        //query
+        ContractViewCollectionComposite GetViewContracts();
+        Task<Model.Contract> FindContractByKey(string id, bool isPaymentIncluded = true);
+        Task<TransactionView> FindContractViewByKey(string id);
+        Task<TransactionView> FindContractViewByCode(string code, ContractStatusEnum status = ContractStatusEnum.All);
 
-        Task<IPagedList<TransactionView>> GetContracts(string contractNo, int pageNumber, int pageSize);
-        Task<TransactionView> GetContractViewById(string id);
-        Task<TransactionView> GetActiveContract(string code);
-        
-
-        Task<IPagedList<TransactionListDTO>> GetExpiryContracts(int monthGracePeriod, int pageNumber, int pageSize);
-        Task<IPagedList<TransactionListDTO>> GetContractsForListing(string contractNo, int pageNumber, int pageSize);
     }
 }
