@@ -113,10 +113,21 @@
             terminate: function (data,action,failure) {
                 $http.post(router.apiPath("contract", "terminate"),data).then(
                     function (response) {
+                        console.log(response.data);
                         action(response.data);
                     },
                     function () {
                         failure(modelStateValidation.parseError(response.data));
+                    }
+                );
+            },
+            getContractForTermination: function (id, action, failure) {
+                $http.get(router.apiPath("contract", "terminate", id)).then(
+                    function (response) {
+                        action(response.data);
+                    },
+                    function (response) {
+                        action(modelStateValidation.parseError(response.data));
                     }
                 );
             }

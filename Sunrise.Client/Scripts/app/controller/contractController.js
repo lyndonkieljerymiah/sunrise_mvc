@@ -21,19 +21,20 @@ mainApp.controller("contractController", function ($scope, contractDataManager, 
     }
     function create(villaId, tenantType) {
         spinnerManager.start();
-        isPageLoad = true;
         contractDataManager.createContract(villaId, tenantType,
             function (data) {
-
                 //villa
                 $scope.nbSlides.images = data.villa.imageGalleries;
                 $scope.model.data = data;
-                $scope.$watch("model.data.register.tenantType", function (nv, ov, ob) {
+
+                $scope.$watch("model.data.register.tenantType", function (nv, ov, ob)
+                {
                     $scope.model.data.register.isIndividual = nv === "ttin" ? true : false;
                 });
                 spinnerManager.stop();
             });
     }
+    
     function init(villaId) {
         create(villaId, null);
     }
@@ -216,30 +217,37 @@ mainApp.controller("contractListController", function ($scope, contractDataManag
                     }]
         };
 
-    var terminateDialog = function () {
+    var terminateDialog = function (entity) {
         var modalInstance = $uibModal.open({
             backdrop: false,
             controller: "terminateController",
             controllerAs: "$ctrl",
-            templateUrl: "/contract/terminateTemplate"
+            templateUrl: "/contract/terminateTemplate",
+            resolve: function () {
+                entity: entity
+            }
+
         });
     }
 
     function onSelectActive(search) {
         spinnerManager.start();
+
         if ($scope.gridActiveOptions.data.length > 0) {
             spinnerManager.stop();
             return 0;
         }
+
         contractDataManager.getActive(search,
             function (data) {
                 $scope.gridActiveOptions.data = data;
                 spinnerManager.stop();
             },
             function (data) {
-                $scope.ctrl.errorState = data;
+                toaster.pop("error", "Unexpected error occured");
                 spinnerManager.stop();
-            });
+            }
+        );
     }
 
     function list() {
@@ -292,7 +300,14 @@ mainApp.controller("contractListController", function ($scope, contractDataManag
             title: 'Confirmation',
             description: 'Are you sure Do you want Terminate the Contract No '  + entity.code + '?',
             action: function (response) {
-                terminateDialog();
+                contractDataManager.getContractForTermination(entity.id,
+                    function (result) {
+                        terminateDialog(result);
+                    }, function () {
+                        //must do validation
+
+                    });
+                
             }
         });
     }
@@ -307,17 +322,17 @@ mainApp.controller("contractListController", function ($scope, contractDataManag
  ***************************************************/
 mainApp.controller("terminateController", TerminateController);
 
-function TerminateController($uibModalInstance,contractDataManager) {
+function TerminateController($scope,entity,$uibModalInstance,contractDataManager) {
     
     var $ctrl = this;
     $ctrl.save = save;
     $ctrl.cancel = cancel;
-    $ctrl.terminate = {};
+    $ctrl.terminate = entity;
 
     function save() {
         contractDataManager.terminate($ctrl.terminate,
             function (result) {
-
+                
             },
             function (result) {
 

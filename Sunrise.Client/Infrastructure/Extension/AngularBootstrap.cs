@@ -10,8 +10,7 @@ using System.Web.Mvc;
 namespace Sunrise.Client.Infrastructure.Extension
 {
     public static class AngularBootstrap
-    {
-        
+    {   
         public static MvcHtmlString NgInputFor<TModel,TValue>(
             this HtmlHelper<TModel> html,
             Expression<Func<TModel,TValue>> expression, 
