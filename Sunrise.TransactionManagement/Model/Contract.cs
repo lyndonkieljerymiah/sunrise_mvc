@@ -26,7 +26,7 @@ namespace Sunrise.TransactionManagement.Model
             var transaction = new Contract();
 
             transaction.Id = id;
-            transaction.Code = code + "-R"+ DateTime.Today.Year;
+            transaction.Code = code + "-R";
             transaction.Period = DateTimeRange.SetRange(periodStart, defaultMonthPeriod);
             transaction.Amount = Payable.Create(ratePerMonth,transaction.Period);
 

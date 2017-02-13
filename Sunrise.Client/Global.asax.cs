@@ -88,6 +88,7 @@ namespace Sunrise.Client
                 .ReverseMap();
 
                 cfg.CreateMap<ContractView, ContractListViewModel>().ReverseMap();
+                cfg.CreateMap<ContractSingleView, ContractRegisterEditViewModel>().ReverseMap();
                 #endregion
             });
 

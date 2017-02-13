@@ -42,7 +42,6 @@ mainApp.directive("dateTimePicker", function () {
                 '<span class="input-group-btn">', '<button type="button" class="btn btn-default" ng-click="toggleDateTimePicker($event)"><i class="fa fa-calendar"></i></button></span>',
                 '</div>', '<ng-transclude></ng-transclude>'].join(''),
         link: function (scope, elem, attrs) {
-
             scope.opened = [];
             scope.toggleDateTimePicker = function ($event, index) {
                 $event.preventDefault();
@@ -52,8 +51,6 @@ mainApp.directive("dateTimePicker", function () {
         }
     }
 });
-
-
 
 mainApp.directive("inputSet", function () {
     return {
@@ -123,3 +120,61 @@ mainApp.directive("inputSet", function () {
     }
 });
 
+mainApp.directive("modelStateAttribute", function () {
+    return {
+        restrict: "A",
+        link: function (scope, elem, attrs) {
+            var formObject = $(elem);
+            scope.errorState = {
+                validate: function () {
+                    //make it clean at the first time
+                    scope.errorState.clear = true;
+                    scope.errorState.error = {};
+
+                    var allRequired = formObject.find("[data-val-required]");
+                    if (allRequired.length > 0) {
+                        for (var i = 0; i <= allRequired.length; i++) {
+                            var input = allRequired[i];
+                            if (input !== undefined) {
+                                console.log($(input).val());
+                                if ($(input).val().trim().length === 0 || $(input).val() === undefined) {
+                                    scope.errorState.error[$(input).attr("ng-model")] = $(input).attr("data-val-required");
+                                    scope.errorState.clear = false;
+                                }
+                            }
+                        }
+                    }
+                },
+                clear: true,
+                error: {}
+            };
+            function doValidation(type, value) {
+                var errorMessage = "";
+                switch (type) {
+                    case "currency":
+                        if (value === null || value.trim().length == 0) {
+                            errorMessage = "value must be bumeric";
+                        }
+                        else {
+                            isValid = /^(\d*?)(\.\d{1,2})?$/.test(value);
+                            if (!isValid)
+                                errorMessage = "value must be bumeric";
+                        }
+                        break;
+                    case "number":
+                        if (value === null || value == 0) {
+                            errorMessage = "value must be bumeric";
+                        }
+                        else {
+                            isValid = /^\d+$/.test(value);
+                            if (!isValid)
+                                errorMessage = "value must be bumeric";
+                        }
+                    default:
+                        break;
+                }
+                return errorMessage;
+            }
+        }
+    }
+});

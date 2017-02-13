@@ -87,20 +87,18 @@ namespace Sunrise.Client.Persistence.Manager
             var contracts = (await UOW.Contracts.GetActiveContracts()).ToPagedList(pageNumber, pageSize);
             return contracts.ToMappedPagedList<ContractView, ContractListViewModel>();
         }
-        public async Task<ContractRegisterEditViewModel> GetContract(string contractId)
+        public async Task<ContractRegisterEditViewModel> GetContractForRenewal(string contractId)
         {
             try
-            {
-                if ((await HasBalance(contractId)))
-                    return null;
-                                
+            {                   
                 //get the old contract 
                 var contract = await UOW.Contracts.GetSingleContract(contractId);
-
+                
                 //copy to new
                 var newContract = Contract.CreateRenewEmpty(contract.Id, contract.Code, Config.DefaultMonth, contract.RatePerMonth, contract.PeriodEnd);
 
                 var vmNewContract = Mapper.Map<ContractRegisterEditViewModel>(contract);
+                vmNewContract.Code = newContract.Code;
                 vmNewContract.PeriodStart = newContract.Period.Start;
                 vmNewContract.PeriodEnd = newContract.Period.End;
                 vmNewContract.Amount = newContract.Amount.Amount;
@@ -120,32 +118,35 @@ namespace Sunrise.Client.Persistence.Manager
                 //check if has balance
                 if ((await HasBalance(register.Id)))
                 {
-                    result.AddError("ContractBalanceDue", "Unable to renew contract");
-                }
-
-                //take the old one and update
-                var oldContract = await UOW.Contracts.FindQueryAsync(register.Id);
-                var isSuccess = oldContract.ContractCompletion();
-
-                //make sure the contract is completed before creating new one
-                if (isSuccess)
-                {
-                    //create new one
-                    var newContract = Contract.Map(
-                        register.Code, register.RentalTypeCode,
-                        register.ContractStatusCode, register.PeriodStart, register.PeriodEnd,
-                        register.Amount,
-                        register.VillaId, register.TenantId, userId);
-
-                    UOW.Contracts.Add(newContract);
-                    await UOW.Commit();
-                    result.Success = true;
-
+                    result.AddError("ContractBalanceDueException", "Unable to renew contract. Please check unsettled payment");
                 }
                 else
                 {
-                    result.Success = false;
-                    result.AddError("renewContractException", "Payment must be clear to renew.");
+                    //take the old one and update
+                    var oldContract = await UOW.Contracts.FindQueryAsync(register.Id);
+                    var isSuccess = oldContract.ContractCompletion();
+                    //make sure the contract is completed before creating new one
+                    if (isSuccess)
+                    {
+                        //create new one
+                        var newContract = Contract.Map(
+                            register.Code, register.RentalTypeCode,
+                            register.ContractStatusCode,
+                            register.PeriodStart,
+                            register.PeriodEnd,
+                            register.Amount,
+                            register.VillaId, register.TenantId, userId);
+
+                        UOW.Contracts.Add(newContract);
+                        await UOW.Commit();
+                        result.Success = true;
+                        result.ReturnObject = (string)newContract.Id;
+                    }
+                    else
+                    {
+                        result.Success = false;
+                        result.AddError("RenewContractException", "Payment must be clear to renew.");
+                    }
                 }
             }
             catch(Exception e)
@@ -174,28 +175,23 @@ namespace Sunrise.Client.Persistence.Manager
             await callback(contract.VillaId);
             return result;
         }
-        
         #endregion
         
       
-
-
         #region method
         private async Task<bool> HasBalance(string contractId)
         {
             //check if there's any balance
             var bill = await UOW.Bills.FindQueryAsync(b => b.ContractId == contractId,
+                b => b.Contract,
                 b => b.Payments,
                 b => b.Reconciles);
 
             if (bill == null)
-                return false;
+                return true;
             else if (bill.GetBalanceDue() > 0)
-                return false;
-
-
-
-            return true;
+                return true;
+            return false;
         }
         #endregion
     }

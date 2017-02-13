@@ -67,7 +67,6 @@ namespace Sunrise.Client.Domains.ViewModels
             var types = selections
                     .Where(s => s.Type == "RentalType")
                     .Select(s => new SelectListItem() { Text = s.Description, Value = s.Code });
-
             this.RentalTypes = types;
         }
         
@@ -79,13 +78,26 @@ namespace Sunrise.Client.Domains.ViewModels
         public string Id { get; set; }
         public string Code { get; set; }
         public DateTime DateCreated { get; set; }
+
+        [Required]
         public string RentalTypeCode { get; set; }
         public string RentalTypeDescription { get; set; }
+        [Required]
         public string ContractStatusCode { get; set; }
         public string ContractStatusDescription { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
         public DateTime PeriodStart { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
         public DateTime PeriodEnd { get; set; }
+
+        [Required]
+        [DataType(DataType.Currency)]
         public decimal Amount { get; set; }
+
         public string StatusCode { get; private set; }
         public string StatusDescription { get; set; }
 

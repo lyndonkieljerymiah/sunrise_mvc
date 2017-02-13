@@ -71,10 +71,10 @@ namespace Sunrise.Client.Controllers.Api
         [Route("renewal/{contractId}")]
         public async Task<IHttpActionResult> Renewal(string contractId)
         {   
-            var currentContract = await _contractDataManager.GetContract(contractId);
+            var currentContract = await _contractDataManager.GetContractForRenewal(contractId);
             if (currentContract == null)
             {
-                ModelState.AddModelError("ErrorNullException", new Exception("Cannot renew the contract. Need to settle payment"));
+                ModelState.AddModelError("ErrorNullException", new Exception("Cannot renew the contract. Please settle payment"));
                 return BadRequest(ModelState);
             }
 
@@ -85,6 +85,7 @@ namespace Sunrise.Client.Controllers.Api
         [Route("renewal")]
         public async Task<IHttpActionResult> Renewal(ContractRegisterEditViewModel viewModel)
         {
+
             var userId = User.Identity.GetUserId();
             var result = await _contractDataManager.Renew(viewModel,userId);
             if (!result.Success)
@@ -92,7 +93,6 @@ namespace Sunrise.Client.Controllers.Api
                 AddResult(result);
                 return BadRequest(ModelState);
             }
-
             return Ok(result);
         }
         #endregion
@@ -181,7 +181,6 @@ namespace Sunrise.Client.Controllers.Api
         }
         #endregion
         
-
         #region terminate
         [HttpGet]
         [Route("terminate/{contractId}")]
@@ -219,7 +218,6 @@ namespace Sunrise.Client.Controllers.Api
                 return BadRequest(ModelState);
             }
         }
-
         #endregion
 
         #region Private Method

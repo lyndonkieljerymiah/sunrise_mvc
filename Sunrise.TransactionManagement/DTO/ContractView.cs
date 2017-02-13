@@ -30,7 +30,7 @@ namespace Sunrise.TransactionManagement.DTO
         public string Code { get; set; }
         public DateTime DateCreated { get; set; }
         public string RentalTypeCode { get; set; }
-        public string RentalType { get; set; }
+        public string RentalTypeDescription { get; set; }
         public string ContractStatusCode { get; set; }
         public string ContractStatusDescription { get; set; }
         public DateTime PeriodStart { get; set; }
@@ -57,12 +57,4 @@ namespace Sunrise.TransactionManagement.DTO
         public string Address { get; set; }
     }
 
-
-    public class Address
-    {
-        public string Address1 { get; private set; }
-        public string Address2 { get; private set; }
-        public string City { get; private set; }
-        public string PostalCode { get; private set; }
-    }
 }

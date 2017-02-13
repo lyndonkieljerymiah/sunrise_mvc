@@ -54,7 +54,7 @@ namespace Sunrise.Client.Persistence.Manager
                     ElecNo = editableContract.ElecNo,
                     WaterNo = editableContract.WaterNo,
                     QtelNo = editableContract.QTelNo,
-                    RentalType = editableContract.RentalType,
+                    RentalType = editableContract.RentalTypeDescription,
                     VillaStatus = editableContract.VillaStatus,
                     RatePerMonth = editableContract.RatePerMonth,
                     Amount = editableContract.Amount
