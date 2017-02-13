@@ -88,6 +88,12 @@ namespace Sunrise.Client
             }
             return manager;
         }
+
+        public override Task<bool> CheckPasswordAsync(User user, string password)
+        {
+            return base.CheckPasswordAsync(user, password);
+        }
+
     }
 
     // Configure the application sign-in manager which is used in this application.

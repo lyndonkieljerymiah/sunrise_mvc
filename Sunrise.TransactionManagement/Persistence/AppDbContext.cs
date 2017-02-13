@@ -15,14 +15,22 @@ namespace Sunrise.TransactionManagement.Persistence
     {
         public DbSet<Contract> Transactions { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<Bill> Bill { get; set; }
+        public DbSet<Reconcile> Reconcile { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
             modelBuilder.HasDefaultSchema("stm");
+
             modelBuilder.Entity<Contract>().ToTable("Transaction");
+            modelBuilder.Entity<Bill>().ToTable("Bill");
+
             modelBuilder.Entity<Payment>().ToTable("Payment");
+            modelBuilder.Entity<Payment>().Ignore(p => p.IsMarkDeleted);
+
+            modelBuilder.Entity<Reconcile>().ToTable("Reconcile");
+            modelBuilder.Entity<Reconcile>().Ignore(p => p.IsMarkDeleted);
             
             modelBuilder.Entity<Contract>()
                 .Property(t => t.Code)
@@ -34,10 +42,21 @@ namespace Sunrise.TransactionManagement.Persistence
                 .HasOptional(t => t.Terminate)
                 .WithRequired(t => t.Transaction);
 
-            modelBuilder.Entity<Contract>()
-                .HasMany(t => t.Payments)
-                .WithRequired(p => p.Transaction);
+            modelBuilder.Entity<Bill>()
+                .HasRequired(b => b.Contract)
+                .WithMany();
+            
+            modelBuilder.Entity<Bill>()
+                 .HasMany(b => b.Payments)
+                 .WithRequired(p => p.Bill);
 
+            modelBuilder.Entity<Bill>()
+                .HasMany(b => b.Reconciles)
+                .WithRequired(r => r.Bill);
+
+
+            modelBuilder.Entity<Reconcile>().Property(r => r.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
         }
 

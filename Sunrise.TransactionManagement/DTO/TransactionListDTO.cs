@@ -18,7 +18,7 @@ namespace Sunrise.TransactionManagement.DTO
         public DateTime PeriodStart { get; set; }
         public DateTime PeriodEnd { get; set; }
         public string Status { get; set; }
-        public string StatusCode { get; set; }
+        public string StatusDescription { get; set; }
 
         public decimal AmountPayable { get; set; }
         public decimal CreditAmount { get; set; }

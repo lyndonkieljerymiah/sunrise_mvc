@@ -5,11 +5,10 @@
 <div ng-controller="contractListController as $ctrl" ng-init="ctrl.action.list()">
     <spinner></spinner>
     <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
-
     <div class="row">
         <div class="col-md-12">
             <div class="page-header">
-                <h4>@ViewBag.Title</h4>
+                <h4><i class="fa fa-file"></i> @ViewBag.Title</h4>
             </div>
         </div>
         <div class="col-md-3 pull-right">
@@ -21,10 +20,16 @@
         </div>
         <div class="col-md-12" style="margin-bottom:20px"></div>
         <div class="col-md-12">
-            <div ui-grid="gridOptions" class="grid"></div>
+            <uib-tabset class="active">
+                <uib-tab index="0" heading="Pending">
+                    <div ui-grid="gridOptions" class="grid"></div>
+                </uib-tab>
+                <uib-tab index="1" heading="Active" select="ctrl.action.onSelectActive()">
+                    <div ui-grid="gridActiveOptions" class="grid"></div>
+                </uib-tab>
+            </uib-tabset>
         </div>
     </div>
-    
 </div>
 
 @section scripts {

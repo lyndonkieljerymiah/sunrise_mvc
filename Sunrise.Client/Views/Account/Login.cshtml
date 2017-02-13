@@ -15,34 +15,43 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Sunrise Web Portal</title>
-    @Styles.Render("~/Content/login")
+
     @Scripts.Render("~/bundles/modernizr")
+    <!-- Other basic Style-->
+    @Styles.Render("~/Content/css")
 </head>
 
 <body>
-    <div class="transparent-login">
-        <section class="login">
-            @using (Html.BeginForm("Login", "Account",
-                new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form", autofocus="true" }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="input-group">
-                    @Html.TextBoxFor(m => m.Email, new { @class = "input", placeholder = "User", required = "required", autofocus = "autofocus" })
-                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">Please Sign In</div>
+                    <div class="panel-body">
+                        @using (Html.BeginForm("Login", "Account",
+                    new { ReturnUrl = ViewBag.ReturnUrl },
+                    FormMethod.Post, new { @class = "form", role = "form", autofocus = "true" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "User", required = "required", autofocus = "autofocus" })
+                                @Html.ValidationMessageFor(m => m.Email,"", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password", required = "required" })
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                            </div>
+                            <button class="btn btn-success btn-block">Log in</button>
+                        }
+                        <p class="nb-text-version">Sunrise Rental Management ver 1.1</p>
+                    </div>
                 </div>
-
-                <div class="input-group">
-                    @Html.PasswordFor(m => m.Password, new { @class = "input", placeholder = "Password", required = "required" })
-                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                </div>
-
-                <button class="btn-login">Log in</button>
-            }
-        </section>
-        <p class="nb-text-version">Sunrise Rental Management ver 1.1</p>
+            </div>
+        </div>
     </div>
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/angular")
     @Scripts.Render("~/bundles/ui-bootstrap")
 </body>
+
 </html>

@@ -14,10 +14,10 @@ namespace Sunrise.Client.Controllers
             return View();
         }
 
-        [Route("Register/{tv?}")]
-        public PartialViewResult Register(string tv = "ttin")
-        {
-            ViewBag.Type = tv;
+
+        [Route("Register")]
+        public PartialViewResult Register()
+        {   
             return PartialView("_Register");
         }
 

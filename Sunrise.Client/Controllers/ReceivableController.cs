@@ -24,5 +24,15 @@ namespace Sunrise.Client.Controllers
         }
 
 
+        public PartialViewResult Payment()
+        {
+            return PartialView();
+        }
+
+        public PartialViewResult Reconcile()
+        {
+            return PartialView();
+        }
+
     }
 }

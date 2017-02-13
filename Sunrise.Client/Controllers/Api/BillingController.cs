@@ -18,18 +18,18 @@ namespace Sunrise.Client.Controllers.Api
     [Authorize]
     public class BillingController : ApiController
     {
-        private ContractDataManager _contractDataManager;
+        private BillDataManager _billDataManager;
         private SelectionDataManager _selectionDataManager;
         private TenantDataManager _tenantDataManager;
         private VillaDataManager _villaDataManager;
 
         public BillingController(
-            ContractDataManager contractDataManager,
+            BillDataManager billDataManager,
             SelectionDataManager selectionDataManager,
             TenantDataManager tenantDataManager,
             VillaDataManager villaDataManager)
         {
-            _contractDataManager = contractDataManager;
+            _billDataManager = billDataManager;
             _selectionDataManager = selectionDataManager;
 
             _tenantDataManager = tenantDataManager;
@@ -43,15 +43,17 @@ namespace Sunrise.Client.Controllers.Api
         /// <param name="transactionId"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{transactionId?}")]
-        public async Task<IHttpActionResult> Billing(string transactionId)
+        [Route("{contractId}")]
+        public async Task<IHttpActionResult> Create(string contractId)
         {
-            var transaction = await _contractDataManager.GetContractForBilling(transactionId);
+
+
+            //generate bill
+            var bill = await _billDataManager.GenerateBill(contractId);
             var selections = await _selectionDataManager
                 .GetLookup(new[] { "Bank", "PaymentTerm", "PaymentMode", "PaymentStatus" });
-            transaction.Initialize(selections);
-
-            return Ok(transaction);
+            bill.Initialize(selections);
+            return Ok(bill);
         }
 
         /// <summary>
@@ -60,34 +62,58 @@ namespace Sunrise.Client.Controllers.Api
         /// <param name="vm"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("save")]
-        public async Task<IHttpActionResult> Save(BillingViewModel vm)
+        [Route("create")]
+        public async Task<IHttpActionResult> Create(BillingViewModel vm)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            
+
             //get current user 
             var userId = User.Identity.GetUserId();
-            var result = await _contractDataManager.AddPayment(
-                vm, userId, 
-                new Func<string,Task>(UpdateIfPaymentCleared));
-
+            var result = await _billDataManager.Create(vm, userId, new Func<string, Task>(UpdateIfPaymentCleared));
             if (!result.Success)
             {
                 AddErrorResult(result);
                 return BadRequest(ModelState);
             }
+            return Ok(result);
 
-            return Ok(vm);
         }
         
-        [HttpPost]
-        [Route("dismiss")]
-        public async Task<IHttpActionResult> Dismiss(BillingViewModel vm)
+        [HttpGet]
+        [Route("edit/{billCode}")]
+        public async Task<IHttpActionResult> Edit(string billCode)
         {
-            var result = await _contractDataManager.RemoveContract(vm.Id,new Func<string,string,Task>(UpdateWhenContractRemove));
+            var bill = await _billDataManager.GetBillByCode(billCode);
+            if (bill == null)
+            {
+                ModelState.AddModelError("BillNullException", "Bill not found");
+                return BadRequest(ModelState);
+            }
+            return Ok(bill);
+        }
+
+        [HttpPost]
+        [Route("update/{billCode}")]
+        public async Task<IHttpActionResult> Update(BillingViewModel vm)
+        {
+            var result = await _billDataManager.Update(vm, User.Identity.GetUserId());
+            if (result.Success == false)
+            {
+                AddErrorResult(result);
+                return BadRequest(ModelState);
+            }
             return Ok(result);
         }
+
+
+        //[HttpPost]
+        //[Route("dismiss")]
+        //public async Task<IHttpActionResult> Dismiss(BillingViewModel vm)
+        //{
+        //    var result = await _contractDataManager.RemoveContract(vm.Id, new Func<string, string, Task>(UpdateWhenContractRemove));
+        //    return Ok(result);
+        //}
 
         #region Private Method
         private void AddErrorResult(CustomResult result)
@@ -101,7 +127,7 @@ namespace Sunrise.Client.Controllers.Api
             await _villaDataManager.UpdateVillaStatus(id, VillaStatusEnum.NotAvailable);
         }
 
-        private async Task UpdateWhenContractRemove(string tenantId,string villaId)
+        private async Task UpdateWhenContractRemove(string tenantId, string villaId)
         {
             //update status
             await _tenantDataManager.RemoveTenant(tenantId);

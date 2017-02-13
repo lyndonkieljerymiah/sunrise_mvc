@@ -7,11 +7,16 @@
  */
 
 mainApp.controller("receivableController", ReceivableController);
-ReceivableController.$inject = ["$scope","receivableDataManager","alertDialog","confirmationDialog","toaster","spinnerManager","uiGridConstants"];
+ReceivableController.$inject = ["$scope", "receivableDataManager", "alertDialog", "confirmationDialog", "toaster", "modelStateValidation","$uibModal", "spinnerManager"];
 function ReceivableController(
-    $scope, receivableDataManager,
-    alertDialog, confirmationDialog,
-    toaster, spinnerManager, uiGridConstants) {
+    $scope,
+    receivableDataManager,
+    alertDialog,
+    confirmationDialog,
+    toaster,
+    modelStateValidation,
+    $uibModal,
+    spinnerManager) {
 
     spinnerManager.scope = $scope;
 
@@ -22,89 +27,69 @@ function ReceivableController(
         data: {},
         action: {
             searchContract: searchContract,
-            togglePaymentEditButton: togglePaymentEditButton,
-            updateStatus: updateStatus,
+            editPayment: editPayment,
             reverseContract: reverseContract,
-            updateContract: updateContract
+            update: update,
+            addReconciledPayment: addReconciledPayment,
+            editReconciledPayment: editReconciledPayment
         },
-        errorState: {
+        errorState: {}
+    };
 
-        }
-    }
-
-    $scope.gridOptions = {
-        enableCellEdit: false,
-        showGridFooter: true,
-        showColumnFooter: true,
-        columnDefs: [
-            { displayName: 'Date', field: 'paymentDate', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', },
-            { displayName: 'Cheque No', field: 'chequeNo', },
-            { displayName: 'Bank', field: 'bank', },
-            { displayName: 'From', field: 'coveredPeriodFrom', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', },
-            { displayName: 'To', field: 'coveredPeriodTo', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', },
-            {
-                displayName: 'Amount',
-                field: 'amount',
-                cellFilter: 'currency:"QR "',
-                aggregationType: uiGridConstants.aggregationTypes.sum,
-                footerCellFilter: 'currency:" "'
-            },
-            { displayName: 'Mode', field: 'paymentMode', },
-            {
-                displayName: 'Status',
-                field: 'statusCode',
-                editableCellTemplate: 'ui-grid/dropdownEditor',
-                cellFilter: 'mapStatus',
-                enableCellEdit: true,
-                
-            },
-            {
-                displayName: 'Description',
-                field: 'description',
-                enableCellEdit: true
+    var updateOnObserve = function (payments) {
+        var totalCleared = 0;
+        var totalReconcile = $scope.ctrl.data.reconciles.sum("amount");
+        angular.forEach(payments, function (item) {
+            if (item.statusCode === "psc") {
+                totalCleared = totalCleared + item.amount;
             }
-        ],
-        data: [{
-            paymentDate: new Date(),
-            chequeNo: '',
-            bank: '',
-            coveredPeriodFrom: new Date(),
-            coveredPeriodTo: new Date(),
-            amount: '0.00 QR',
-            paymentMode: '',
-            status: ''
-        }]
+            $scope.ctrl.data.totalCleared = totalCleared + totalReconcile;
+        });
+        $scope.ctrl.data.balance = $scope.ctrl.data.amount - $scope.ctrl.data.totalCleared;
+    };
+    var modal = function (type, obj) {
+        var parameter = {
+            controllerAs: "$ctrl",
+            backdrop: false
+        };
+
+        if (type === 1) {
+            parameter.templateUrl = "/receivable/payment/";
+            parameter.controller = "paymentController";
+            parameter.resolve = {
+                paymentObject: function () { return $scope.ctrl.data.paymentDictionary; },
+                payment: function () { return obj; }
+            }
+        }
+        else {
+            parameter.templateUrl = "/receivable/reconcile/";
+            parameter.controller = "reconcileController";
+            parameter.resolve = {
+                paymentObject: function () { return $scope.ctrl.data.paymentDictionary; },
+                reconcile: function () { return obj; }
+            }
+        }
+        return $uibModal.open(parameter);
+    }
+    var reset = function () {
+        $scope.ctrl.txtSearch = "";
+        $scope.ctrl.action.search();
     }
 
-    function searchContract() {
-        spinnerManager.start();
+    function searchContract()
+    {
+        if ($scope.ctrl.txtSearch.trim().length === 0) {
+            toaster.pop("error", "", "Please Enter Search...");
+            return 0;
+        }
+
         $scope.ctrl.currentIndex = -1;
+        spinnerManager.start();
 
-        receivableDataManager.load($scope.ctrl.txtSearch,
+        receivableDataManager.get($scope.ctrl.txtSearch,
             function (data) {
-
                 $scope.ctrl.data = data;
-                $scope.ctrl.errorState = null;
-
-                var items = [];
-                data.paymentDictionary.statuses.forEach(function (item) {
-                    items.push({ id: item.value, text: item.text });
-                });
-
-
-                /**********************************************************************************/
-                $scope.gridOptions.columnDefs[7].editDropdownValueLabel = "text";
-                $scope.gridOptions.columnDefs[7].editDropdownIdLabel = "id";
-                $scope.gridOptions.columnDefs[7].editDropdownOptionsArray = items;
-                $scope.gridOptions.onRegisterApi = function (gridApi) {
-                    $scope.gridApi = gridApi;
-                    gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
-                        $scope.$apply();
-                    });
-                };
-                /**********************************************************************************/
-                $scope.gridOptions.data = data.payments;
-
+                $scope.ctrl.errorState = modelStateValidation.createState(data, "ctrl.data");
                 spinnerManager.stop();
                 beginObserver();
             },
@@ -116,36 +101,20 @@ function ReceivableController(
             }
         );
     }
-    function togglePaymentEditButton() {
-        if ($scope.ctrl.currentIndex != index)
-            $scope.ctrl.currentIndex = index;
-        else
-            $scope.ctrl.currentIndex = -1;
-    }
-    function updateStatus(item) {
-        var currentIndex = $scope.ctrl.currentIndex;
-        $scope.ctrl.data.paymentDictionary.statuses.forEach(function (value) {
-            if (value.value == item.statusCode) {
-                var index = $scope.ctrl.data.payments.indexOf(item);
-                $scope.ctrl.data.payments[index].status = value.text;
-            }
-        });
-    }
-    function updateContract() {
+    function update() {
+
         confirmationDialog.open({
             title: 'Update Confirmation',
             description: 'Are you sure you want to update?',
             buttons: ['Yes', 'No'],
             action: function (response) {
-                //console.log($scope.ctrl.data);
-
                 spinnerManager.start();
                 receivableDataManager.update($scope.ctrl.data,
                     function (data) {
                         if (data.success) {
                             toaster.pop("success", "Save successful");
                             spinnerManager.stop();
-                            $scope.action.searchContract();
+                            //$scope.action.searchContract();
                         }
                     });
             }
@@ -170,43 +139,151 @@ function ReceivableController(
             }
         });
     }
-    function reset() {
-        $scope.ctrl.txtSearch = "";
-        $scope.ctrl.action.search();
-    }
     function beginObserver() {
-        $scope.$watch("data.payments", function (nv, ov, ob) {
+
+        
+
+        $scope.$watch("ctrl.data.payments", function (nv, ov, ob) {
             if (nv && nv.length > 0) {
-                angular.forEach(nv, function (item) {
-                    $scope.ctrl.showReverse = true;
-                    if (item.statusCode !== "psv") {
-                        $scope.ctrl.showReverse = false;
-                        throw "Error";
-                    }
-                });
-            }
-            else {
-                $scope.ctrl.showReverse = false;
+                updateOnObserve(nv);
             }
         }, true);
-    }
 
+        $scope.$watch("ctrl.data.reconciles", function (nv, ov, ob) {
+            if (nv && nv.length > 0) {
+                updateOnObserve($scope.ctrl.data.payments);
+            }
+        }, true);
+
+
+        
+    }
+    function editPayment(item)
+    {   
+        var index = $scope.ctrl.data.payments.indexOf(item);
+        if (index >= 0)
+        {
+            var payment = angular.copy($scope.ctrl.data.payments[index]);
+            var modalInstance = modal(1, payment);
+            modalInstance.result.then(function (returnData) {
+                //return status
+                angular.forEach($scope.ctrl.data.paymentDictionary.statuses, function (item) {
+                    if (returnData.statusCode == item.value) {
+                        returnData.statusDescription = item.text;
+                        return;
+                    }
+                });
+
+                //return payment
+                angular.forEach($scope.ctrl.data.paymentDictionary.modes, function (item) {
+                    if (returnData.paymentModeCode == item.value)
+                    {
+                        returnData.paymentModeDescription = item.text;
+                        return;
+                    }
+                });
+
+                //return payment
+                angular.forEach($scope.ctrl.data.paymentDictionary.banks, function (item) {
+                    if (returnData.bankCode == item.value) {
+                        returnData.bankDescription = item.text;
+                        return;
+                    }
+                });
+
+                angular.copy(returnData,$scope.ctrl.data.payments[index]);
+            })
+            
+
+        }
+        
+
+    }
+    function addReconciledPayment() {
+
+        var reconcile = angular.copy($scope.ctrl.data.paymentDictionary.reconcileInitialValue);
+        var uibModalInstance = modal(2, reconcile);
+        uibModalInstance.result.then(function (returnData)
+        {
+            //return payment
+            angular.forEach($scope.ctrl.data.paymentDictionary.terms, function (item)
+            {
+                if (returnData.paymentTypeCode == item.value)
+                {
+                    returnData.paymentTypeDescription = item.text;
+                    return;
+                }
+            });
+            //return payment
+            angular.forEach($scope.ctrl.data.paymentDictionary.banks, function (item) {
+                if (returnData.bankCode == item.value)
+                {
+                    returnData.bankDescription = item.text;
+                    return;
+                }
+            });
+
+            $scope.ctrl.data.reconciles.push(angular.copy(returnData));
+        });
+    }
+    function editReconciledPayment(item) {
+        var index = $scope.ctrl.data.reconciles.indexOf(item);
+        if (index >= 0) {
+            var reconcile = angular.copy($scope.ctrl.data.reconciles[index]);
+            var modalInstance = modal(2, reconcile);
+
+            modalInstance.result.then(function (returnData) {
+
+                angular.forEach($scope.ctrl.data.paymentDictionary.terms, function (item) {
+                        if (returnData.paymentTypeCode == item.value) {
+                            returnData.paymentTypeDescription = item.text;
+                            return;
+                        }
+                    });
+
+                    
+                angular.forEach($scope.ctrl.data.paymentDictionary.banks, function (item) {
+                    if (returnData.bankCode == item.value) {
+                        returnData.bankDescription = item.text;
+                        return;
+                    }
+                });
+                    
+                    angular.copy(returnData, $scope.ctrl.data.reconciles[index]);
+                });
+                
+        }
+    }
 };
 
+mainApp.controller("paymentController",
+    function ($uibModalInstance, payment, paymentObject) {
+        var $ctrl = this;
+        $ctrl.payment = payment;
+        $ctrl.paymentObject = paymentObject;
 
-mainApp.filter('mapStatus', function () {
-    var statusMap = {
-        psb: 'Bounce',
-        psc: 'Clear',
-        psh: 'Hold',
-        psv: 'Received'
-    };
- 
-    return function(input) {
-        if (!input){
-            return '';
-        } else {
-            return statusMap[input];
+        $ctrl.cancel = function () {
+            $uibModalInstance.dismiss();
         }
-    };
-})
+
+        $ctrl.save = function () {
+            $ctrl.payment.isModify = true;
+            $uibModalInstance.close($ctrl.payment);
+        }
+    });
+
+mainApp.controller("reconcileController", function (reconcile, paymentObject,$uibModalInstance) {
+
+    var $ctrl = this;
+    $ctrl.paymentObject = paymentObject;
+    $ctrl.reconcile = reconcile;
+    
+    $ctrl.cancel = function () {
+        $uibModalInstance.dismiss();
+    }
+
+    $ctrl.save = function () {
+        $uibModalInstance.close($ctrl.reconcile);
+    }
+
+});

@@ -1,53 +1,41 @@
 ﻿
 
-mainApp.directive("tenantRegister", function ($http) {
-    return {
-        restrict: "EA",
-        replace: true,
-        link: function (scope) {
-            scope.getTemplate = function () {
-                return scope.template;
-            }
-        },
-        template: "<div ng-include='getTemplate()'></div>"
-    }
-});
-
-
 
 mainApp.controller("contractController", function ($scope, contractDataManager, confirmationDialog, toaster, spinnerManager) {
 
-    var templatePath = "/tenant/register/";
     var isPageLoad = false;
     spinnerManager.scope = $scope;
 
-    $scope.sales = {};
+    $scope.model = {
+        data: {},
+        action: {
+            init: init,
+            save: save
+        },
+        errorState: {}
+    };
 
     function restart() {
         $scope.errorState = {};
         isPageLoad = false;
     }
-
-
-
     function create(villaId, tenantType) {
         spinnerManager.start();
         isPageLoad = true;
         contractDataManager.createContract(villaId, tenantType,
             function (data) {
-                $scope.nbSlides.images = data.villa.imageGalleries
-                $scope.sales = data;
-                $scope.template = templatePath + data.register.tenantType;
-                spinnerManager.stop(restart);
+
+                //villa
+                $scope.nbSlides.images = data.villa.imageGalleries;
+                $scope.model.data = data;
+                $scope.$watch("model.data.register.tenantType", function (nv, ov, ob) {
+                    $scope.model.data.register.isIndividual = nv === "ttin" ? true : false;
+                });
+                spinnerManager.stop();
             });
     }
     function init(villaId) {
         create(villaId, null);
-    }
-    function changeTenantType() {
-        if (!isPageLoad) {
-            create($scope.sales.villa.id, $scope.sales.register.tenantType);
-        }
     }
     function save() {
         confirmationDialog.open({
@@ -57,13 +45,12 @@ mainApp.controller("contractController", function ($scope, contractDataManager, 
             action: function (response) {
                 spinnerManager.start();
                 //reverse
-                $scope.sales.register.gender = parseInt($scope.sales.register.gender);
-
-                contractDataManager.save($scope.sales,
+                $scope.model.data.register.gender = parseInt($scope.model.data.register.gender);
+                contractDataManager.save($scope.model.data,
                     function (data) {
                         var id = data.id;
+                        spinnerManager.stop();
                         contractDataManager.proceedToBilling(id);
-                        spinnerManager.stop(restart);
                     },
                     function (data) {
                         $scope.errorState = data;
@@ -74,14 +61,7 @@ mainApp.controller("contractController", function ($scope, contractDataManager, 
         });
     }
 
-    return {
-        init: init,
-        changeTenantType: changeTenantType,
-        save: save
-    }
 });
-
-
 
 mainApp.controller("villaSearchController", function (villaDataManager, $uibModalInstance) {
 
@@ -111,8 +91,11 @@ mainApp.controller("villaSearchController", function (villaDataManager, $uibModa
  *  ContractListController
  *  Assumption: display list of contract (active and pending)
  *  Action: 
- *       add new - redirect to register contract 
+ *       add new - redirect to register contract
+ *       edit - edit pending contract  
+ *       active - load when active selected
  *       remove - remove contract 
+ *       
  *   
  ***************************************/
 mainApp.controller("contractListController", function ($scope, contractDataManager,
@@ -126,7 +109,9 @@ mainApp.controller("contractListController", function ($scope, contractDataManag
             list: list,
             createNewContract: add,
             editContract: edit,
-            cancelContract: cancel
+            cancelContract: remove,
+            onSelectActive: onSelectActive,
+            terminateContract: terminate
         }
     };
 
@@ -155,7 +140,7 @@ mainApp.controller("contractListController", function ($scope, contractDataManag
                  shown: function () {
                      return $scope.gridOptions.enableFiltering;
                  }
-            },
+             },
             {
                 title: 'Show filter',
                 icon: 'fa fa-filter',
@@ -189,20 +174,73 @@ mainApp.controller("contractListController", function ($scope, contractDataManag
                 name: 'action',
                 displayName: ' ',
                 cellTemplate: ['<div ng-show="row.entity.editState"><div class="btn-group" uib-dropdown dropdown-append-to-body>',
-                                '<button class="btn btn-default btn-sm" uib-dropdown-toggle><i class="fa fa-caret-down"></i></button>',
+                                '<button class="btn btn-primary btn-xs" uib-dropdown-toggle>Action <i class="fa fa-caret-down"></i></button>',
                                 '<ul class="dropdown-menu ui-grid-cell" uib-dropdown-menu role="menu">',
                                     '<li role="menuitem"><a href="#" ng-click="grid.appScope.ctrl.action.editContract(row.entity.id)">Edit</a></li>',
                                     '<li role="menuitem"><a href="#" ng-click="grid.appScope.ctrl.action.cancelContract(row.entity.id)">Cancel</a></li>',
                                 '</ul></div></div>'].join(''),
-                width: '5%',
+                width: '10%',
                 cellClass: 'text-center',
                 enableSorting: false,
                 enableFiltering: false
 
             }]
     }
+    $scope.gridActiveOptions = {
+            enableSorting: true,
+            showGridFooter: true,
+            rowHeight: 39,
+            enableFiltering: false,
+            enableGridMenu: true,
+            columnDefs: [
+                    { name: 'date', field: 'dateCreated', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', enableFiltering: false },
+                    { displayName: 'No.', field: 'code', width: '10%', cellClass: 'text-center' },
+                    { name: 'tenant', field: 'tenant', width: '30%' },
+                    { name: 'villa', field: 'villaNo', cellClass: 'text-center' },
+                    { name: 'start', field: 'periodStart', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', enableFiltering: false, cellClass: 'text-center' },
+                    { name: 'end', field: 'periodEnd', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', enableFiltering: false, cellClass: 'text-center' },
+                    { name: 'status', field: 'status', cellClass: 'text-center', width: '8%' },
+                    { name: 'due', field: 'monthDue', width: '5%', enableFiltering: false, cellClass: 'text-center' },
+                    {
+                        name: 'action',
+                        displayName: ' ',
+                        enableSorting: false,
+                        cellTemplate: ['<div class="btn-group" uib-dropdown dropdown-append-to-body>',
+                                        '<button class="btn btn-primary btn-xs" uib-dropdown-toggle>Action <i class="fa fa-caret-down"></i></button>',
+                                        '<ul class="dropdown-menu ui-grid-cell" uib-dropdown-menu role="menu">',
+                                        '<li role="menuitem"><a href="#" ng-click="grid.appScope.ctrl.action.openRenewDialog(row.entity)">Renew</a></li>',
+                                        '<li role="menuitem"><a href="#" ng-click="grid.appScope.ctrl.action.terminateContract(row.entity)">Terminate</a></li>',
+                                    '</ul></div>'].join(''),
+                        width: '10%',
+                        cellClass: 'text-center'
+                    }]
+        };
 
+    var terminateDialog = function () {
+        var modalInstance = $uibModal.open({
+            backdrop: false,
+            controller: "terminateController",
+            controllerAs: "$ctrl",
+            templateUrl: "/contract/terminateTemplate"
+        });
+    }
 
+    function onSelectActive(search) {
+        spinnerManager.start();
+        if ($scope.gridActiveOptions.data.length > 0) {
+            spinnerManager.stop();
+            return 0;
+        }
+        contractDataManager.getActive(search,
+            function (data) {
+                $scope.gridActiveOptions.data = data;
+                spinnerManager.stop();
+            },
+            function (data) {
+                $scope.ctrl.errorState = data;
+                spinnerManager.stop();
+            });
+    }
 
     function list() {
         spinnerManager.start();
@@ -217,25 +255,23 @@ mainApp.controller("contractListController", function ($scope, contractDataManag
             });
     }
     function add() {
-
         var modalInstance = $uibModal.open({
             size: "lg",
             templateUrl: '/contract/search',
             controller: 'villaSearchController',
             controllerAs: '$ctrl'
         });
-
         modalInstance.result.then(function (villaId) {
             contractDataManager.redirectToContract(villaId);
         });
     }
-    function cancel(id) {
+    function remove(id) {
         confirmationDialog.open({
             title: "Remove Contract",
             description: "Do you want to cancel the contract?",
             action: function (response) {
                 spinnerManager.start();
-                contractDataManager.cancel(id,
+                contractDataManager.remove(id,
                     function (data) {
                         toaster.pop("success", "Contract successfully remove");
                         spinnerManager.stop();
@@ -245,17 +281,53 @@ mainApp.controller("contractListController", function ($scope, contractDataManag
                         toaster.pop("error", "Contract unable to remove");
                         spinnerManager.stop();
                     });
-
             }
         });
     }
-
     function edit(id) {
         contractDataManager.proceedToBilling(id);
     }
-
+    function terminate(entity) {
+        confirmationDialog.open({
+            title: 'Confirmation',
+            description: 'Are you sure Do you want Terminate the Contract No '  + entity.code + '?',
+            action: function (response) {
+                terminateDialog();
+            }
+        });
+    }
 });
 
+
+
+/***************************************************
+ *  TerminationController
+ *  Assumption: terminate contract
+ * 
+ ***************************************************/
+mainApp.controller("terminateController", TerminateController);
+
+function TerminateController($uibModalInstance,contractDataManager) {
+    
+    var $ctrl = this;
+    $ctrl.save = save;
+    $ctrl.cancel = cancel;
+    $ctrl.terminate = {};
+
+    function save() {
+        contractDataManager.terminate($ctrl.terminate,
+            function (result) {
+
+            },
+            function (result) {
+
+            });
+    }
+
+    function cancel() {
+        $uibModalInstance.dismiss();
+    }
+}
 
 /*******************************************************
  *  RenewDialogController
@@ -291,7 +363,6 @@ function ContractExpiryListController($scope,
         enableFiltering: false,
         rowHeight: 35,
         onRegisterApi: function (gridApi) {
-            console.log(gridApi);
             $scope.gridApi = gridApi;
         },
         gridMenuCustomItems: [
@@ -322,13 +393,13 @@ function ContractExpiryListController($scope,
                }
            }],
         columnDefs: [
-            { name: 'date', field: 'dateCreated', type: 'date', cellFilter: 'date:"MM/dd/yyyy"',enableFiltering:false },
-            { displayName: 'No.', field: 'code', width: '10%',cellClass: 'text-center' },
+            { name: 'date', field: 'dateCreated', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', enableFiltering: false },
+            { displayName: 'No.', field: 'code', width: '10%', cellClass: 'text-center' },
             { name: 'tenant', field: 'tenant', width: '30%' },
             { name: 'villa', field: 'villaNo', cellClass: 'text-center' },
             { name: 'start', field: 'periodStart', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', enableFiltering: false, cellClass: 'text-center' },
             { name: 'end', field: 'periodEnd', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', enableFiltering: false, cellClass: 'text-center' },
-            { name: 'status', field: 'status', cellClass: 'text-center',width:'8%' },
+            { name: 'status', field: 'status', cellClass: 'text-center', width: '8%' },
             { name: 'due', field: 'monthDue', width: '5%', enableFiltering: false, cellClass: 'text-center' },
             {
                 name: 'action',
@@ -365,13 +436,11 @@ function ContractExpiryListController($scope,
     function openRenewDialog(item) {
         spinnerManager.start();
         contractRenewalManager.renewal(item.id,
-            function (data)
-            {
+            function (data) {
                 spinnerManager.stop();
                 var modalInstance = openModalInstance(data);
                 modalInstance.result.then(function (response) {
-                    if (response.success)
-                    {
+                    if (response.success) {
                         contractRenewalManager.proceedToBilling(response.returnObject) //redirect to contract billing
                     }
                     else {
@@ -386,7 +455,6 @@ function ContractExpiryListController($scope,
     }
 
     function terminate() {
-
         confirmationDialog.open({
             title: "Confirmation",
             description: "Do you want to Terminate the contract?",
@@ -427,7 +495,7 @@ function RenewDialogController($scope, $uibModalInstance, confirmationDialog, co
     $ctrl.save = save;
     $ctrl.init = init;
     $ctrl.dismiss = dismiss;
-    
+
 
 
     function init() {
@@ -456,7 +524,7 @@ function RenewDialogController($scope, $uibModalInstance, confirmationDialog, co
         });
     }
 
-   
+
 
     function dismiss() {
         $uibModalInstance.dismiss();

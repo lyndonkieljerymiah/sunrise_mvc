@@ -242,8 +242,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\BillingController.cs" />
-    <Compile Include="Controllers\Api\ReceivableController.cs" />
     <Compile Include="Controllers\Api\ContractController.cs" />
+    <Compile Include="Controllers\Api\ReceivableController.cs" />
     <Compile Include="Controllers\Api\TenantController.cs" />
     <Compile Include="Controllers\Api\VillaController.cs" />
     <Compile Include="Controllers\BillingController.cs" />
@@ -275,7 +275,6 @@
     <Compile Include="Domains\ViewModels\Manage\SetPasswordViewModel.cs" />
     <Compile Include="Domains\ViewModels\Manage\VerifyPhoneNumberViewModel.cs" />
     <Compile Include="Domains\ViewModels\PaymentViewModel.cs" />
-    <Compile Include="Domains\ViewModels\ReceivableViewModel.cs" />
     <Compile Include="Domains\ViewModels\RenewalContractViewModel.cs" />
     <Compile Include="Domains\ViewModels\TransactionRegisterViewModel.cs" />
     <Compile Include="Domains\ViewModels\TenantRegisterViewModel.cs" />
@@ -290,6 +289,8 @@
     <Compile Include="Infrastructure\Extension\StringExtension.cs" />
     <Compile Include="Helpers\File\FileMediaFormatter.cs" />
     <Compile Include="Infrastructure\Extension\MapPagedList.cs" />
+    <Compile Include="Infrastructure\Filter\BasicAuthenticationIdentity.cs" />
+    <Compile Include="Infrastructure\Filter\TerminateAtuhorizedFilter.cs" />
     <Compile Include="Infrastructure\Validations\CustomCurrencyValue.cs" />
     <Compile Include="Infrastructure\Validations\CustomDateCurrentValidation.cs" />
     <Compile Include="Infrastructure\Validations\CustomDateEndStartValidation.cs" />
@@ -300,16 +301,17 @@
     <Compile Include="Migrations\201701031413553_Initial.Designer.cs">
       <DependentUpon>201701031413553_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201702021738205_entity.cs" />
-    <Compile Include="Migrations\201702021738205_entity.Designer.cs">
-      <DependentUpon>201702021738205_entity.cs</DependentUpon>
+    <Compile Include="Migrations\201702120909114_AddTransactionCode.cs" />
+    <Compile Include="Migrations\201702120909114_AddTransactionCode.Designer.cs">
+      <DependentUpon>201702120909114_AddTransactionCode.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Persistence\Context\AppDbContext.cs" />
+    <Compile Include="Persistence\Manager\BillDataManager.cs" />
     <Compile Include="Persistence\Manager\ContractDataManager.cs" />
-    <Compile Include="Persistence\Manager\ReceivableDataManager.cs" />
     <Compile Include="Persistence\Manager\SelectionDataManager.cs" />
     <Compile Include="Persistence\Manager\TenantDataManager.cs" />
+    <Compile Include="Persistence\Manager\UserDataManager.cs" />
     <Compile Include="Persistence\Manager\VillaDataManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -400,7 +402,7 @@
     <Content Include="Scripts\app\controller\receivableController.js" />
     <Content Include="Scripts\app\controller\shopController.js" />
     <Content Include="Scripts\app\controller\villaController.js" />
-    <Content Include="Scripts\app\data\payment-manager.data.js" />
+    <Content Include="Scripts\app\data\billing-manager.data.js" />
     <Content Include="Scripts\app\data\receivable-manager.data.js" />
     <Content Include="Scripts\app\data\contract-manager.data.js" />
     <Content Include="Scripts\app\data\tenant-manager.data.js" />
@@ -418,6 +420,8 @@
     <Content Include="Scripts\app\helper\router.js" />
     <Content Include="Scripts\app\service\transformRequestAsForm.js" />
     <Content Include="Scripts\libs\calendar\calendar.js" />
+    <Content Include="Scripts\libs\datatable\datatable.min.css" />
+    <Content Include="Scripts\libs\datatable\datatable.min.js" />
     <Content Include="Scripts\libs\fileupload\FileAPI.flash.swf" />
     <Content Include="Scripts\libs\fileupload\FileAPI.js" />
     <Content Include="Scripts\libs\fileupload\FileAPI.min.js" />
@@ -1701,7 +1705,6 @@
     <Content Include="Views\Contract\Contract.cshtml" />
     <Content Include="Views\Billing\Billing.cshtml" />
     <Content Include="Views\Receivable\Index.cshtml" />
-    <Content Include="Views\Billing\List.cshtml" />
     <Content Include="Views\Receivable\List.cshtml" />
     <Content Include="Views\Contract\Search.cshtml" />
     <Content Include="Views\Villa\Create.cshtml" />
@@ -1760,6 +1763,10 @@
     <Content Include="Scripts\libs\ui-grid\bower_components\angular\LICENSE.md" />
     <Content Include="Scripts\libs\ui-grid\bower_components\angular\package.json" />
     <Content Include="Scripts\libs\ui-grid\bower_components\angular\README.md" />
+    <Content Include="Views\Billing\Payment.cshtml" />
+    <Content Include="Views\Receivable\Payment.cshtml" />
+    <Content Include="Views\Receivable\Reconcile.cshtml" />
+    <Content Include="Views\Contract\TerminateTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1798,8 +1805,8 @@
     <EmbeddedResource Include="Migrations\201701031413553_Initial.resx">
       <DependentUpon>201701031413553_Initial.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702021738205_entity.resx">
-      <DependentUpon>201702021738205_entity.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702120909114_AddTransactionCode.resx">
+      <DependentUpon>201702120909114_AddTransactionCode.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -57,67 +57,63 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstract\IPaymentRepository.cs" />
-    <Compile Include="Abstract\ITransactionRepository.cs" />
-    <Compile Include="Abstract\IUnitOfWork.cs" />
-    <Compile Include="Compositor\ContractViewCollectionComposite.cs" />
-    <Compile Include="Compositor\ContractViewComposite.cs" />
     <Compile Include="Data\Config\ContractConfig.cs" />
-    <Compile Include="Data\Contract\ContractDataService.cs" />
-    <Compile Include="Data\Contract\IContractDataService.cs" />
-    <Compile Include="Data\Factory\ContractFactory.cs" />
-    <Compile Include="Data\Factory\IContractFactory.cs" />
+    <Compile Include="DTO\BillView.cs" />
     <Compile Include="DTO\PaymentView.cs" />
+    <Compile Include="DTO\ReconcileView.cs" />
     <Compile Include="DTO\TenantView.cs" />
     <Compile Include="DTO\TransactionListDTO.cs" />
-    <Compile Include="DTO\TransactionView.cs" />
+    <Compile Include="DTO\ContractView.cs" />
     <Compile Include="DTO\VillaGalleryView.cs" />
     <Compile Include="DTO\VillaView.cs" />
     <Compile Include="Enum\ContractStatusEnum.cs" />
     <Compile Include="Enum\PaymentStatusEnum.cs" />
     <Compile Include="Infrastructure\Extension\EnumerableExtension.cs" />
-    <Compile Include="Migrations\201701021644453_Initial.cs" />
-    <Compile Include="Migrations\201701021644453_Initial.Designer.cs">
-      <DependentUpon>201701021644453_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201702061413026_Initial.cs" />
+    <Compile Include="Migrations\201702061413026_Initial.Designer.cs">
+      <DependentUpon>201702061413026_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701040855584_UpdateCodeInTransaction.cs" />
-    <Compile Include="Migrations\201701040855584_UpdateCodeInTransaction.Designer.cs">
-      <DependentUpon>201701040855584_UpdateCodeInTransaction.cs</DependentUpon>
+    <Compile Include="Migrations\201702061416362_RemovePaymentDescription.cs" />
+    <Compile Include="Migrations\201702061416362_RemovePaymentDescription.Designer.cs">
+      <DependentUpon>201702061416362_RemovePaymentDescription.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701111657184_AddRevereseInPayment.cs" />
-    <Compile Include="Migrations\201701111657184_AddRevereseInPayment.Designer.cs">
-      <DependentUpon>201701111657184_AddRevereseInPayment.cs</DependentUpon>
+    <Compile Include="Migrations\201702071603200_ChangeStringToIndPKReconcile.cs" />
+    <Compile Include="Migrations\201702071603200_ChangeStringToIndPKReconcile.Designer.cs">
+      <DependentUpon>201702071603200_ChangeStringToIndPKReconcile.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701111702220_UpdatePaymentStamp.cs" />
-    <Compile Include="Migrations\201701111702220_UpdatePaymentStamp.Designer.cs">
-      <DependentUpon>201701111702220_UpdatePaymentStamp.cs</DependentUpon>
+    <Compile Include="Migrations\201702110737291_RemovePaymentMode.cs" />
+    <Compile Include="Migrations\201702110737291_RemovePaymentMode.Designer.cs">
+      <DependentUpon>201702110737291_RemovePaymentMode.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701141402358_AddReverseInContract.cs" />
-    <Compile Include="Migrations\201701141402358_AddReverseInContract.Designer.cs">
-      <DependentUpon>201701141402358_AddReverseInContract.cs</DependentUpon>
+    <Compile Include="Migrations\201702110812197_updateDateReconcile.cs" />
+    <Compile Include="Migrations\201702110812197_updateDateReconcile.Designer.cs">
+      <DependentUpon>201702110812197_updateDateReconcile.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701260745001_UpdateTerminateStatus.cs" />
-    <Compile Include="Migrations\201701260745001_UpdateTerminateStatus.Designer.cs">
-      <DependentUpon>201701260745001_UpdateTerminateStatus.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201701281315216_AddTermination.cs" />
-    <Compile Include="Migrations\201701281315216_AddTermination.Designer.cs">
-      <DependentUpon>201701281315216_AddTermination.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201701291544042_ChangeTerminationDependency.cs" />
-    <Compile Include="Migrations\201701291544042_ChangeTerminationDependency.Designer.cs">
-      <DependentUpon>201701291544042_ChangeTerminationDependency.cs</DependentUpon>
+    <Compile Include="Migrations\201702111559499_UpdateTerminate.cs" />
+    <Compile Include="Migrations\201702111559499_UpdateTerminate.Designer.cs">
+      <DependentUpon>201702111559499_UpdateTerminate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\Bill.cs" />
+    <Compile Include="Model\Reconcile.cs" />
     <Compile Include="Model\Payment.cs" />
     <Compile Include="Model\Terminate.cs" />
     <Compile Include="Model\Contract.cs" />
     <Compile Include="Model\TransactionBase.cs" />
     <Compile Include="Model\UpdateStamp.cs" />
+    <Compile Include="Model\ValueObject\BillStatusDictionary.cs" />
+    <Compile Include="Model\ValueObject\Payable.cs" />
+    <Compile Include="Model\ValueObject\PaymentModeDictionary.cs" />
+    <Compile Include="Model\ValueObject\PaymentStatusDictionary.cs" />
+    <Compile Include="Model\ValueObject\PaymentTypeDictionary.cs" />
+    <Compile Include="Model\ValueObject\TransactionStatusDictionary.cs" />
     <Compile Include="Persistence\AppDbContext.cs" />
     <Compile Include="Persistence\ReferenceDbContext.cs" />
-    <Compile Include="Persistence\Repository\PaymentRepository.cs" />
-    <Compile Include="Persistence\Repository\TransactionRepository.cs" />
+    <Compile Include="Persistence\Repository\Concrete\BillRepository.cs" />
+    <Compile Include="Persistence\Repository\Concrete\ContractRepository.cs" />
+    <Compile Include="Persistence\Repository\Abstract\IBillRepository.cs" />
+    <Compile Include="Persistence\Repository\Abstract\IContractRepository.cs" />
+    <Compile Include="Persistence\Repository\IUnitOfWork.cs" />
     <Compile Include="Persistence\Repository\UnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -131,31 +127,24 @@
       <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201701021644453_Initial.resx">
-      <DependentUpon>201701021644453_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702061413026_Initial.resx">
+      <DependentUpon>201702061413026_Initial.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701040855584_UpdateCodeInTransaction.resx">
-      <DependentUpon>201701040855584_UpdateCodeInTransaction.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702061416362_RemovePaymentDescription.resx">
+      <DependentUpon>201702061416362_RemovePaymentDescription.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701111657184_AddRevereseInPayment.resx">
-      <DependentUpon>201701111657184_AddRevereseInPayment.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702071603200_ChangeStringToIndPKReconcile.resx">
+      <DependentUpon>201702071603200_ChangeStringToIndPKReconcile.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701111702220_UpdatePaymentStamp.resx">
-      <DependentUpon>201701111702220_UpdatePaymentStamp.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702110737291_RemovePaymentMode.resx">
+      <DependentUpon>201702110737291_RemovePaymentMode.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701141402358_AddReverseInContract.resx">
-      <DependentUpon>201701141402358_AddReverseInContract.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702110812197_updateDateReconcile.resx">
+      <DependentUpon>201702110812197_updateDateReconcile.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701260745001_UpdateTerminateStatus.resx">
-      <DependentUpon>201701260745001_UpdateTerminateStatus.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701281315216_AddTermination.resx">
-      <DependentUpon>201701281315216_AddTermination.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701291544042_ChangeTerminationDependency.resx">
-      <DependentUpon>201701291544042_ChangeTerminationDependency.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702111559499_UpdateTerminate.resx">
+      <DependentUpon>201702111559499_UpdateTerminate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

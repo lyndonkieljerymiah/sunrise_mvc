@@ -7,6 +7,7 @@ using System.Web.Mvc;
 namespace Sunrise.Client.Controllers
 {
     [RoutePrefix("villa")]
+    [Authorize]
     public class VillaController : Controller
     {
         // GET: Villa

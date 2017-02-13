@@ -1,8 +1,4 @@
-﻿using PagedList;
-using PagedList.EntityFramework;
-using System;
-using System.Data.Entity;
-using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
 using Utilities.Enum;
 
@@ -12,10 +8,7 @@ namespace Sunrise.TransactionManagement.Data.Contract
     using DTO;
     using Model;
     using Persistence;
-    using Infrastructure.Extension;
-    using System.Linq.Expressions;
-    using Compositor;
-    using Enum;
+    using System.Collections.Generic;
 
     /// <summary>
     /// TODO: Contract Data Service abstract methods for Contract Db Operation
@@ -94,68 +87,26 @@ namespace Sunrise.TransactionManagement.Data.Contract
 
         //query
         #region ver 1.2
-        public ContractViewCollectionComposite GetViewContracts()
+        public async Task<IEnumerable<ContractView>> GetViewContracts()
         {
-            /*****************************************  
-             * sql: select * from transactionview 
-             *      inner join     
-             ****************************************/
-            var contracts = ReferenceContext
-                            .Transactions
-                            .Include(t => t.Tenant)
-                            .Include(v => v.Villa)
-                            .Include(v => v.Payments);
-
-            var contractCollection = new ContractViewCollectionComposite(contracts);
-            return contractCollection;
+            var contracts = await Context.Database.SqlQuery<ContractView>("dbo.GetAllContracts").ToListAsync();
+            return contracts;
         }
 
-        public async Task<TransactionView> FindContractViewByKey(string id)
+        public async Task<ContractView> FindContractViewByKey(string id)
         {
-            var contract = await ReferenceContext
-                           .Transactions
-                           .Include(t => t.Tenant)
-                           .Include(v => v.Villa)
-                           .Include(v => v.Villa.Galleries)
-                           .Include(v => v.Payments)
-                           .SingleOrDefaultAsync(c => c.Id == id);
-
-            return contract;
+            throw new NullReferenceException();
         }
-        public async Task<Contract> FindContractByKey(string id, bool isPaymentIncluded = true)
+        public async Task<Contract> FindContractByKey(string id)
         {
-            if (isPaymentIncluded)
-            {
-                return await Context.Transactions
-                    .Include(t => t.Payments)
-                    .SingleOrDefaultAsync(t => t.Id == id);
-            }
-            else
-            {
-                return await Context.Transactions.FindAsync(id);
-            }
+            throw new NullReferenceException();
         }
-      
-
-        public async Task<TransactionView> FindContractViewByCode(string code,ContractStatusEnum status = ContractStatusEnum.All)
+        public async Task<ContractView> FindContractViewByCode(string code)
         {
-            var contract = ReferenceContext
-                                .Transactions
-                                .Include(t => t.Tenant)
-                                .Include(v => v.Villa)
-                                .Include(v => v.Payments);
-            switch(status)
-            {
-                case ContractStatusEnum.Active:
-                    return await contract.SingleOrDefaultAsync(c => c.StatusCode == ContractStatusSelection.Active && c.Code == code);
-                default:
-                    break;
-            }
-
-            return await contract.SingleOrDefaultAsync(c => c.Code == code);
+            throw new NullReferenceException();
         }
+        
         #endregion
-
 
 
     }

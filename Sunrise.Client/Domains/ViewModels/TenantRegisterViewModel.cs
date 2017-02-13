@@ -20,6 +20,7 @@ namespace Sunrise.Client.Domains.ViewModels
         
         [Required]
         public string TenantType { get; set; }
+
         public string FullType { get; private set; }
         public IEnumerable<SelectListItem> TenantTypes { get; set; }
 
@@ -86,20 +87,16 @@ namespace Sunrise.Client.Domains.ViewModels
             this.Gender = GenderEnum.Male;
         }
 
-        [Required]
+        
         public GenderEnum Gender { get; set; }
         
         [Display(Name="Qatar Id")]
-        [Required]
         public string QatarId { get; set; }
-
-        [Required]
+        
         public DateTime Birthday { get; set; }
-
-        [Required]
+        
         public string Company { get; set; }
-
-
+        
         public string FullGender
         {
             get { return (this.Gender == GenderEnum.Male) ? "Male" : "Female"; }
@@ -128,16 +125,13 @@ namespace Sunrise.Client.Domains.ViewModels
 
         [Display(Name = "Business Type")]
         public string BusinessType { get; set; }
-
-        [Required]
+        
         [Display(Name = "CR No")]
         public string CrNo { get; set; }
-
-        [Required]
+        
         [Display(Name = "Validity Date")]
         public DateTime ValidityDate { get; set; }
-
-        [Required]
+        
         public string Representative { get; set; }  
     }
 }

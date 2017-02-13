@@ -2,26 +2,28 @@
     <div class="form-group">
         <label class="col-md-3 text-right">Type:</label>
         <div class="col-md-9">
-            <select ng-model="sales.register.tenantType" ng-change="$ctrl.changeTenantType()" class="form-control">
-                <option ng-repeat="type in sales.register.tenantTypes" value="{{type.value}}">{{type.text}}</option>
+            <select ng-model="model.data.register.tenantType" class="form-control">
+                <option ng-repeat="type in model.data.register.tenantTypes" value="{{type.value}}">{{type.text}}</option>
             </select>
         </div>
     </div>
-    @if (ViewBag.Type == "ttin")
-    {
+
+    <div ng-show="model.data.register.isIndividual">
         <div class="form-group">
             <label for="name" class="col-md-3 text-right">Full Name:</label>
-            <div class="col-md-9">
-                <input type="text" id="name" name="name" class="form-control"
-                       required
-                       ng-model="sales.register.name" />
-                <span ng-hide="sales.register.name.length > 0">{{errorState['vm.register.name']}}</span>
-            </div>
+            <input-set my-class="col-md-9"
+                       my-model="model.data.register.name"
+                       my-required="true"
+                       validate-state="model.errorState['register.name'].validate">
+                <span ng-hide="model.errorState['register.name'].validate">
+                    {{model.errorState['register.name'].message}}
+                </span>
+            </input-set>
         </div>
         <div class="form-group">
             <label for="gender" class="col-md-3 text-right">Gender:</label>
             <div class="col-md-9">
-                <select ng-model="sales.register.individual.gender" class="form-control">
+                <select ng-model="model.data.register.individual.gender" class="form-control">
                     <option value="0">Male</option>
                     <option value="1">Female</option>
                 </select>
@@ -29,137 +31,172 @@
         </div>
         <div class="form-group">
             <label for="qatarId" class="col-md-3 text-right">Qatar Id</label>
-            <div class="col-md-9">
-                <div>
-                    <input type="text" id="qatarId" name="qatarId"
-                           ng-model="sales.register.individual.qatarId"
-                            required
-                           class="form-control"/>
-                </div>
-                <span ng-hide="sales.register.individual.qatarId.length > 0">{{errorState['vm.register.individual.qatarid']}}</span>
-            </div>
+            <input-set my-class="col-md-9"
+                       my-model="model.data.register.individual.qatarId"
+                       my-required="true"
+                       valid-state="model.errorState['register.individual.qatarId'].validate">
+                <span ng-hide="model.errorState['register.individual.qatarId'].validate">
+                    {{model.errorState['register.individual.qatarId'].message}}
+                </span>
+            </input-set>
         </div>
         <div class="form-group">
             <label for="birthday" class="col-md-3 text-right">Birthday</label>
             <div class="col-md-9">
-                <date-time-picker index="0" model="sales.register.individual.birthday">
-                    <span ng-hide="sales.register.individual.birthday.length > 0">{{errorState['vm.register.individual.birthday']}}</span>
+                <date-time-picker index="0" model="model.data.register.individual.birthday">
+                    <span ng-hide="model.data.register.individual.birthday.length > 0">
+                        {{model.errorState['register.individual.birthday'].message}}
+                    </span>
                 </date-time-picker>
             </div>
         </div>
         <div class="form-group">
             <label for="company" class="col-md-3 text-right">Company:</label>
-            <div class="col-md-9">
-                <input type="text" name="company" , id="company"
-                       ng-model="sales.register.individual.company"
-                       class="form-control" />
-                <span ng-hide="sales.register.individual.company.length > 0">{{errorState['vm.register.individual.company']}}</span>
-            </div>
+            <input-set my-class="col-md-9"
+                       my-model="model.data.register.individual.company"
+                       my-required="true"
+                       valid-state="model.errorState['register.individual.company'].validate">
+                <span ng-hide="model.errorState['register.individual.company'].validate">
+                    {{model.errorState['register.individual.company'].message}}
+                </span>
+            </input-set>
         </div>
-    }
-    else
-    {
+    </div>
+
+    <div ng-show="!model.data.register.isIndividual">
         <div class="form-group">
             <label for="businessName" class="col-md-3 text-right">Business Name:</label>
-            <div class="col-md-9">
-                <input type="text" name="businessName" id="businessName"
-                       ng-model="sales.register.name"
-                       class="form-control" />
-                <span ng-hide="sales.register.name.length > 0">{{errorState['vm.register.name']}}</span>
-            </div>
+            <input-set my-class="col-md-9"
+                       my-model="model.data.register.name"
+                       my-required="true"
+                       valid-state="model.errorState['register.name'].validate">
+                <span ng-hide="model.errorState['register.name'].validate">
+                    {{model.errorState['register.name'].message}}
+                </span>
+            </input-set>
         </div>
         <div class="form-group">
             <label for="businessType" class="col-md-3 text-right">Business Type:</label>
             <div class="col-md-9">
                 <input type="text" name="businessType" id="businessType" class="form-control"
-                       ng-model="sales.register.company.businessType" />
+                       ng-model="model.data.register.company.businessType" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-md-3 text-right">CR No:</label>
-            <div class="col-md-9">
-                <input type="text" class="form-control" ng-model="sales.register.company.crNo" />
-                <span ng-show="sales.register.company.crNo.length > 0">{{errorState['vm.register.company.crno']}}</span>
-            </div>
+            <input-set my-class="col-md-9"
+                       my-model="model.data.register.company.crNo"
+                       my-required="true"
+                       valid-state="model.errorState['register.company.crNo'].validate">
+                <span ng-hide="model.errorState['register.company.crNo'].validate">
+                    {{model.errorState['register.company.crNo'].message}}
+                </span>
+            </input-set>
         </div>
         <div class="form-group">
             <label class="col-md-3 text-right">Validity Date:</label>
             <div class="col-md-9">
-                <date-time-picker index="0" model="sales.register.company.validityDate">
-                    <span ng-hide="sales.register.company.validityDate.length > 0">{{errorState['vm.register.company.validitydate']}}</span>
+                <date-time-picker index="0" model="model.data.register.company.validityDate">
+                    <span ng-hide="model.data.register.company.validityDate.lenght > 0">{{model.errorState['register.company.validitydate']}}</span>
                 </date-time-picker>
             </div>
         </div>
         <div class="form-group">
             <label class="col-md-3 text-right">Representative:</label>
-            <div class="col-md-9">
-                <input type="text" class="form-control" ng-model="sales.register.company.representative" />
-                <span ng-hide="sales.register.company.representative.length > 0">{{errorState['vm.register.company.representative']}}</span>
-            </div>
+            <input-set my-class="col-md-9"
+                       my-model="model.data.register.company.representative"
+                       my-required="true"
+                       my-validate-state="model.errorState['register.company.representative'].validate">
+                <span ng-hide="model.errorState['register.company.representative'].validate">
+                    {{model.errorState['register.company.representative'].message}}
+                </span>
+            </input-set>
         </div>
-    }
+    </div>
 
+
+    <!-- contact -->
     <div class="page-header">
         <strong>Contact Details</strong>
     </div>
     <div class="form-group">
         <label class="col-md-3 text-right">Email Address:</label>
-        <div class="col-md-9">
-            <input type="email" class="form-control" ng-model="sales.register.emailAddress" />
-            <span ng-hide="sales.register.emailAddress.length > 0">{{errorState['vm.register.emailaddress']}}</span>
-        </div>
+        <input-set my-class="col-md-9"
+                   my-type="email"
+                   my-model="model.data.register.emailAddress"
+                   my-required="true"
+                   validate-state="model.errorState['register.emailAddress'].validate">
+            <span ng-hide="model.errorState['register.emailAddress'].validate">
+                {{model.errorState['register.emailAddress'].message}}
+            </span>
+        </input-set>
     </div>
     <div class="form-group">
         <label class="col-md-3 text-right">Tel No:</label>
         <div class="col-md-9">
-            <input type="tel" ng-model="sales.register.telNo" class="form-control" />
+            <input type="tel" ng-model="model.data.register.telNo" class="form-control" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-md-3 text-right">Mobile No:</label>
-        <div class="col-md-9">
-            <input type="tel" class="form-control" ng-model="sales.register.mobileNo" />
-            <span ng-hide="sales.register.mobileNo.length > 0">{{errorState['vm.register.mobileno']}}</span>
-        </div>
+        <input-set my-class="col-md-9"
+                   my-model="model.data.register.mobileNo"
+                   my-required="true"
+                   valid-state="model.errorState['register.mobileNo'].validate">
+            <span ng-hide="model.errorState['register.mobileNo'].validate">
+                {{model.errorState['register.mobileNo'].validate}}
+            </span>
+        </input-set>
     </div>
     <div class="form-group">
         <label class="col-md-3 text-right">Fax No:</label>
         <div class="col-md-9">
-            <input type="tel" class="form-control" ng-model="sales.register.faxNo" />
+            <input type="tel" class="form-control" ng-model="model.data.register.faxNo" />
         </div>
     </div>
+    <!-- end contact-->
+    <!-- address -->
     <div class="page-header">
         <strong>Company Address</strong>
     </div>
-
     <div class="form-group">
         <label class="col-md-3 text-right">Address 1:</label>
-        <div class="col-md-9">
-            <input type="text" class="form-control" ng-model="sales.register.address1" />
-            <span ng-hide="sales.register.address1.length > 0">{{errorState['vm.register.address1']}}</span>
-        </div>
+        <input-set my-class="col-md-9"
+                   my-model="model.data.register.address1"
+                   my-required="true"
+                   valid-state="model.errorState['register.address1'].validate">
+            <span ng-hide="model.errorState['register.address1'].validate">
+                {{model.errorState['register.address1'].message}}
+            </span>
+        </input-set>
     </div>
-
     <div class="form-group">
         <label class="col-md-3 text-right">Address 2:</label>
         <div class="col-md-9">
-            <input type="text" class="form-control" ng-model="sales.register.address2" />
+            <input type="text" class="form-control" ng-model="model.data.address2" />
         </div>
     </div>
-
     <div class="form-group">
         <label class="col-md-3 text-right">City:</label>
-        <div class="col-md-9">
-            <input type="text" ng-model="sales.register.city" class="form-control" />
-            <span ng-hide="sales.register.city.length > 0">{{errorState['vm.register.city']}}</span>
-        </div>
+        <input-set my-class="col-md-9"
+                   my-model="model.data.register.city"
+                   my-required="true"
+                   valid-state="model.errorState['register.city'].validate">
+            <span ng-hide="model.errorState['register.city'].validate">
+                {{model.errorState['register.city'].message}}
+            </span>
+        </input-set>
     </div>
     <div class="form-group">
         <label class="col-md-3 text-right">Postal Code:</label>
-        <div class="col-md-9">
-            <input type="text" ng-model="sales.register.postalCode" class="form-control" />
-            <span ng-hide="sales.register.postalCode">{{errorState['vm.register.postalcode']}}</span>
-        </div>
+        <input-set my-class="col-md-9"
+                   my-model="model.data.register.postalCode"
+                   my-required="true"
+                   valid-state="model.errorState['register.postalCode'].validate">
+            <span ng-hide="model.errorState['register.postalCode'].validate">
+                {{model.errorState['register.postalCode'].message}}
+            </span>
+        </input-set>
     </div>
-
+    <!-- end address-->
 </div>

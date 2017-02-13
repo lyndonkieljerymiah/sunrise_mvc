@@ -39,5 +39,10 @@ namespace Sunrise.Client.Controllers
             return PartialView();
         }
 
+        [Route("terminateTemplate")]
+        public PartialViewResult TerminateTemplate()
+        {
+            return PartialView();
+        }
     }
 }

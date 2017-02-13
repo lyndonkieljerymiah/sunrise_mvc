@@ -30,13 +30,15 @@ mainApp.directive("dateTimePicker", function () {
         transclude: true,
         replace: false,
         scope: {
+            myName: "@",
+            myId: "@",
             format: "@",
             model: "=",
             index: "@",
             required: "@"
         },
         template: ['<div class="input-group">',
-                '<input type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="model" is-open="opened[index]" datepicker-options="dateOptions" alt-input-formats="altInputFormats" ng-required="required" />',
+                '<input id={{my-id}} name={{my-id}} type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="model" is-open="opened[index]" datepicker-options="dateOptions" alt-input-formats="altInputFormats" ng-required="required" />',
                 '<span class="input-group-btn">', '<button type="button" class="btn btn-default" ng-click="toggleDateTimePicker($event)"><i class="fa fa-calendar"></i></button></span>',
                 '</div>', '<ng-transclude></ng-transclude>'].join(''),
         link: function (scope, elem, attrs) {
@@ -51,6 +53,8 @@ mainApp.directive("dateTimePicker", function () {
     }
 });
 
+
+
 mainApp.directive("inputSet", function () {
     return {
         restrict: 'EA',
@@ -63,6 +67,7 @@ mainApp.directive("inputSet", function () {
             myNumeric: "@",
             validState: "=",
             errorMsg: "=",
+            myType: "@",
             myId : "@"
         },
         template: ["<div class='{{myClass}}'>",
@@ -70,9 +75,12 @@ mainApp.directive("inputSet", function () {
                    "<ng-transclude></ng-transclude>",
                    "</div>"].join(''),
         link: function (scope, el, attrs) {
+
             var pattern;
+
             //check input validation
             var inp = el.find("input");
+            
             inp.bind("change", function ()
             {   
                 if (scope.myNumeric) {

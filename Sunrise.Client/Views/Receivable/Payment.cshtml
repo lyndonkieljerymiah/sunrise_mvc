@@ -1,0 +1,90 @@
+﻿@using Sunrise.Client.Infrastructure.Extension
+@model Sunrise.Client.Domains.ViewModels.PaymentViewModel
+
+<form id="paymentForm" class="form-horizontal" name="paymentForm" model-state-attribute >
+    <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Payment</h3>
+    </div>
+    <div class="modal-body">
+        <!--type -->
+        <div class="form-group">
+            <label class="col-md-2 text-right">Type:</label>
+            <div class="col-md-4">
+                @Html.NgDropdownFor(m => m.PaymentTypeCode, "$ctrl.paymentObject.terms", "$ctrl.payment",
+                                new string[] { "ng-change='$ctrl.changeBehaviourWhenSelectingTerm()'" })
+
+            </div>
+            <div ng-hide="$ctrl.payment.chequeFieldDisabled">
+                <label class="col-md-2 text-right">Mode:</label>
+                <div class="col-md-4">
+                    @Html.NgDropdownFor(m => m.PaymentModeCode, "$ctrl.paymentObject.modes", "$ctrl.payment")
+                </div>
+            </div>
+        </div>
+
+        <!--end type-->
+        <div class="form-group">
+            <label class="col-md-2 text-right">Date:</label>
+            <div class="col-md-10">
+                @Html.NgDatePickerFor(m => m.PaymentDate, "$ctrl.payment", "0")
+                @Html.ValidationMessageFor(m => m.PaymentDate)
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 text-right">Cheque No:</label>
+            <div class="col-md-10">
+                @Html.NgInputFor(m => m.ChequeNo, "$ctrl.payment", "text", new string[] { "ng-disabled='$ctrl.payment.chequeFieldDisabled'", "required=''" })
+                <span ng-show="errorState.chequeNo">{{errorState.chequeNo}}</span>
+            </div>
+        </div>
+        <div class="form-group" ng-hide="$ctrl.payment.paymentTypeCode == 'ptcs'">
+            <label class="col-md-2 text-right">Bank:</label>
+            <div class="col-md-10">
+                @Html.NgDropdownFor(m => m.BankCode, "$ctrl.paymentObject.banks", "$ctrl.payment", new string[] { "ng-required='$ctrl.payment.paymentTypeCode=='ptcq''" })
+            </div>
+        </div>
+        <div class="page-header">
+            <strong>Covered Period</strong>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 text-right">Start:</label>
+            <div class="col-md-4">
+                @Html.NgDatePickerFor(m => m.PeriodStart, "$ctrl.payment", "1")
+            </div>
+            <label class="col-md-2 text-right">End:</label>
+            <div class="col-md-4">
+                <div class="input-group">
+                    @Html.NgDatePickerFor(m => m.PeriodEnd, "$ctrl.payment", "2")
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 text-right">Amount:</label>
+            <div class="col-md-10">
+                @Html.NgInputFor(m => m.Amount, "$ctrl.payment", "amount",
+                    new string[] {
+                        "placeholder='Amount'",
+                        @"ng-pattern='/^\d+/'",
+                        "required=''"})
+                <span ng-show="paymentForm.amount.$invalid">Please enter numeric value</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 text-right">Status:</label>
+            <div class="col-md-10">
+                @Html.NgDropdownFor(m => m.StatusCode, "$ctrl.paymentObject.statuses", "$ctrl.payment")
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 text-right">Remarks:</label>
+            <div class="col-md-10">
+                @Html.NgTextAreaFor(m => m.Remarks, "$ctrl.payment")
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="$ctrl.save()"><i class="fa fa-save"></i> Save</button>
+        <button class="btn btn-danger" ng-click="$ctrl.cancel()"><i class="fa fa-undo"></i> Cancel</button>
+    </div>
+</form>

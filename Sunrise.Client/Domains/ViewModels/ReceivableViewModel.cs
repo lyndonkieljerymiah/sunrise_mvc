@@ -84,7 +84,7 @@ namespace Sunrise.Client.Domains.ViewModels
 
         public void SetEditMode()
         {   
-            UpdateState = Payments.Where(p => p.WriteState == true).Count() == 0 ? false : true;
+            UpdateState = Payments.Where(p => p.IsClear == true).Count() == 0 ? false : true;
         }
     }
 }

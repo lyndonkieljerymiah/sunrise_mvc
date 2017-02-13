@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Sunrise.Client.Domains.ViewModels.BillingViewModel
+@{
     ViewBag.Title = "Payment Clearing";
 }
 <div ng-controller="receivableController">
@@ -26,7 +27,6 @@
                         </button>
                     </span>
                 </div>
-                <span ng-show="ctrl.errorState['notfoundexception']">{{ctrl.errorState['notfoundexception']}}</span>
             </div>
         </div>
         <div class="col-md-3 pull-right">
@@ -41,21 +41,13 @@
     <div class="row">
         <div class="col-md-9">
             <div class="panel panel-info">
-                <div class="panel-heading">Tenant Information</div>
+                <div class="panel-heading">
+                    <h5 class="panel-title">Tenant Information</h5>
+                </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-2">Name:</div>
                         <div class="col-md-10">{{ctrl.data.name}}</div>
-                    </div>
-                    <div class="row" ng-show="ctrl.data.qatarId">
-                        <div class="col-md-2">Qatar Id:</div>
-                        <div class="col-md-10">{{ctrl.data.qatarId}}</div>
-                    </div>
-                    <div class="row" ng-show="ctrl.data.crNo">
-                        <div class="col-md-2">CR No:</div>
-                        <div class="col-md-4">{{ctrl.data.crNo}}</div>
-                        <div class="col-md-2">Validity Date:</div>
-                        <div class="col-md-4">{{ctrl.data.validityDate | date : 'MM/dd/yyyy'}}</div>
                     </div>
                     <div class="row">
                         <div class="col-md-2">Address:</div>
@@ -64,18 +56,20 @@
                     <hr />
                     <div class="row">
                         <div class="col-md-12">
-                            <table class="table table-condensed">
+                            <table class="table table-condensed table-striped table-bordered">
                                 <tr>
                                     <th>Villa</th>
                                     <th>Period Start</th>
                                     <th>Period End</th>
                                     <th>Amount</th>
+                                    <th>Monthly Payable</th>
                                 </tr>
                                 <tr>
-                                    <td>{{ctrl.data.villa.villaNo}}</td>
+                                    <td>{{ctrl.data.villaNo}}</td>
                                     <td>{{ctrl.data.periodStart | date: 'MM/dd/yyyy'}}</td>
                                     <td>{{ctrl.data.periodEnd | date: 'MM/dd/yyyy'}}</td>
-                                    <td>{{ctrl.data.amountPayable | currency: 'QR '}}</td>
+                                    <td>{{ctrl.data.amount | currency: 'QR '}}</td>
+                                    <td>{{ctrl.data.ratePerMonth | currency: 'QR '}}</td>
                                 </tr>
                             </table>
                         </div>
@@ -87,25 +81,105 @@
                     <!-- payment -->
                     <div class="row">
                         <div class="col-md-12">
-                            <div ui-grid="gridOptions" ui-grid-edit class="grid"></div>
+                            <table class="table table-condensed table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Cheque No</th>
+                                        <th>Bank</th>
+                                        <th>Mode</th>
+                                        <th>From</th>
+                                        <th>To</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Remarks</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="payment in ctrl.data.payments">
+                                        <td>{{payment.paymentDate | date:'MM/dd/yyyy'}}</td>
+                                        <td>{{payment.chequeNo}}</td>
+                                        <td>{{payment.bankDescription}}</td>
+                                        <td>{{payment.paymentModeDescription}}</td>
+                                        <td>{{payment.periodStart | date:'MM/dd/yyyy'}}</td>
+                                        <td>{{payment.periodEnd | date: 'MM/dd/yyyy'}}</td>
+                                        <td>{{payment.amount | currency: 'QR '}}</td>
+                                        <td>{{payment.statusDescription}}</td>
+                                        <td>{{payment.remarks}}</td>
+                                        <td class="text-center">
+                                            <a href="#" ng-show="payment.isReceived" class="btn btn-xs btn-primary" ng-click="ctrl.action.editPayment(payment)">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                            
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     <!-- end payment -->
                 </uib-tab>
                 <uib-tab index="1" heading="Reconcile Payment">
-                    <div ui-grid="rpGridOptions" ui-grid-edit class="grid"></div>
+                    <div class="body-content">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="btn btn-success" ng-click="ctrl.action.addReconciledPayment()">Add Reconcile</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- reconcile -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-condensed table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Reference No</th>
+                                        <th>Payment Type</th>
+                                        <th>Bank</th>
+                                        <th>Dishonored Amount</th>
+                                        <th>Amount</th>
+                                        <th>Period Start</th>
+                                        <th>Period End</th>
+                                        <th>Remarks</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="reconcile in ctrl.data.reconciles">
+                                        <td>{{reconcile.date | date:'MM/dd/yyyy'}}</td>
+                                        <td>{{reconcile.referenceNo}}</td>
+                                        <td>{{reconcile.paymentTypeDescription}}</td>
+                                        <td>{{reconcile.bankDescription}}</td>
+                                        <td>{{reconcile.dishonouredAmount | currency:'QR '}}</td>
+                                        <td>{{reconcile.amount | currency:'QR '}}</td>
+                                        <td>{{reconcile.periodStart| date:'MM/dd/yyyy'}}</td>
+                                        <td>{{reconcile.periodEnd| date:'MM/dd/yyyy'}}</td>
+                                        <td>{{reconcile.remarks}}</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-xs btn-primary" ng-click="ctrl.action.editReconciledPayment(reconcile)"><i class="fa fa-edit"></i></button>&nbsp;
+                                            <button class="btn btn-xs btn-danger" ng-click="ctrl.action.removeReconciledPayment(reconcile)"><i class="fa fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- end payment -->
                 </uib-tab>
             </uib-tabset>
             <hr />
-            <div class="row" ng-show="ctrl.data.updateState">
+            <div class="row">
                 <div class="col-md-2 pull-right">
-                    <button class="btn btn-danger btn-block" ng-click="ctrl.action.updateContract()">Update</button>
+                    <button class="btn btn-danger btn-block" ng-hide="ctrl.data.balance == 0" ng-click="ctrl.action.update()">Update</button>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="well">
-                <strong class="text-success text-center">Contract Status: {{ctrl.data.status}}</strong>
+                <strong class="text-success text-center">Contract Status: {{ctrl.data.transactionStatusDescription}}</strong>
             </div>
             <div class="well">
                 <div class="row">
@@ -113,7 +187,7 @@
                         <p class="text-danger"><i class="fa fa-money"></i> Received:</p>
                     </div>
                     <div class="col-md-7 text-right">
-                        <strong class="text-danger">{{ctrl.data.totalReceivedPayment | currency : "QR "}}</strong>
+                        <strong class="text-danger">{{ctrl.data.totalReceived | currency : "QR "}}</strong>
                     </div>
                 </div>
                 <div class="row">
@@ -121,7 +195,7 @@
                         <p class="text-danger"><i class="fa fa-money"></i> Cleared:</p>
                     </div>
                     <div class="col-md-7 text-right">
-                        <strong class="text-danger">{{ctrl.data.totalPayment | currency : "QR "}}</strong>
+                        <strong class="text-danger">{{ctrl.data.totalCleared | currency : "QR "}}</strong>
                     </div>
                 </div>
                 <hr />
@@ -131,7 +205,7 @@
                         <p class="text-danger"><i class="fa fa-money"></i> Balance:</p>
                     </div>
                     <div class="col-md-7 text-right">
-                        <strong class="text-danger">{{ctrl.data.totalBalance | currency : "QR "}}</strong>
+                        <strong class="text-danger">{{ctrl.data.balance | currency : "QR "}}</strong>
                     </div>
                 </div>
                 <!--end component-->
@@ -139,6 +213,7 @@
         </div>
     </div>
 </div>
+
 @section scripts {
     <script src="~/Scripts/app/data/receivable-manager.data.js"></script>
     <script src="~/Scripts/app/controller/receivableController.js"></script>

@@ -7,6 +7,7 @@ using System.Web.Mvc;
 namespace Sunrise.Client.Controllers
 {
     [RoutePrefix("billing")]
+    [Authorize]
     public class BillingController : Controller
     {
 
@@ -24,7 +25,11 @@ namespace Sunrise.Client.Controllers
             return View();
         }
 
-
+        [Route("payment")]
+        public PartialViewResult Payment()
+        {
+            return PartialView();
+        }
      
     }
 }

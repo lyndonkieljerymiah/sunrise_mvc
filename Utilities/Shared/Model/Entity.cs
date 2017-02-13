@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 namespace Utilities.Shared.Model
 {
-    public class Entity
+    public abstract class Entity<TType>
     {
-        public string Id { get; set; }
+        public Entity(TType id)
+        {
+            Id = id;
+        }
+
+        public TType Id { get; protected set; }
+
         public DateTime DateStamp { get; set; }
 
     }

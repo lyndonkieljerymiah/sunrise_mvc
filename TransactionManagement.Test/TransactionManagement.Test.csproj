@@ -72,9 +72,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Actual\ContractIntegration.cs" />
-    <Compile Include="Actual\ContractViewTest.cs" />
+    <Compile Include="Actual\BillIntegration.cs" />
+    <Compile Include="Mock\BillUnitTesting.cs" />
     <Compile Include="Mock\ContractUnitTesting.cs" />
+    <Compile Include="ModelMock\VillaMock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Setup\ContractSetup.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sunrise.TransactionManagement\Sunrise.TransactionManagement.csproj">

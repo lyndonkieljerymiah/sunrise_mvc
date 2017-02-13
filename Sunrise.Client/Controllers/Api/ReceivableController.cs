@@ -13,43 +13,40 @@ namespace Sunrise.Client.Controllers.Api
     [Authorize]
     public class ReceivableController : ApiController
     {
-        private readonly ContractDataManager _contractDataManager;
-        private ReceivableDataManager _receivableDataManager;
+        private BillDataManager _billDataManager;
         private SelectionDataManager _selectionDataManager;
         private VillaDataManager _villaDataManager;
 
         public ReceivableController(
-            ReceivableDataManager receivableDataManager,
-            ContractDataManager contractDataManager,
+            BillDataManager billDataManager,
             SelectionDataManager selectionDataManager,
             VillaDataManager villaDataManager)
         {
-            _contractDataManager = contractDataManager;
             _selectionDataManager = selectionDataManager;
-            _receivableDataManager = receivableDataManager;
+            _billDataManager = billDataManager;
             _villaDataManager = villaDataManager;
         }
 
         /// <summary>
-        /// TODO: Calls when creating receivable
+        /// TODO: Get Bill 
         /// </summary>
-        /// <param name="billNo"></param>
+        /// <param name="billCode"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{contractCode}")]
-        public async Task<IHttpActionResult> Create(string contractCode)
+        [Route("{billCode}")]
+        public async Task<IHttpActionResult> GetBill(string billCode)
         {
-            var contract = await _contractDataManager.GetContractForPaymentClearing(contractCode);
-            if (contract == null)
+            var bill = await _billDataManager.GetBillByCode(billCode);
+            if (bill == null)
             {
-                ModelState.AddModelError("NotFoundException", "Invalid or no existing contract");
+                ModelState.AddModelError("BillInvalidCodeException", "Invalid Bill No");
                 return BadRequest(ModelState);
             }
+            var selections = await _selectionDataManager
+                .GetLookup(new[] { "Bank", "PaymentTerm", "PaymentMode", "PaymentStatus" });
+            bill.Initialize(selections);
 
-            //create new payment for client code use 
-            //let the client do the dropdown population
-            contract.Initialize((await _selectionDataManager.GetLookup(new string[] { "PaymentStatus" })));
-            return Ok(contract);
+            return Ok(bill);
         }
 
         /// <summary>
@@ -59,43 +56,13 @@ namespace Sunrise.Client.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("update")]
-        public async Task<IHttpActionResult> Update(ReceivableViewModel vm)
+        public async Task<IHttpActionResult> Update(BillingViewModel vm)
         {
             var userId = User.Identity.GetUserId();
-
+                
             //update the payment
-            //and call hookup to update the villa status
-            var result = await _receivableDataManager.ClearPayment(vm.Id, vm.Payments, userId,new Func<string,Task>(UpdateWhenClearingPayment));
+            var result = await _billDataManager.Update(vm, userId);
             return Ok(result);
         }
-
-        [HttpPost]
-        [Route("reverse")]
-        public async Task<IHttpActionResult> ReverseContract(ReceivableViewModel vm)
-        {
-            var result = await _receivableDataManager.ReverseContract(vm.Id, new Func<string, Task>(UpdateWhenContractReserved));
-            if (!result.Success)
-            {
-                var errors = result.Errors;
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(error.Key, error.Value);
-                    return BadRequest(ModelState);
-                }
-            }
-            return Ok(result);
-        }
-
-        #region Private Method
-        public async Task UpdateWhenClearingPayment(string villaId)
-        {
-            await  _villaDataManager.UpdateVillaStatus(villaId, VillaStatusEnum.NotAvailable);
-        }
-        public async Task UpdateWhenContractReserved(string villaId)
-        {
-            await _villaDataManager.UpdateVillaStatus(villaId, VillaStatusEnum.Reserved);
-        }
-        #endregion
-
     }
 }

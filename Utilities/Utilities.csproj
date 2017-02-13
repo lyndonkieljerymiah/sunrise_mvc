@@ -59,6 +59,8 @@
     <Compile Include="Shared\Model\Entity.cs" />
     <Compile Include="Shared\PubSub\ISubcriber.cs" />
     <Compile Include="ValueObjects\DateTimeRange.cs" />
+    <Compile Include="ValueObjects\RangeAmount.cs" />
+    <Compile Include="ValueObjects\Status.cs" />
     <Compile Include="ValueObjects\ValueObject.cs" />
   </ItemGroup>
   <ItemGroup>

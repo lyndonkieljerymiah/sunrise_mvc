@@ -25,5 +25,10 @@ namespace Sunrise.Client.Domains.ViewModels.Identity
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+
+        [Display(Name = "Transaction Code")]
+        [Required]
+        public string TransactionCode { get; set; }
     }
 }

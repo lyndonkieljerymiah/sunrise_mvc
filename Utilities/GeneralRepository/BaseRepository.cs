@@ -26,14 +26,11 @@ namespace Utilities.GeneralRepository
         {
             _set.Add(entity);
         }
-
         public virtual void Update(T entity)
         {
             _set.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
         }
-
-        
         public virtual void Remove(T entity)
         {
             _set.Remove(entity);
@@ -43,7 +40,6 @@ namespace Utilities.GeneralRepository
         {
             return await _set.ToListAsync();
         }
-
         public async Task<T> FindQueryAsync(object id)
         {
             return await _set.FindAsync(id);

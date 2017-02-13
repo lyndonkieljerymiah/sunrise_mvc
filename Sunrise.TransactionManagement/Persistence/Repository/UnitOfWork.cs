@@ -1,4 +1,5 @@
-﻿using Sunrise.TransactionManagement.Abstract;
+﻿using Sunrise.TransactionManagement.Persistence.Repository.Abstract;
+using Sunrise.TransactionManagement.Persistence.Repository.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,50 +11,37 @@ namespace Sunrise.TransactionManagement.Persistence.Repository
     public class UnitOfWork : IUnitOfWork
     {
 
-        private readonly AppDbContext _appDbContext;
-        private readonly ReferenceDbContext _referenceContext;
-        private ITransactionRepository _transactions;
-        private IPaymentRepository _payments;
-
+        private AppDbContext Context { get; set; }
 
         public UnitOfWork()
         {
-            this._appDbContext = new AppDbContext();
-            this._referenceContext = new ReferenceDbContext();
+            Context = new AppDbContext();
         }
 
-        public ITransactionRepository Transactions
+        public IBillRepository Bills
         {
             get
             {
-                if(this._transactions == null)
-                {
-                    _transactions = new TransactionRepository(_appDbContext, _referenceContext);
-                }
-                return this._transactions;
+                return new BillRepository(Context);
             }
         }
-
-        public IPaymentRepository Payments
+        public IContractRepository Contracts
         {
             get
             {
-               if(this._payments == null)
-                {
-                    _payments = new PaymentRepository(_appDbContext);
-                }
-                return _payments;
+                return new ContractRepository(Context);
             }
         }
 
-        public async Task SaveChanges()
+        public async Task Commit()
         {
-            await _appDbContext.SaveChangesAsync();
+            await Context.SaveChangesAsync();
         }
 
+   
         #region disposed method
         private bool disposed = false;
-      
+
 
         protected virtual void Dispose(bool disposing)
         {
@@ -61,7 +49,7 @@ namespace Sunrise.TransactionManagement.Persistence.Repository
             {
                 if (disposing)
                 {
-                    _appDbContext.Dispose();
+                    Context.Dispose();
                 }
             }
             this.disposed = true;
