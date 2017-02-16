@@ -7,10 +7,11 @@
  */
 
 mainApp.controller("receivableController", ReceivableController);
-ReceivableController.$inject = ["$scope", "receivableDataManager", "alertDialog", "confirmationDialog", "toaster", "modelStateValidation","$uibModal", "spinnerManager"];
+ReceivableController.$inject = ["$scope", "receivableDataManager","ReceivableDataService", "alertDialog", "confirmationDialog", "toaster", "modelStateValidation", "$uibModal", "spinnerManager"];
 function ReceivableController(
     $scope,
     receivableDataManager,
+    ReceivableDataService,
     alertDialog,
     confirmationDialog,
     toaster,
@@ -20,8 +21,9 @@ function ReceivableController(
 
     spinnerManager.scope = $scope;
 
-    $scope.ctrl = {
+    $scope.model = {
         txtSearch: "",
+        enabledUpdate: false,
         showReverse: false,
         currentIndex: -1,
         data: {},
@@ -32,21 +34,10 @@ function ReceivableController(
             update: update,
             addReconciledPayment: addReconciledPayment,
             editReconciledPayment: editReconciledPayment
-        },
-        errorState: {}
+        }
     };
 
-    var updateOnObserve = function (payments) {
-        var totalCleared = 0;
-        var totalReconcile = $scope.ctrl.data.reconciles.sum("amount");
-        angular.forEach(payments, function (item) {
-            if (item.statusCode === "psc") {
-                totalCleared = totalCleared + item.amount;
-            }
-            $scope.ctrl.data.totalCleared = totalCleared + totalReconcile;
-        });
-        $scope.ctrl.data.balance = $scope.ctrl.data.amount - $scope.ctrl.data.totalCleared;
-    };
+    $scope.errorState = {};
     var modal = function (type, obj) {
         var parameter = {
             controllerAs: "$ctrl",
@@ -57,7 +48,7 @@ function ReceivableController(
             parameter.templateUrl = "/receivable/payment/";
             parameter.controller = "paymentController";
             parameter.resolve = {
-                paymentObject: function () { return $scope.ctrl.data.paymentDictionary; },
+                paymentObject: function () { return $scope.model.data.paymentDictionary; },
                 payment: function () { return obj; }
             }
         }
@@ -65,7 +56,7 @@ function ReceivableController(
             parameter.templateUrl = "/receivable/reconcile/";
             parameter.controller = "reconcileController";
             parameter.resolve = {
-                paymentObject: function () { return $scope.ctrl.data.paymentDictionary; },
+                paymentObject: function () { return $scope.model.data.paymentDictionary; },
                 reconcile: function () { return obj; }
             }
         }
@@ -76,27 +67,27 @@ function ReceivableController(
         $scope.ctrl.action.search();
     }
 
-    function searchContract()
-    {
-        if ($scope.ctrl.txtSearch.trim().length === 0) {
+    function searchContract() {
+        if ($scope.model.txtSearch.trim().length === 0) {
             toaster.pop("error", "", "Please Enter Search...");
             return 0;
         }
-
-        $scope.ctrl.currentIndex = -1;
         spinnerManager.start();
-
-        receivableDataManager.get($scope.ctrl.txtSearch,
-            function (data) {
-                $scope.ctrl.data = data;
-                $scope.ctrl.errorState = modelStateValidation.createState(data, "ctrl.data");
+        $scope.model.data = new ReceivableDataService();
+        $scope.model.data.create($scope.model.txtSearch,
+            function (respSuccess) {
+                $scope.$watch("ctrl.data.payments", function (nv, ov, ob) {
+                    $scope.model.data.updateTotal();
+                }, true);
+                $scope.$watch("ctrl.data.reconciles", function (nv, ov, ob) {
+                    $scope.model.data.updateTotal();
+                }, true);
+                $scope.model.enabledUpdate = true;
                 spinnerManager.stop();
-                beginObserver();
             },
-            function (data) {
-                $scope.ctrl.errorState = data;
-                $scope.ctrl.data = {};
+            function (respError) {
                 toaster.pop("error", "Contract not found");
+                $scope.model.enabledUpdate = false;
                 spinnerManager.stop();
             }
         );
@@ -139,125 +130,40 @@ function ReceivableController(
             }
         });
     }
-    function beginObserver() {
 
-        
-
-        $scope.$watch("ctrl.data.payments", function (nv, ov, ob) {
-            if (nv && nv.length > 0) {
-                updateOnObserve(nv);
-            }
-        }, true);
-
-        $scope.$watch("ctrl.data.reconciles", function (nv, ov, ob) {
-            if (nv && nv.length > 0) {
-                updateOnObserve($scope.ctrl.data.payments);
-            }
-        }, true);
-
-
-        
-    }
-    function editPayment(item)
-    {   
-        var index = $scope.ctrl.data.payments.indexOf(item);
-        if (index >= 0)
-        {
-            var payment = angular.copy($scope.ctrl.data.payments[index]);
+    function editPayment(item) {
+        var index = $scope.model.data.payments.indexOf(item);
+        if (index >= 0) {
+            var payment = $scope.model.data.getPayment(index); 
             var modalInstance = modal(1, payment);
             modalInstance.result.then(function (returnData) {
-                //return status
-                angular.forEach($scope.ctrl.data.paymentDictionary.statuses, function (item) {
-                    if (returnData.statusCode == item.value) {
-                        returnData.statusDescription = item.text;
-                        return;
-                    }
-                });
-
-                //return payment
-                angular.forEach($scope.ctrl.data.paymentDictionary.modes, function (item) {
-                    if (returnData.paymentModeCode == item.value)
-                    {
-                        returnData.paymentModeDescription = item.text;
-                        return;
-                    }
-                });
-
-                //return payment
-                angular.forEach($scope.ctrl.data.paymentDictionary.banks, function (item) {
-                    if (returnData.bankCode == item.value) {
-                        returnData.bankDescription = item.text;
-                        return;
-                    }
-                });
-
-                angular.copy(returnData,$scope.ctrl.data.payments[index]);
-            })
-            
-
+                $scope.model.data.updatePayment(returnData);
+            });
         }
-        
-
     }
     function addReconciledPayment() {
-
-        var reconcile = angular.copy($scope.ctrl.data.paymentDictionary.reconcileInitialValue);
+        var reconcile = $scope.model.data.getNewReconcile();
         var uibModalInstance = modal(2, reconcile);
-        uibModalInstance.result.then(function (returnData)
-        {
-            //return payment
-            angular.forEach($scope.ctrl.data.paymentDictionary.terms, function (item)
-            {
-                if (returnData.paymentTypeCode == item.value)
-                {
-                    returnData.paymentTypeDescription = item.text;
-                    return;
-                }
-            });
-            //return payment
-            angular.forEach($scope.ctrl.data.paymentDictionary.banks, function (item) {
-                if (returnData.bankCode == item.value)
-                {
-                    returnData.bankDescription = item.text;
-                    return;
-                }
-            });
-
-            $scope.ctrl.data.reconciles.push(angular.copy(returnData));
+        uibModalInstance.result.then(function (returnData) {
+            $scope.model.data.addNewReconcile(returnData);
         });
     }
-    function editReconciledPayment(item) {
+    function editReconciledPayment(item)
+    {
         var index = $scope.ctrl.data.reconciles.indexOf(item);
         if (index >= 0) {
-            var reconcile = angular.copy($scope.ctrl.data.reconciles[index]);
+            var reconcile = $scope.model.data.getReconcile(index);
             var modalInstance = modal(2, reconcile);
-
             modalInstance.result.then(function (returnData) {
-
-                angular.forEach($scope.ctrl.data.paymentDictionary.terms, function (item) {
-                        if (returnData.paymentTypeCode == item.value) {
-                            returnData.paymentTypeDescription = item.text;
-                            return;
-                        }
-                    });
-
-                    
-                angular.forEach($scope.ctrl.data.paymentDictionary.banks, function (item) {
-                    if (returnData.bankCode == item.value) {
-                        returnData.bankDescription = item.text;
-                        return;
-                    }
-                });
-                    
-                    angular.copy(returnData, $scope.ctrl.data.reconciles[index]);
-                });
-                
+                $scope.model.data.updateReconcile(returnData,index);
+            });
         }
     }
 };
 
 mainApp.controller("paymentController",
     function ($uibModalInstance, payment, paymentObject) {
+
         var $ctrl = this;
         $ctrl.payment = payment;
         $ctrl.paymentObject = paymentObject;
@@ -272,12 +178,12 @@ mainApp.controller("paymentController",
         }
     });
 
-mainApp.controller("reconcileController", function (reconcile, paymentObject,$uibModalInstance) {
+mainApp.controller("reconcileController", function (reconcile, paymentObject, $uibModalInstance) {
 
     var $ctrl = this;
     $ctrl.paymentObject = paymentObject;
     $ctrl.reconcile = reconcile;
-    
+
     $ctrl.cancel = function () {
         $uibModalInstance.dismiss();
     }

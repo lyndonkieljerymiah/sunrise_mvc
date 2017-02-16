@@ -1,4 +1,7 @@
-﻿<form id="paymentForm" class="form-horizontal" name="paymentForm">
+﻿@using Sunrise.Client.Infrastructure.Extension
+@model Sunrise.Client.Domains.ViewModels.PaymentViewModel
+
+<form id="paymentForm" class="form-horizontal" name="paymentForm" model-state-attribute model-scope="errorState">
     <div class="modal-header">
         <h3 class="modal-title" id="modal-title">Payment</h3>
     </div>
@@ -7,16 +10,12 @@
         <div class="form-group">
             <label class="col-md-2 text-right">Type:</label>
             <div class="col-md-4">
-                <select class="form-control" placheholder="Term" ng-model="$ctrl.payment.paymentTypeCode" ng-change="$ctrl.changeBehaviourWhenSelectingTerm()">
-                    <option ng-repeat="term in $ctrl.paymentObject.terms" value="{{term.value}}">{{term.text}}</option>
-                </select>
+                @Html.NgDropdownFor(m => m.PaymentTypeCode, "$ctrl.paymentObject.terms", "$ctrl.payment", new string[] { "ng-change='$ctrl.changeBehaviourWhenSelectingTerm()'" })
             </div>
-            <div ng-hide="$ctrl.payment.chequeFieldDisabled">
+            <div>
                 <label class="col-md-2 text-right">Mode:</label>
                 <div class="col-md-4">
-                    <select class="form-control" ng-model="$ctrl.payment.paymentModeCode">
-                        <option ng-repeat="mode in $ctrl.paymentObject.modes" value="{{mode.value}}">{{mode.text}}</option>
-                    </select>
+                    @Html.NgDropdownFor(m => m.PaymentModeCode, "$ctrl.paymentObject.modes", "$ctrl.payment")
                 </div>
             </div>
         </div>
@@ -24,29 +23,21 @@
         <div class="form-group">
             <label class="col-md-2 text-right">Date:</label>
             <div class="col-md-10">
-                <date-time-picker format="MM/dd/yyyy" index="0" model="$ctrl.payment.paymentDate" required="true"></date-time-picker>
+                @Html.NgDatePickerFor(m => m.PaymentDate, "$ctrl.payment", "0")
+                @Html.NgValidateFor(m => m.PaymentDate, "$ctrl.payment")
             </div>
         </div>
         <div class="form-group">
             <label class="col-md-2 text-right">Cheque No:</label>
             <div class="col-md-10">
-                <input type="text"
-                       name="chequeNo"
-                       id="chequeNo"
-                       class="form-control"
-                       ng-disabled="$ctrl.payment.chequeFieldDisabled"
-                       ng-model="$ctrl.payment.chequeNo"
-                       required />
-                <span ng-show="errorState.chequeNo">{{errorState.chequeNo}}</span>
+                @Html.NgInputFor(m => m.ChequeNo,"$ctrl.payment","text", new string[] { "ng-disabled='$ctrl.payment.chequeFieldDisabled'" } )
+                @Html.NgValidateFor(m => m.ChequeNo,"$ctrl.payment")
             </div>
         </div>
         <div class="form-group" ng-hide="$ctrl.payment.paymentTypeCode == 'ptcs'">
             <label class="col-md-2 text-right">Bank:</label>
             <div class="col-md-10">
-                <select ng-model="$ctrl.payment.bankCode" class="form-control" ng-required="$ctrl.payment.paymentTypeCode == 'ptcq'">
-                    <option value="">--Select Bank--</option>
-                    <option ng-repeat="bank in $ctrl.paymentObject.banks" value="{{bank.value}}">{{bank.text}}</option>
-                </select>
+                @Html.NgDropdownFor(m => m.BankCode , "$ctrl.paymentObject.banks", "$ctrl.payment")
             </div>
         </div>
         <div class="page-header">
@@ -55,30 +46,20 @@
         <div class="form-group">
             <label class="col-md-2 text-right">Start:</label>
             <div class="col-md-4">
-                <date-time-picker format="MM/dd/yyyy" index="1" model="$ctrl.payment.periodStart" required="true">
-                    <span ng-show="errorState['periodFromException']">{{errorState['periodFromException']}}</span>
-                </date-time-picker>
+                @Html.NgDatePickerFor(m => m.PeriodStart, "$ctrl.payment", "1")
+                @Html.NgValidateFor(m => m.PeriodStart, "$ctrl.payment")
             </div>
             <label class="col-md-2 text-right">End:</label>
             <div class="col-md-4">
-                <div class="input-group">
-                    <date-time-picker format="MM/dd/yyyy" index="2" model="$ctrl.payment.periodEnd" required="true">
-                        <span ng-show="errorState['periodToException']">{{errorState['periodToException']}}</span>
-                    </date-time-picker>
-                </div>
+                @Html.NgDatePickerFor(m => m.PeriodEnd, "$ctrl.payment", "1")
+                @Html.NgValidateFor(m => m.PeriodEnd, "$ctrl.payment")
             </div>
         </div>
         <div class="form-group">
             <label class="col-md-2 text-right">Amount:</label>
             <div class="col-md-10">
-                <input type="text"
-                       name="amount"
-                       id="amount"
-                       class="form-control text-right"
-                       placeholder="Amount"
-                       ng-pattern="/^\d+/"
-                       ng-model="$ctrl.payment.amount" required />
-                <span ng-show="paymentForm.amount.$invalid">Please enter numeric value</span>
+                @Html.NgInputFor(m => m.Amount, "$ctrl.payment", "amount")
+                @Html.NgValidateFor(m => m.Amount, "$ctrl.payment")
             </div>
         </div>
     </div>

@@ -99,7 +99,7 @@ namespace Sunrise.Client.Domains.ViewModels
             payment.PaymentModeCode = PaymentModeDictionary.CreatePayment().Code;
             payment.PaymentTypeCode = PaymentTypeDictionary.CreateCheque().Code;
             payment.PaymentDate = DateTime.Today;
-
+            payment.Amount = this.RatePerMonth;
             this.PaymentDictionary.InitialValue = payment;
 
             var reconcile = new ReconcileViewModel();
@@ -123,7 +123,8 @@ namespace Sunrise.Client.Domains.ViewModels
             this.StatusCode = (PaymentStatusDictionary.CreateReceived()).Code;
             this.PaymentTypeCode = (PaymentTypeDictionary.CreateCheque()).Code;
             this.PaymentModeCode = (PaymentModeDictionary.CreatePayment()).Code;
-            
+            this.BankCode = "bdb";
+
             //this.BankCode = StatusDictionary.CreateByDefault();
 
         }
@@ -171,6 +172,7 @@ namespace Sunrise.Client.Domains.ViewModels
         public bool IsModify { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsModifyStatus { get; set; }
+
         public bool IsClear
         {
             get
@@ -178,7 +180,6 @@ namespace Sunrise.Client.Domains.ViewModels
                 return new PaymentStatusDictionary(StatusCode).IsClear() || this.StatusCode == null ? true : false;
             }
         }
-
         public bool IsReceived
         {
             get
@@ -187,6 +188,7 @@ namespace Sunrise.Client.Domains.ViewModels
             }
         }
     }
+
     public class PaymentDictionary
     {
         private IEnumerable<Selection> _selections;
@@ -221,6 +223,7 @@ namespace Sunrise.Client.Domains.ViewModels
         {
             get
             {
+
                 var types = _selections
                  .Where(s => s.Type == "Bank")
                  .Select(s => new SelectListItem() { Text = s.Description, Value = s.Code });

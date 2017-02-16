@@ -104,8 +104,8 @@ namespace Sunrise.Client.Controllers.Api
         /// <param name="villaId"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("register/{villaId?}/{tenantType?}")]
-        public async Task<IHttpActionResult> Register(string villaId, string tenantType = "ttin")
+        [Route("register/{villaId?}")]
+        public async Task<IHttpActionResult> Register(string villaId)
         {   
             var villaViewModel = await _villaDataManager.GetVilla(villaId);
             villaViewModel.DefaultImageUrl = Url.Content("~/Content/imgs/notavailable.png");
@@ -115,7 +115,7 @@ namespace Sunrise.Client.Controllers.Api
                 villaViewModel.Type = "vsav";
 
             villaViewModel.VillaType = selections.SingleOrDefault(s => s.Code == villaViewModel.Type).Description;
-            var vmRegister = Mapper.Map<TenantRegisterViewModel>(Tenant.CreateNew(tenantType));
+            var vmRegister = Mapper.Map<TenantRegisterViewModel>(Tenant.CreateNew("ttin"));
             vmRegister.SetTenantTypes(selections);
             
             //create and map
@@ -165,8 +165,7 @@ namespace Sunrise.Client.Controllers.Api
                 AddResult(result);
                 return BadRequest(ModelState);
             }
-            var sv = new { Id = (string)transactionResult.ReturnObject};
-            return Ok(sv);
+            return Ok(transactionResult);
         }
 
         #endregion

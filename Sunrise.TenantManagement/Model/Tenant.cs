@@ -39,14 +39,8 @@ namespace Sunrise.TenantManagement.Model
         internal Tenant(string tenantType) : this()
         {
             this.TenantType = tenantType;
-            if (tenantType == "ttin")
-            {
-                this.Individual = new Individual();
-            }
-            else
-            {
-                this.Company = new Company();
-            }
+            this.Individual = new Individual();
+            this.Company = new Company();
         }
 
         public Tenant()

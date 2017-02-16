@@ -2,6 +2,7 @@
     ViewBag.Title = "Billing";
 }
 <div ng-controller="billingController as $ctrl" ng-init="model.action.init('@ViewBag.Id')">
+
     <spinner></spinner>
     <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
 
@@ -78,20 +79,20 @@
                                 </tr>
                                 <tbody>
                                     <tr ng-repeat="payment in model.data.payments | orderBy : 'paymentDate':reverse track by $index"
-                                        ng-class="{danger: sales.selectedRow == $index}">
+                                        ng-class="{danger: payment.collideDetected}">
                                         <td class="active text-center">{{($index+1)}}</td>
                                         <td class="text-center">{{payment.paymentDate | date: 'MM/dd/yyyy'}}</td>
                                         <td class="text-center">{{payment.chequeNo}}</td>
                                         <td class="text-center">{{payment.paymentModeDescription}}</td>
-                                        <td class="text-left">
+                                        <td class="text-center">
                                             {{payment.periodStart | date : 'MM/dd/yyyy'}} -
                                             {{payment.periodEnd | date : 'MM/dd/yyyy'}}
                                         </td>
                                         <td class="text-right">{{payment.amount | currency:"QR "}}</td>
-                                        <td class="text-center">{{payment.statusDescription}}</td>
+                                        <td class="text-center"><span class="label label-info">{{payment.statusDescription}}</span></td>
                                         <th style="width:10%;text-align:center">
-                                            <button ng-hide="payment.isClear" ng-click="model.action.remove(payment)" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button> &nbsp;
-                                            <button ng-hide="payment.isClear" ng-click="model.action.edit(payment)" class="btn btn-danger btn-xs"><i class="fa fa-pencil"></i></button>
+                                            <button ng-click="model.action.remove(payment)" class="btn btn-danger btn-xs" tooltip-placement="top" uib-tooltip="Remove Payment"><i class="fa fa-trash"></i></button> &nbsp;
+                                            <button ng-click="model.action.edit(payment)" class="btn btn-danger btn-xs" tooltip-placement="top" uib-tooltip="Edit Payment"><i class="fa fa-pencil"></i></button>
                                         </th>
                                     </tr>
                                 </tbody>
@@ -99,7 +100,7 @@
                                     <tr class="active">
                                         <td colspan="7"></td>
                                         <td class="text-center">
-                                            <button ng-hide="model.data.payment.isClear" class="btn btn-sm btn-primary" ng-click="model.action.addNewPayment()"><i class="fa fa-plus-circle"></i></button>
+                                            <button ng-hide="model.data.payment.isClear" class="btn btn-sm btn-primary" ng-click="model.action.addNewPayment()" tooltip-placement="top" uib-tooltip="Add Payment"><i class="fa fa-plus-circle"></i></button>
                                         </td>
 
                                     </tr>
@@ -107,7 +108,7 @@
                             </table>
                         </div>
                         <div class="col-md-2 pull-right">
-                            <button class="btn btn-primary btn-block" ng-click="model.action.save()"><i class="fa fa-save"></i> Save</button>
+                            <button class="btn btn-primary btn-block" ng-click="model.action.save()" ng-show="model.data.saveEnabled"><i class="fa fa-save"></i> Save</button>
                         </div>
                     </div>
                 </div>

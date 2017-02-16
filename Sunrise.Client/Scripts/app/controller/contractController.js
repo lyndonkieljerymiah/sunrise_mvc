@@ -1,64 +1,99 @@
 ﻿
-mainApp.controller("contractController", function ($scope, contractDataManager, confirmationDialog, toaster, spinnerManager) {
+mainApp.controller("contractController", function (
+    $scope, ContractDataService, confirmationDialog, toaster, spinnerManager,$timeout) {
 
     var isPageLoad = false;
     spinnerManager.scope = $scope;
 
     $scope.model = {
-        data: {},
         action: {
             init: init,
             save: save
-        },
-        errorState: {}
+        }
     };
+    //define errorstate
+    $scope.errorState = {};
 
-    function restart() {
-        $scope.errorState = {};
-        isPageLoad = false;
-    }
-    function create(villaId, tenantType) {
+    function create(villaId) {
         spinnerManager.start();
-        contractDataManager.createContract(villaId, tenantType,
-            function (data) {
+        $scope.model.data = new ContractDataService();
+        $scope.model.data.create(villaId,
+            function () {
                 //villa
-                $scope.nbSlides.images = data.villa.imageGalleries;
-                $scope.model.data = data;
+                $scope.nbSlides.images = $scope.model.data.villa.imageGalleries;
 
                 $scope.$watch("model.data.register.tenantType", function (nv, ov, ob) {
                     $scope.model.data.register.isIndividual = nv === "ttin" ? true : false;
+                    if ($scope.model.data.register.isIndividual) {
+                        $scope.model.data.register.name = "";
+                        $scope.model.data.register.company.businessType = "";
+                        $scope.model.data.register.company.crNo = "";
+                        $scope.model.data.register.company.representative = "";
+                    }
+                    else {
+                        $scope.model.data.register.name = "";
+                        $scope.model.data.register.individual.qatarId = "";
+                        $scope.model.data.register.individual.company = "";
+                    }
                 });
                 spinnerManager.stop();
             });
     }
 
     function init(villaId) {
-        create(villaId, null);
+        create(villaId);
     }
+
     function save() {
         confirmationDialog.open({
             title: "Saving Confirmation!!",
             description: "Are you sure you want to save?",
             buttons: ["Yes", "No"],
             action: function (response) {
-                spinnerManager.start();
                 //reverse
-                $scope.model.data.register.gender = parseInt($scope.model.data.register.gender);
-                contractDataManager.save($scope.model.data,
-                    function (data) {
-                        var id = data.id;
-                        spinnerManager.stop();
-                        contractDataManager.proceedToBilling(id);
-                    },
-                    function (data) {
-                        $scope.errorState = data;
-                        toaster.pop("error", "Failed to save unexpected error occured");
-                        spinnerManager.stop();
-                    });
+                $scope.errorState.validate(function (item) {
+                    if ($scope.model.data.register.isIndividual) {
+                        var exception = [
+                            "model.data.register.company.businessType",
+                            "model.data.register.company.crNo",
+                            "model.data.register.company.representative"];
+
+                        for (i = 0; i < exception.length; i++) {
+                            if (item == exception[i]) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                    else {
+                        var exception = [
+                            "model.data.register.individual.qatarId",
+                            "model.data.register.individual.company"];
+                        for (i = 0; i < exception.length; i++) {
+                            if (item === exception[i]) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                });
+                if ($scope.errorState.clear) {
+                    spinnerManager.start();
+                    $scope.model.data.save(
+                        function (data) {
+                            var id = data.returnObject;
+                            spinnerManager.stop();
+                            $scope.model.data.routeToBilling(id);
+                        },
+                        function (respError) {
+                            $scope.errorState.error = respError;
+                            spinnerManager.stop();
+                        }
+                    , "model.data");
+                }
             }
         });
     }
-
 });
 
 mainApp.controller("villaSearchController", function (villaDataManager, $uibModalInstance) {
@@ -174,7 +209,7 @@ mainApp.controller("contractListController", function ($scope,
             { displayName: 'Villa', field: 'villaNo', width: '10%', cellClass: 'text-center' },
             { displayName: 'Start', field: 'periodStart', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width: '10%', cellClass: 'text-center', enableFiltering: false },
             { displayName: 'End', field: 'periodEnd', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width: '10%', cellClass: 'text-center', enableFiltering: false },
-            { displayName: 'Status', field: 'status', width: '8%', cellClass: 'text-center' },
+            { displayName: 'Status', field: 'statusDescription', width: '8%', cellClass: 'text-center' },
             {
                 name: 'action',
                 displayName: ' ',
@@ -204,7 +239,7 @@ mainApp.controller("contractListController", function ($scope,
                 { name: 'villa', field: 'villaNo', cellClass: 'text-center' },
                 { name: 'start', field: 'periodStart', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', enableFiltering: false, cellClass: 'text-center' },
                 { name: 'end', field: 'periodEnd', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', enableFiltering: false, cellClass: 'text-center' },
-                { name: 'status', field: 'status', cellClass: 'text-center', width: '8%' },
+                { displayName: 'Status', field: 'statusDescription', cellClass: 'text-center', width: '8%' },
                 { name: 'due', field: 'monthDue', width: '5%', enableFiltering: false, cellClass: 'text-center' },
                 {
                     name: 'action',
@@ -220,7 +255,7 @@ mainApp.controller("contractListController", function ($scope,
                     cellClass: 'text-center'
                 }]
     };
-
+    var recordSet = new ContractListDataService();
     var terminateDialog = function (entity) {
         var modalInstance = $uibModal.open({
             backdrop: false,
@@ -281,7 +316,6 @@ mainApp.controller("contractListController", function ($scope,
 
     function onSelectActive(search) {
         spinnerManager.start();
-        var recordSet = new ContractListDataService();
         if ($scope.gridActiveOptions.data.length > 0) {
             spinnerManager.stop();
             return 0;
@@ -289,26 +323,25 @@ mainApp.controller("contractListController", function ($scope,
         recordSet.loadActive(
             function () {
                 spinnerManager.stop();
+                $scope.gridActiveOptions.data = recordSet.dataSet;
             },
             function () {
                 toaster.pop("error", "Unexpected error occured");
                 spinnerManager.stop();
-            }
-        );
-        $scope.gridActiveOptions.data = recordSet.dataSet;
+            });
     }
     function onSelectOfficial() {
         spinnerManager.start();
-        var recordSet = new ContractListDataService();
         recordSet.loadOfficial(
             function () {
                 spinnerManager.stop();
+                $scope.gridOptions.data = recordSet.dataSet;
             },
             function () {
                 toaster.pop("error", "Unexpected error occured");
             }
         );
-        $scope.gridOptions.data = recordSet.dataSet;
+        
     }
     function add() {
         var modalInstance = $uibModal.open({
@@ -318,7 +351,7 @@ mainApp.controller("contractListController", function ($scope,
             controllerAs: '$ctrl'
         });
         modalInstance.result.then(function (villaId) {
-            contractDataManager.redirectToContract(villaId);
+            router.route("contract", "", villaId);
         });
     }
     function remove(id) {
@@ -327,11 +360,11 @@ mainApp.controller("contractListController", function ($scope,
             description: "Do you want to cancel the contract?",
             action: function (response) {
                 spinnerManager.start();
-                contractDataManager.remove(id,
+                recordSet.remove(id,
                     function (data) {
                         toaster.pop("success", "Contract successfully remove");
                         spinnerManager.stop();
-                        list();
+                        onSelectOfficial();
                     },
                     function (data) {
                         toaster.pop("error", "Contract unable to remove");
@@ -341,7 +374,7 @@ mainApp.controller("contractListController", function ($scope,
         });
     }
     function edit(id) {
-        contractDataManager.proceedToBilling(id);
+        recordSet.routeToBilling(id);
     }
     function terminate(entity) {
         confirmationDialog.open({
@@ -376,10 +409,8 @@ function TerminateController($scope, entity, $uibModalInstance, TerminateContrac
 
     var $ctrl = this;
     $ctrl.model = new TerminateContractDataService();
-    $ctrl.model.create(entity.id, function (response) {
-        toaster.pop("error", "", reponse.errorMessage);
-    });
-    
+    $ctrl.model.create(entity.id);
+    console.log($ctrl.model);
     $ctrl.save = save;
     $ctrl.cancel = cancel;
     function save() {

@@ -50,6 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enum\Enum.cs" />
+    <Compile Include="Events\Abstract\IDomainEvent.cs" />
+    <Compile Include="Events\Abstract\IHandler.cs" />
+    <Compile Include="Events\Domain\DomainEvents.cs" />
     <Compile Include="GeneralContext\BaseDbContext.cs" />
     <Compile Include="GeneralRepository\BaseRepository.cs" />
     <Compile Include="GeneralRepository\IBaseRepository.cs" />
@@ -68,6 +71,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Events\Handler\" />
     <Folder Include="Tools\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

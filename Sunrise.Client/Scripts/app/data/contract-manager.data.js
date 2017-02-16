@@ -145,6 +145,63 @@
     });
 
 
+mainApp.factory("ContractDataService", function ($http, modelStateValidation, router) {
+
+    function ContractDataService(contractData) {
+        this.setData(contractData);
+    }
+    ContractDataService.prototype = {
+        setData: function (contractData) {
+            angular.extend(this, contractData);
+        },
+        create: function (villaId, succCb, errCb) {
+            var scope = this;
+            $http.get(router.apiPath("contract", "register", villaId)).then(
+                function (respSuccess) {
+                    var data = respSuccess.data;
+                    data.periodStart = new Date(data.periodStart);
+                    data.periodEnd = new Date(data.periodEnd);
+                    data.register.individual.gender = data.register.individual.gender.toString();
+                    data.register.individual.birthday = new Date(data.register.individual.birthday);
+                    data.register.company.validityDate = new Date(data.register.company.validityDate);
+                    data.template = "/tenant/register/";
+                    data.saveEnabled = false;
+                    scope.setData(data);
+                    succCb();
+                },
+                function (respError) {
+                    errCb(modelStateValidation.parseError(respError.data));
+                }
+            );
+        },
+        save: function (succCb, errCb, parent) {
+
+            var dataCopy = angular.copy(this);
+            dataCopy.register.gender = parseInt(this.register.gender);
+            dataCopy.villa.imageGalleries = null;
+            if (dataCopy.register.tenantType == "ttin") {
+                dataCopy.register.company = null;
+            }
+            else {
+                dataCopy.register.individual = null;
+            }
+
+            $http.post(router.apiPath("contract", "register"), dataCopy)
+                .then(
+                    function (respSuccess) {
+                        succCb(respSuccess);
+                    },
+                    function (respError) {
+                        errCb(modelStateValidation.parseError(respError.data, parent));
+                    });
+        },
+        routeToBilling: function (id) {
+            router.route("billing", "", id);
+        }
+    }
+    return ContractDataService;
+});
+
 mainApp.factory("ContractListDataService", ["$http", "router", "modelStateValidation", function ($http, router, modelStateValidation) {
 
     function ContractListDataService(contractData) {
@@ -154,6 +211,7 @@ mainApp.factory("ContractListDataService", ["$http", "router", "modelStateValida
 
     ContractListDataService.prototype = {
         setData: function (contractData) {
+            this.dataSet = [];
             angular.extend(this.dataSet, contractData);
         },
         loadOfficial: function (succCb, errCb) {
@@ -177,6 +235,19 @@ mainApp.factory("ContractListDataService", ["$http", "router", "modelStateValida
                 function (response) {
                     errCb(modelStateValidation.parseError(response.data));
                 });
+        },
+        routeToBilling: function (id) {
+            router.route("billing", "", id);
+        },
+        remove: function (id, succCb, errCb) {
+            console.log(id);
+            $http.post(router.apiPath("contract", "remove"), { id: id }).then(
+                    function (response) {
+                        succCb(response);
+                    },
+                    function (response) {
+                        errCb(modelStateValidation.parseError(response.data));
+                    });
         }
     };
 
@@ -190,8 +261,7 @@ mainApp.factory("RenewContractDataService",
             this.setData(renewData);
         }
         RenewContracRenewContractDataService.prototype = {
-            setData: function (renewData)
-            {
+            setData: function (renewData) {
                 angular.extend(this, renewData);
             },
             create: function (id, errCb) {
@@ -233,24 +303,23 @@ mainApp.factory("TerminateContractDataService",
                 angular.extend(this, contractData);
             },
             create: function (id, errCb) {
+                var scope = this;
                 $http.get(router.apiPath("contract", "terminate", id)).then(
                         function (response) {
-                            this.setData(response.data);
+                            scope.setData(response.data);
                         },
                         function (response) {
                             errCb(modelStateValidation.parseError(response.data));
                         });
             },
-            save: function (succCb, errCb)
-            {
+            save: function (succCb, errCb) {
                 $http.post(router.apiPath("contract", "terminate"), this).then(
                         function (response) {
                             succCb(response.data);
                         },
                         function (response) {
                             errCb(modelStateValidation.parseError(response.data));
-                        }
-                );
+                        });
             }
         }
 

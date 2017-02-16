@@ -8,6 +8,7 @@ using Sunrise.TransactionManagement.Model;
 using Sunrise.TransactionManagement.Model.ValueObject;
 using Sunrise.TransactionManagement.Persistence.Repository;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Utilities.Enum;
 
@@ -76,16 +77,15 @@ namespace Sunrise.Client.Persistence.Manager
             }
             return result;
         }
-        public async Task<IPagedList<ContractListViewModel>> GetOfficialContracts(int pageNumber = 0, int pageSize = 20)
-        {   
-            IPagedList<ContractView>  contracts = (await UOW.Contracts.GetOfficialContracts())
-                                        .ToPagedList(pageNumber, pageSize);
-            return contracts.ToMappedPagedList<ContractView, ContractListViewModel>();
-        }
-        public async Task<IPagedList<ContractListViewModel>> GetActiveContracts(int pageNumber, int pageSize)
+        public async Task<IEnumerable<ContractListViewModel>> GetOfficialContracts(int pageNumber = 0, int pageSize = 20)
         {
-            var contracts = (await UOW.Contracts.GetActiveContracts()).ToPagedList(pageNumber, pageSize);
-            return contracts.ToMappedPagedList<ContractView, ContractListViewModel>();
+            var contracts = await UOW.Contracts.GetOfficialContracts();
+            return Mapper.Map<IEnumerable<ContractListViewModel>>(contracts);
+        }
+        public async Task<IEnumerable<ContractListViewModel>> GetActiveContracts(int pageNumber, int pageSize)
+        {
+            var contracts = await UOW.Contracts.GetActiveContracts();
+            return  Mapper.Map<IEnumerable<ContractListViewModel>>(contracts);
         }
         public async Task<ContractRegisterEditViewModel> GetContractForRenewal(string contractId)
         {

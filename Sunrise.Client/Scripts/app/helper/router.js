@@ -27,7 +27,6 @@
             if (value) {
                 path = path + "/" + value;
             }
-            console.log(path);
             return path;
         }
     }

@@ -86,22 +86,22 @@ namespace Sunrise.Client.Domains.ViewModels
             this.Birthday = DateTime.Today;
             this.Gender = GenderEnum.Male;
         }
-
         
         public GenderEnum Gender { get; set; }
-        
+
+        [Required]
         [Display(Name="Qatar Id")]
         public string QatarId { get; set; }
-        
+
+        [Required]
         public DateTime Birthday { get; set; }
-        
+        [Required]
         public string Company { get; set; }
-        
+
         public string FullGender
         {
             get { return (this.Gender == GenderEnum.Male) ? "Male" : "Female"; }
         }
-
         public IEnumerable<SelectListItem> Genders
         {
             get
@@ -125,13 +125,14 @@ namespace Sunrise.Client.Domains.ViewModels
 
         [Display(Name = "Business Type")]
         public string BusinessType { get; set; }
-        
+        [Required]
         [Display(Name = "CR No")]
         public string CrNo { get; set; }
-        
+
+        [Required]
         [Display(Name = "Validity Date")]
         public DateTime ValidityDate { get; set; }
-        
+        [Required]
         public string Representative { get; set; }  
     }
 }

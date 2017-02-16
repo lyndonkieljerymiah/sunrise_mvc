@@ -1,142 +1,137 @@
-﻿@{
+﻿@using Sunrise.Client.Infrastructure.Extension
+@model Sunrise.Client.Domains.ViewModels.ContractRegisterCreateViewModel
+@{
     ViewBag.Title = "Contract Registration";
+    ViewBag.Controller = "model.data";
 }
 
-<form class="form-horizontal" method="post" ng-controller="contractController as $ctrl" ng-init="model.action.init('@ViewBag.Id')">
-    <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
-    <spinner></spinner>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="page-header">
-                <h4>@ViewBag.Title</h4>
+<div ng-controller="contractController as $ctrl" ng-init="model.action.init('@ViewBag.Id')">
+    <form class="form-horizontal" model-state-attribute model-scope="errorState">
+        <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
+        <spinner></spinner>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h4>@ViewBag.Title</h4>
+                </div>
             </div>
-        </div>
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="panel panel-yellow">
-                                <div class="panel-heading">New Tenant</div>
-                                <div class="panel-body">
-                                    <!-- angular -->
-                                    <div ng-include="model.data.template"></div>
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="panel panel-yellow">
+                                    <div class="panel-heading">New Tenant</div>
+                                    <div class="panel-body">
+                                        <!-- angular -->
+                                        <div ng-include="model.data.template"></div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <strong>Villa No: {{model.data.villa.villaNo}}</strong>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="thumbnail">
-                                                <!--slider-->
-                                                <slider>
-                                                    <div ng-repeat="slide in nbSlides.images" class="nb-image-container slide-animation" ng-show="slide.visible">
-                                                        <img src="{{slide.imageConverted}}" />
-                                                    </div>
-                                                    <a class="arrow prev" href="#" ng-click="nbSlides.prev()"><i class="fa fa-2x fa-chevron-left"></i></a>
-                                                    <a class="arrow next" href="#" ng-click="nbSlides.next();"><i class="fa fa-2x fa-chevron-right"></i></a>
-                                                    <nav class="nb-bulletin">
-                                                        <ul>
-                                                            <li ng-repeat="slide in nbSlides.images">
-                                                                <a href="#" ng-class="{active:nbSlides.currentIndex == $index}" ng-click="nbSlides.chooseIndex($index)"></a>
-                                                            </li>
-                                                        </ul>
-                                                    </nav>
-                                                    <div class="caption">
-                                                        <p>Descripton: {{model.data.villa.description}}</p>
-                                                        <p>
+                            <div class="col-md-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <strong>Villa No: {{model.data.villa.villaNo}}</strong>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="thumbnail">
+                                                    <!--slider-->
+                                                    <slider>
+                                                        <div ng-repeat="slide in nbSlides.images" class="nb-image-container slide-animation" ng-show="slide.visible">
+                                                            <img src="{{slide.imageConverted}}" />
+                                                        </div>
+                                                        <a class="arrow prev" href="#" ng-click="nbSlides.prev()"><i class="fa fa-2x fa-chevron-left"></i></a>
+                                                        <a class="arrow next" href="#" ng-click="nbSlides.next();"><i class="fa fa-2x fa-chevron-right"></i></a>
+                                                        <nav class="nb-bulletin">
                                                             <ul>
-                                                                <li>Capacity: {{model.data.villa.capacity}}</li>
-                                                                <li>Rate per Month: {{model.data.villa.ratePerMonth | currency : "QR "}}</li>
-                                                                <li>Type: {{model.data.villa.villaType}}</li>
+                                                                <li ng-repeat="slide in nbSlides.images">
+                                                                    <a href="#" ng-class="{active:nbSlides.currentIndex == $index}" ng-click="nbSlides.chooseIndex($index)"></a>
+                                                                </li>
                                                             </ul>
-                                                        </p>
-                                                    </div>
-                                                </slider>
-                                                <!--end slider-->
+                                                        </nav>
+                                                        <div class="caption">
+                                                            <p>Descripton: {{model.data.villa.description}}</p>
+                                                            <p>
+                                                                <ul>
+                                                                    <li>Capacity: {{model.data.villa.capacity}}</li>
+                                                                    <li>Rate per Month: {{model.data.villa.ratePerMonth | currency : "QR "}}</li>
+                                                                    <li>Type: {{model.data.villa.villaType}}</li>
+                                                                </ul>
+                                                            </p>
+                                                        </div>
+                                                    </slider>
+                                                    <!--end slider-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Details</div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-md-4 text-right">Rental Type:</label>
+                                            <div class="col-md-8">
+                                                @Html.NgDropdownFor(m => m.RentalType, "model.data.rentalTypes", (string)ViewBag.Controller)
+                                                @Html.NgValidateFor(m => m.RentalType, (string)ViewBag.Controller)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 text-right">Contract Status:</label>
+                                            <div class="col-md-8">
+                                                @Html.NgDropdownFor(m => m.ContractStatus, "model.data.contractStatuses", (string)ViewBag.Controller)
+                                                @Html.NgValidateFor(m => m.ContractStatus, (string)ViewBag.Controller)
+                                            </div>
+                                        </div>
+                                        <div class="page-header">
+                                            <strong>Period</strong>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 text-right">Start:</label>
+                                            <div class="col-md-8">
+                                                @Html.NgDatePickerFor(m => m.PeriodStart, (string)ViewBag.Controller, "1")
+                                                @Html.NgValidateFor(m => m.PeriodStart, (string)ViewBag.Controller)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 text-right">End:</label>
+                                            <div class="col-md-8">
+                                                @Html.NgDatePickerFor(m => m.PeriodEnd, (string)ViewBag.Controller, "2")
+                                                @Html.NgValidateFor(m => m.PeriodEnd, (string)ViewBag.Controller)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 text-right">Amount:</label>
+                                            <div class="col-md-8">
+                                                @Html.NgInputFor(m => m.Amount, (string)ViewBag.Controller, "amount")
+                                                @Html.NgValidateFor(m => m.Amount, (string)ViewBag.Controller)
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <hr />
-                            <div class="panel panel-default">
-                                <div class="panel-heading">Details</div>
-                                <div class="panel-body">
-                                    <div class="form-group">
-                                        <label class="col-md-4 text-right">Rental Type:</label>
-                                        <div class="col-md-8">
-                                            <select ng-model="model.data.rentalType" class="form-control">
-                                                <option ng-repeat="type in model.data.rentalTypes" value="{{type.value}}">{{type.text}}</option>
-                                            </select>
-                                            <span ng-show="model.errorState['rentaltype']">{{model.errorState['rentaltype']}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-md-4 text-right">Contract Status:</label>
-                                        <div class="col-md-8">
-                                            <select ng-model="model.data.contractStatus" class="form-control">
-                                                <option ng-repeat="status in model.data.contractStatuses" value="{{status.value}}">{{status.text}}</option>
-                                            </select>
-                                            <span ng-show="model.errorState['contractstatusCode']">{{model.errorState['contractstatusCode']}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="page-header">
-                                        <strong>Period</strong>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-md-4 text-right">Start:</label>
-                                        <div class="col-md-8">
-                                            <date-time-picker index="1" model="model.data.periodStart">
-                                                <span ng-show="model.errorState['vm.periodstart']">{{model.errorState['vm.periodstart']}}</span>
-                                            </date-time-picker>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-md-4 text-right">End:</label>
-                                        <div class="col-md-8">
-                                            <date-time-picker index="2" model="model.data.periodEnd">
-                                                <span ng-show="model.errorState['vm.periodend']">{{model.errorState['vm.periodend']}}</span>
-                                            </date-time-picker>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-md-4 text-right">Amount:</label>
-                                        <input-set my-class="col-md-8"
-                                                   my-model="model.data.amount"
-                                                   my-required="true"
-                                                   my-numeric="currency"
-                                                   valid-state="model.errorState['amount'].validate">
-                                            <span ng-hide="model.errorState['amount'].validate">
-                                                {{model.errorState['amount'].message}}
-                                            </span>
-                                        </input-set>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-md-2 pull-right">
-                            <button class="btn btn-primary btn-block text-left"
-                                    ng-click="model.action.save()">
-                                <i class="fa fa-save"></i> Register
-                            </button>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-2 pull-right">
+                                <button class="btn btn-primary btn-block text-left"
+                                        ng-click="model.action.save()">
+                                    <i class="fa fa-save"></i> Register
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>
 @section scripts
 {
     <script src="~/Scripts/app/data/contract-manager.data.js"></script>

@@ -46,8 +46,6 @@ namespace Sunrise.Client.Controllers.Api
         [Route("{contractId}")]
         public async Task<IHttpActionResult> Create(string contractId)
         {
-
-
             //generate bill
             var bill = await _billDataManager.GenerateBill(contractId);
             var selections = await _selectionDataManager

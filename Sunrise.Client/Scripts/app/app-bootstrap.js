@@ -11,11 +11,16 @@
 
 mainApp.factory('modelStateValidation',
     function () {
-
-        function parseError(response) {
+        function parseError(response,parent) {
             var error = {};
             for (var key in response.modelState) {
-                error[key.toLowerCase()] = response.modelState[key][0];
+                var newKey = parent ? parent + "." +  key.toCamelCase(".") : key.toCamelCase(".");
+                if (response.modelState[key] instanceof Array) {
+                    error[newKey] = response.modelState[key][0];
+                }
+                else {
+                    error[newKey] = response.modelState[key];
+                }
             }
             return error;
         }

@@ -35,12 +35,14 @@ namespace Sunrise.Client.Infrastructure.Extension
             builder.Append("ng-model= '" + controller + "." + fullBindingName + "' ");
             builder.Append("type= '" + type + "' ");
             builder.Append("class= 'form-control " + (type.ToLower()=="amount" ? " text-right' " : "' "));
+
             var validationAttributes = html.GetUnobtrusiveValidationAttributes(fullBindingName, metadata);
             foreach (var key in validationAttributes.Keys)
             {   
                 builder.Append(key + "='" + validationAttributes[key].ToString() + "' ");
             }
             string strAttribute = attribs == null ? "" : string.Join(" ", attribs);
+
             builder.Append(strAttribute);
             builder.Append(" />");
 
@@ -146,24 +148,30 @@ namespace Sunrise.Client.Infrastructure.Extension
             fieldId = fieldId.ToCamelCase();
 
             StringBuilder builder = new StringBuilder();
-            builder.Append("<date-time-picker ");
-            builder.Append("my-name= '" + fullBindingName + "' ");
-            builder.Append("model= '" + controller + "." + fullBindingName + "' ");
-            builder.Append("index= '" + index + "' ");
+            builder.Append("<div class='input-group' dt-picker-attrib>");
+            builder.Append("<input class='form-control' name='" + fullBindingName + "' id='" + fullBindingName + "' ");
+            builder.Append("ng-model='" + controller + "." + fullBindingName + "' ");
+            builder.Append("uib-datepicker-popup='MM/dd/yyyy' ");
+            builder.Append("datepicker-options='dateOptions' ");
+            builder.Append("is-open='opened[index]'");
+            builder.Append(" index='" + index + "'");
 
             var validationAttributes = html.GetUnobtrusiveValidationAttributes(fullBindingName, metadata);
             foreach (var key in validationAttributes.Keys)
             {
-                builder.Append(key + "=" + validationAttributes[key].ToString() + " ");
+                builder.Append(key + "='" + validationAttributes[key].ToString() + "' ");
             }
 
-            builder.Append(" ></date-time-picker>");
+            builder.Append(" />");
+            builder.Append("<span class='input-group-btn'><button type='button' class='btn btn-default' ng-click='toggleDateTimePicker($event)'><i class='fa fa-calendar'></i></button></span>");
+            builder.Append("</div>");
+
             return new MvcHtmlString(builder.ToString());
         }
 
         public static MvcHtmlString NgValidateFor<TModel,TValue>(this HtmlHelper<TModel> html,
             Expression<Func<TModel, TValue>> expression,
-            string controller = "")
+            string parent = "")
         {
             var fieldName = ExpressionHelper.GetExpressionText(expression);
             var fullBindingName = html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(fieldName);
@@ -176,9 +184,9 @@ namespace Sunrise.Client.Infrastructure.Extension
             fieldId = fieldId.ToCamelCase();
 
             StringBuilder builder = new StringBuilder();
-            builder.Append("<span ng-show=\"errorState.error['" + controller + "." + fullBindingName +"']\" >");
-            builder.Append("{{errorState.error['" + controller + "." + fullBindingName + "']}}");
-            builder.Append("</span>");
+            builder.Append("<strong class='text-danger'>");
+            builder.Append("{{errorState.error['" + parent + "." + fullBindingName + "']}}");
+            builder.Append("</strong>");
 
             return new MvcHtmlString(builder.ToString());
         }

@@ -52,6 +52,23 @@ mainApp.directive("dateTimePicker", function () {
     }
 });
 
+mainApp.directive("dtPickerAttrib", function () {
+    return {
+        restrict: "A",
+        scope: true,
+        link: function (scope, elem, attrs) {
+            scope.opened = [];
+            scope.toggleDateTimePicker = function ($event, index) {
+                $event.preventDefault();
+                $event.stopPropagation();
+                scope.opened[scope.index] = scope.opened[scope.index] ? false : true;
+            }
+
+        }
+    }
+});
+
+
 mainApp.directive("inputSet", function () {
     return {
         restrict: 'EA',
@@ -123,31 +140,46 @@ mainApp.directive("inputSet", function () {
 mainApp.directive("modelStateAttribute", function () {
     return {
         restrict: "A",
+        scope: {
+            modelScope: "="
+        },
         link: function (scope, elem, attrs) {
             var formObject = $(elem);
             scope.errorState = {
-                validate: function () {
+                validate: function (cbException) {
                     //make it clean at the first time
                     scope.errorState.clear = true;
                     scope.errorState.error = {};
 
+                    //check required
                     var allRequired = formObject.find("[data-val-required]");
+
                     if (allRequired.length > 0) {
                         for (var i = 0; i <= allRequired.length; i++) {
+                            var isExcempted = false;
                             var input = allRequired[i];
                             if (input !== undefined) {
-                                console.log($(input).val());
-                                if ($(input).val().trim().length === 0 || $(input).val() === undefined) {
-                                    scope.errorState.error[$(input).attr("ng-model")] = $(input).attr("data-val-required");
-                                    scope.errorState.clear = false;
+                                if (cbException) {
+                                    var isExcempted = cbException($(input).attr("ng-model"));
+                                }
+                                if (!isExcempted) {
+                                    if ($(input).val().trim().length === 0 || $(input).val() === undefined) {
+                                        scope.errorState.error[$(input).attr("ng-model")] = $(input).attr("data-val-required");
+                                        scope.errorState.clear = false;
+                                    }
                                 }
                             }
                         }
                     }
                 },
                 clear: true,
-                error: {}
+                addError: function(name,value) {
+                    scope.errorState.error[name] = value;
+                }
             };
+            if (scope.modelScope) {
+                scope.modelScope = scope.errorState;
+            }
             function doValidation(type, value) {
                 var errorMessage = "";
                 switch (type) {
