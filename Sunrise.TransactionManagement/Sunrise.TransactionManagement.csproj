@@ -69,29 +69,9 @@
     <Compile Include="Enum\ContractStatusEnum.cs" />
     <Compile Include="Enum\PaymentStatusEnum.cs" />
     <Compile Include="Infrastructure\Extension\EnumerableExtension.cs" />
-    <Compile Include="Migrations\201702061413026_Initial.cs" />
-    <Compile Include="Migrations\201702061413026_Initial.Designer.cs">
-      <DependentUpon>201702061413026_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201702061416362_RemovePaymentDescription.cs" />
-    <Compile Include="Migrations\201702061416362_RemovePaymentDescription.Designer.cs">
-      <DependentUpon>201702061416362_RemovePaymentDescription.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201702071603200_ChangeStringToIndPKReconcile.cs" />
-    <Compile Include="Migrations\201702071603200_ChangeStringToIndPKReconcile.Designer.cs">
-      <DependentUpon>201702071603200_ChangeStringToIndPKReconcile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201702110737291_RemovePaymentMode.cs" />
-    <Compile Include="Migrations\201702110737291_RemovePaymentMode.Designer.cs">
-      <DependentUpon>201702110737291_RemovePaymentMode.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201702110812197_updateDateReconcile.cs" />
-    <Compile Include="Migrations\201702110812197_updateDateReconcile.Designer.cs">
-      <DependentUpon>201702110812197_updateDateReconcile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201702111559499_UpdateTerminate.cs" />
-    <Compile Include="Migrations\201702111559499_UpdateTerminate.Designer.cs">
-      <DependentUpon>201702111559499_UpdateTerminate.cs</DependentUpon>
+    <Compile Include="Migrations\201702200833249_Initial.cs" />
+    <Compile Include="Migrations\201702200833249_Initial.Designer.cs">
+      <DependentUpon>201702200833249_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Bill.cs" />
@@ -128,23 +108,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201702061413026_Initial.resx">
-      <DependentUpon>201702061413026_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702061416362_RemovePaymentDescription.resx">
-      <DependentUpon>201702061416362_RemovePaymentDescription.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702071603200_ChangeStringToIndPKReconcile.resx">
-      <DependentUpon>201702071603200_ChangeStringToIndPKReconcile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702110737291_RemovePaymentMode.resx">
-      <DependentUpon>201702110737291_RemovePaymentMode.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702110812197_updateDateReconcile.resx">
-      <DependentUpon>201702110812197_updateDateReconcile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702111559499_UpdateTerminate.resx">
-      <DependentUpon>201702111559499_UpdateTerminate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702200833249_Initial.resx">
+      <DependentUpon>201702200833249_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

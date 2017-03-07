@@ -108,9 +108,10 @@ namespace Sunrise.TransactionManagement.Model
         public bool UpdatePayment(int id,
           DateTime paymentDate, string paymentType, string paymentMode, string chequeNo,
            string bank, DateTime coveredFrom, DateTime coveredTo,
-           decimal amount, string remarks, string status, string userId)
+           decimal amount, string remarks, string status,string userId)
         {
             var payment = Payments.SingleOrDefault(p => p.Id == id);
+
             if (payment == null)
             {
                 throw new Exception("Cannot find payment");
@@ -126,11 +127,10 @@ namespace Sunrise.TransactionManagement.Model
                 payment.Bank = new StatusDictionary(bank);
                 payment.Period = DateTimeRange.Create(coveredFrom, coveredTo);
                 payment.Amount = amount;
-                payment.SetStatus(status, remarks, userId);
+                payment.SetStatus(status,remarks,userId);
                 return true;
             }
             return false;
-
         }
         
         public void RemovePayment(int id)
@@ -141,7 +141,6 @@ namespace Sunrise.TransactionManagement.Model
                 payment.IsMarkDeleted = true;
             }
         }
-
         private bool IsNotCovered(DateTime value, int id = 0)
         {
             var existingDate = 0;
@@ -150,28 +149,31 @@ namespace Sunrise.TransactionManagement.Model
                 if (id == 0)
                 {
                     existingDate = this.Payments
-                        .Where(p => value.Date >= p.Period.Start &&
-                                value.Date < p.Period.End  && !p.PaymentMode.IsSecurityDeposit()).Count();
+                        .Where(p => !p.PaymentMode.IsSecurityDeposit() && p.Period.IsRangeConflict(value)).Count();
                 }
                 else
                 {
                     //exclude the selected payment
                     existingDate = this.Payments
-                        .Where(p => value.Date >= p.Period.Start &&
-                                value.Date < p.Period.End && !p.PaymentMode.IsSecurityDeposit() && p.Id != id).Count();
+                        .Where(p => 
+                            !p.PaymentMode.IsSecurityDeposit() && 
+                            p.Period.IsRangeConflict(value) && 
+                            p.Id != id).Count();
                 }
             }
+
             return existingDate > 0 ? false : true;
         }
         #endregion
 
 
         #region Reconcile
-        public void AddReconcile(string chequeNo,string paymentType,string referenceNo,string bank,decimal dishonouredAmount,decimal amount,DateTime periodStart,DateTime periodEnd,string remarks)
+        public void AddReconcile(string chequeNo,string paymentType,
+            string referenceNo,string bank,decimal dishonouredAmount,
+            decimal amount,DateTime periodStart,DateTime periodEnd,string remarks)
         {
             var reconcile = Reconcile.Create(chequeNo,paymentType, referenceNo,bank, dishonouredAmount, amount, DateTimeRange.Create(periodStart, periodEnd), remarks);
             Reconciles.Add(reconcile);
-
         }
         public void UpdateReconcile(int id, string chequeNo, string referenceNo,string bank, decimal dishonouredAmount, decimal amount, DateTime periodStart, DateTime periodEnd, string remarks)
         {
@@ -205,6 +207,7 @@ namespace Sunrise.TransactionManagement.Model
             decimal reconcileAmount = Reconciles.Count > 0 ? Reconciles.Sum(r => r.Amount) : 0;
             var totalPaidAmount = paymentAmount + reconcileAmount;
             return Contract.Amount.GetBalance(totalPaidAmount);
+
         }
         #endregion
 

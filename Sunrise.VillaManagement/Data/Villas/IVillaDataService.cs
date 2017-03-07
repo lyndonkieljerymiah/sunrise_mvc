@@ -15,7 +15,7 @@ namespace Sunrise.VillaManagement.Data.Villas
         Task<CustomResult> CreateVilla(Villa villa);
         Task<CustomResult> UpdateVilla(Villa villa);
         Task<CustomResult> RemoveVilla(string id);
-        Task<IEnumerable<VillaListDTO>> GetVillasForDisplay(string villaNo = "", VillaStatusEnum status = VillaStatusEnum.All, int pageNumber = 1, int pageSize = 20);
+        Task<IEnumerable<VillaView>> GetVillas(string villaNo = "", VillaStatusEnum status = VillaStatusEnum.All, int pageNumber = 1, int pageSize = 20);
 
         
         Task<Villa> FindVilla(string id);

@@ -20,15 +20,16 @@ namespace Sunrise.TransactionManagement.Persistence.Repository.Concrete
             
         }
 
-        public async Task<BillView> GetBill(string billId)
+        public async Task<BillView> GetBill(string billCode)
         {
             var parameters = new List<SqlParameter>
             {
-                new SqlParameter("BillCode",billId)
+                new SqlParameter("BillCode",billCode)
             };
+
             var bill = await _context.Database.SqlQuery<BillView>("GetBill @BillCode", parameters.ToArray()).SingleOrDefaultAsync();
-            
-            if(bill != null)
+
+            if (bill != null)
             {
                 bill.Payments = (await GetPayments(bill.Id)).ToList();
                 bill.Reconciles = (await GetReconciles(bill.Id)).ToList();
@@ -42,15 +43,19 @@ namespace Sunrise.TransactionManagement.Persistence.Repository.Concrete
             {
                 new SqlParameter("ContractId",contractId)
             };
-            var bill = await _context.Database.SqlQuery<BillView>("GetBillByContract @ContractId", parameters.ToArray()).SingleOrDefaultAsync();
+
+            var bill = await _context.Database
+                        .SqlQuery<BillView>("GetBillByContract @ContractId", parameters.ToArray())
+                        .SingleOrDefaultAsync();
+
             if (bill != null)
             {
                 bill.Payments = (await GetPayments(bill.Id)).ToList();
                 bill.Reconciles = (await GetReconciles(bill.Id)).ToList();
             }
-
             return bill;
         }
+
         public override void Update(Bill entity)
         {
             if (entity.Payments.Count > 0)
@@ -59,23 +64,38 @@ namespace Sunrise.TransactionManagement.Persistence.Repository.Concrete
                 {
                     if (payment.IsMarkDeleted)
                     {
-                        entity.Payments.Remove(payment);
+                        _context.Payments.Remove(payment);
                         entity.Payments.Remove(payment);
                     }
                 }
             }
+
+            if(entity.Reconciles.Count > 0)
+            {
+                foreach (var  reconcile in entity.Reconciles)
+                {
+                    if(reconcile.IsMarkDeleted)
+                    {
+                        _context.Reconcile.Remove(reconcile);
+                        entity.Reconciles.Remove(reconcile);
+                    }
+                }
+            }
+
             base.Update(entity);
         }
         
         #region private method
         private async Task<IEnumerable<PaymentView>> GetPayments(string billId)
         {
+
             var parameters = new List<SqlParameter> {
                 new SqlParameter("BillId",billId) 
             };
 
-            return await _context.Database.SqlQuery<PaymentView>("GetBillPayment @BillId", parameters.ToArray()).ToListAsync();
-
+            return await _context.Database
+                .SqlQuery<PaymentView>("GetBillPayment @BillId", parameters.ToArray())
+                .ToListAsync();
         }
         private async Task<IEnumerable<ReconcileView>> GetReconciles(string billId)
         {
@@ -83,7 +103,9 @@ namespace Sunrise.TransactionManagement.Persistence.Repository.Concrete
                 new SqlParameter("BillId",billId)
             };
 
-            return await _context.Database.SqlQuery<ReconcileView>("GetBillReconcile @BillId", parameters.ToArray()).ToListAsync();
+            return await _context.Database
+                .SqlQuery<ReconcileView>("GetBillReconcile @BillId", parameters.ToArray())
+                .ToListAsync();
         }
         #endregion
     }

@@ -12,6 +12,7 @@ namespace Sunrise.VillaManagement.Model
         public VillaGallery(ImageBlob blob)
         {
             this.Blob = blob;
+            
         }
 
         internal VillaGallery()

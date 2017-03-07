@@ -17,8 +17,10 @@ namespace Sunrise.TransactionManagement.Model
         {   
             var transaction = new Contract();
             transaction.Code = "C" + code + DateTime.Today.Year.ToString();
+
             transaction.Period = DateTimeRange.SetRange(defaultMonthPeriod);
             transaction.Amount = Payable.Create(ratePerMonth,transaction.Period);
+
             return transaction;
         }
         public static Contract CreateRenewEmpty(string id,string code, int defaultMonthPeriod = 0, decimal ratePerMonth = 0,DateTime periodStart = new DateTime())
@@ -32,7 +34,6 @@ namespace Sunrise.TransactionManagement.Model
 
             return transaction;
         }
-
         public static Contract Map(string code, string rentalType, string contractStatus, DateTime periodStart, DateTime periodEnd,
             decimal amountPayable, string villaId, string tenantId, string userId)
         {
@@ -40,7 +41,7 @@ namespace Sunrise.TransactionManagement.Model
             {
                 Code = code,
                 RentalType = StatusDictionary.CreateByDefault(rentalType),
-                ContractStatus = StatusDictionary.CreateByDefault(contractStatus),
+                ContractType = StatusDictionary.CreateByDefault(contractStatus),
                 Period = DateTimeRange.Create(periodStart, periodEnd),
                 Amount = new Payable(amountPayable),
                 VillaId = villaId,
@@ -59,15 +60,16 @@ namespace Sunrise.TransactionManagement.Model
             this.DateCreated = DateTime.Today;
             this.Status = TransactionStatusDictionary.CreatePending();
             this.RentalType = StatusDictionary.CreateByDefault("rtff");
-            this.ContractStatus = StatusDictionary.CreateByDefault("csl");
-            Amount = new Payable();
+            this.ContractType = StatusDictionary.CreateByDefault("csl");
+
+            this.Amount = new Payable();
         }
         
         public string Id { get; private set; }
         public string Code { get; set; }
         public DateTime DateCreated { get; set; }
         public StatusDictionary RentalType { get; set; }
-        public StatusDictionary ContractStatus { get; set; }
+        public StatusDictionary ContractType { get; set; }
         public DateTimeRange Period { get; set; }
         public Payable Amount { get; set; }
         public TransactionStatusDictionary Status { get; private set; }
@@ -81,15 +83,20 @@ namespace Sunrise.TransactionManagement.Model
         public virtual Terminate Terminate { get; set; }
         
         #region contract status operation
-        public void TerminateContract(string description,string userId)
+        public void Renew()
         {
 
-            if(this.Terminate == null) this.Terminate = new Terminate();
-
-            this.Terminate.Description = description;
-            this.Terminate.UserId = userId;
-            this.Status.Cancelled();
-            this.IsTerminated = true;
+        }
+        public void TerminateContract(string description,string userId)
+        {
+            if (Status.IsActive())
+            {
+                this.Terminate = new Terminate();
+                this.Terminate.Description = description;
+                this.Terminate.UserId = userId;
+                this.Status.Cancelled();
+                this.IsTerminated = true;
+            }
         }
         public void ActivateStatus()
         {
@@ -106,7 +113,7 @@ namespace Sunrise.TransactionManagement.Model
             }
             return true;
         }
-        public bool ContractCompletion()
+        public bool ContractComplete()
         {
             if(this.Status.IsActive())  
                 this.Status.Completed();

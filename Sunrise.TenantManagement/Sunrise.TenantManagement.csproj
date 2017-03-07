@@ -55,13 +55,9 @@
     <Compile Include="Data\Factory\TenantDataFactory.cs" />
     <Compile Include="Data\Tenants\ITenantDataService.cs" />
     <Compile Include="Data\Tenants\TenantDataService.cs" />
-    <Compile Include="Migrations\201701021808339_Initial.cs" />
-    <Compile Include="Migrations\201701021808339_Initial.Designer.cs">
-      <DependentUpon>201701021808339_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201701030732329_Changes.cs" />
-    <Compile Include="Migrations\201701030732329_Changes.Designer.cs">
-      <DependentUpon>201701030732329_Changes.cs</DependentUpon>
+    <Compile Include="Migrations\201702200823554_Initial.cs" />
+    <Compile Include="Migrations\201702200823554_Initial.Designer.cs">
+      <DependentUpon>201702200823554_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Address.cs" />
@@ -82,11 +78,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201701021808339_Initial.resx">
-      <DependentUpon>201701021808339_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701030732329_Changes.resx">
-      <DependentUpon>201701030732329_Changes.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702200823554_Initial.resx">
+      <DependentUpon>201702200823554_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

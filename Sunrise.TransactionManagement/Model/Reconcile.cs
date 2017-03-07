@@ -20,6 +20,7 @@ namespace Sunrise.TransactionManagement.Model
             this.ChequeNo = chequeNo;
             this.PaymentType = new PaymentTypeDictionary(paymentType);
             this.ReferenceNo = referenceNo;
+            this.Date = DateTime.Today;
             this.DishonouredAmount = dishonouredAmount;
             this.Bank = StatusDictionary.CreateByDefault(bank);
             this.Amount = amount;

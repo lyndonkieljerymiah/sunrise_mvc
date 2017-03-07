@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="page-header">
-                <h4>@ViewBag.Title</h4>
+                <h4 class="text-info"><i class="fa fa-credit-card-alt"></i> @ViewBag.Title</h4>
             </div>
         </div>
     </div>
@@ -17,9 +17,10 @@
             <div class="form-group">
                 <div class="input-group">
                     <input type="text"
-                           name="villaNo" id="villaNo"
+                           name="billNo" id="billNo"
                            class="form-control"
                            placeholder="Search Bill No..."
+                           ng-enter="model.action.searchContract()"
                            ng-model="model.txtSearch" />
                     <span class="input-group-btn">
                         <button class="btn btn-primary" ng-click="model.action.searchContract()">
@@ -37,47 +38,57 @@
         </div>
     </div>
     <div class="col-md-12" style="margin:10px 0"></div>
-
     <div class="row">
         <div class="col-md-9">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h5 class="panel-title">Tenant Information</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h5 class="panel-title"><i class="fa fa-user-circle"></i>  Tenant Information</h5>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-2">Name:</div>
+                                <div class="col-md-10">{{model.data.name}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">Address:</div>
+                                <div class="col-md-10">{{model.data.address}}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-2">Name:</div>
-                        <div class="col-md-10">{{model.data.name}}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2">Address:</div>
-                        <div class="col-md-10">{{model.data.address}}</div>
-                    </div>
-                    <hr />
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-condensed table-striped table-bordered">
-                                <tr>
-                                    <th class="text-center">Villa</th>
-                                    <th class="text-center">Period Start</th>
-                                    <th class="text-center">Period End</th>
-                                    <th class="text-center">Amount</th>
-                                    <th class="text-center">Monthly Payable</th>
-                                </tr>
-                                <tr>
-                                    <td class="text-center">{{model.data.villaNo}}</td>
-                                    <td class="text-center">{{model.data.periodStart | date: 'MM/dd/yyyy'}}</td>
-                                    <td class="text-center">{{model.data.periodEnd | date: 'MM/dd/yyyy'}}</td>
-                                    <td class="text-center">{{model.data.amount | currency: 'QR '}}</td>
-                                    <td class="text-center">{{model.data.ratePerMonth | currency: 'QR '}}</td>
-                                </tr>
-                            </table>
+                <div class="col-md-6">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <h5 class="panel-title"><i class="fa fa-home"></i> Villa Information</h5>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <strong class="col-md-4 text-right">Villa No:</strong>
+                                <span class="col-md-6 ">{{model.data.villaNo}}</span>
+                            </div>
+                            <div class="row">
+                                <strong class="col-md-4 text-right">Period:</strong>
+                                <strong class="col-md-6 text-info">
+                                    {{model.data.periodStart | date: 'MM/dd/yyyy'}} -
+                                    {{model.data.periodEnd | date: 'MM/dd/yyyy'}}
+                                </strong>
+                            </div>
+                            <div class="row">
+                                <strong class="col-md-4 text-right">Amount:</strong>
+                                <span class="col-md-6 ">{{model.data.amount | currency: 'QR '}}</span>
+                            </div>
+                            <div class="row">
+                                <strong class="col-md-4 text-right">Monthly Payable:</strong>
+                                <span class="col-md-6 ">{{model.data.ratePerMonth | currency: 'QR '}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <uib-tabset>
-                <uib-tab tabindex="0" heading="Cheque Payment">
+                <uib-tab tabindex="0" heading="Received Payment">
                     <!-- payment -->
                     <div class="row">
                         <div class="col-md-12">
@@ -88,10 +99,9 @@
                                         <th class="text-center">Cheque No</th>
                                         <th class="text-center">Bank</th>
                                         <th class="text-center">Mode</th>
-                                        <th class="text-center">From</th>
-                                        <th class="text-center">To</th>
                                         <th class="text-center">Amount</th>
                                         <th class="text-center">Status</th>
+                                        <th class="text-center">Status Date</th>
                                         <th class="text-center">Remarks</th>
                                         <th></th>
                                     </tr>
@@ -102,21 +112,16 @@
                                         <td class="text-center">{{payment.chequeNo}}</td>
                                         <td class="text-center">{{payment.bankDescription}}</td>
                                         <td class="text-center">{{payment.paymentModeDescription}}</td>
-                                        <td class="text-center">{{payment.periodStart | date:'MM/dd/yyyy'}}</td>
-                                        <td class="text-center">{{payment.periodEnd | date: 'MM/dd/yyyy'}}</td>
                                         <td class="text-center">{{payment.amount | currency: 'QR '}}</td>
                                         <td class="text-center">
-                                            <button href="#"
-                                                    class="btn btn-xs btn-success"
-                                                    uib-popover-template="payment.editTemplate"
-                                                    popover-title="Status - {{payment.statusDescription}}">
-                                                {{payment.statusDescription}}
-                                            </button>
+                                            <span class="label label-success">{{payment.statusDescription}}</span>
                                         </td>
+                                        <td class="text-center" style="width:10%">{{payment.statusDate | date: 'MM/dd/yyyy'}}</td>
                                         <td class="text-center">{{payment.remarks}}</td>
                                         <td class="text-center">
                                             <a href="#"
-                                               class="btn btn-xs btn-primary" 
+                                               class="btn btn-xs btn-primary"
+                                               ng-show="payment.isEditable"
                                                ng-click="model.action.editPayment(payment)"
                                                tooltip-placement="top" uib-tooltip="Edit Payment">
                                                 <i class="fa fa-pencil"></i>
@@ -126,16 +131,6 @@
 
                                 </tbody>
                             </table>
-                            <!-- template -->
-                            <script type="text/ng-template" id="template.html">
-                                <div>Status Editing</div>
-                                <div class="form-group">
-                                    <label>Popup Title:</label>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </script>
-                            <!-- end template -->
-
                         </div>
                     </div>
                     <!-- end payment -->
@@ -144,11 +139,12 @@
                     <div class="body-content">
                         <div class="row">
                             <div class="col-md-12">
-                                <button 
-                                        class="btn btn-success" 
-                                        ng-click="model.action.addReconciledPayment()" 
-                                        tooltip-placement="top" 
-                                        uib-tooltip="Add Reconcile">Add Reconcile</button>
+                                <button class="btn btn-success"
+                                        ng-click="model.action.addReconciledPayment()"
+                                        tooltip-placement="top"
+                                        uib-tooltip="Add Reconcile">
+                                    Add Reconcile
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -162,7 +158,7 @@
                                         <th class="text-center">Reference No</th>
                                         <th class="text-center">Payment Type</th>
                                         <th class="text-center">Bank</th>
-                                        <th class="text-center">Dishonored Amount</th>
+                                        <th class="text-center">Dishonor</th>
                                         <th class="text-center">Amount</th>
                                         <th class="text-center">Period Start</th>
                                         <th class="text-center">Period End</th>
@@ -182,8 +178,8 @@
                                         <td class="text-center">{{reconcile.periodEnd| date:'MM/dd/yyyy'}}</td>
                                         <td class="text-center">{{reconcile.remarks}}</td>
                                         <td class="text-center">
-                                            <button class="btn btn-xs btn-primary" ng-click="ctrl.action.editReconciledPayment(reconcile)"><i class="fa fa-edit"></i></button>&nbsp;
-                                            <button class="btn btn-xs btn-danger" ng-click="ctrl.action.removeReconciledPayment(reconcile)"><i class="fa fa-trash"></i></button>
+                                            <button class="btn btn-xs btn-primary" ng-show="reconcile.isEditable" ng-click="model.action.editReconciledPayment(reconcile)"><i class="fa fa-edit"></i></button>&nbsp;
+                                            <button class="btn btn-xs btn-danger" ng-show="reconcile.isDeletable" ng-click="model.action.removeReconciledPayment(reconcile)"><i class="fa fa-trash"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -193,6 +189,27 @@
                     <!-- end reconcile -->
                 </uib-tab>
             </uib-tabset>
+
+            <div class="row">
+                <div class="col-md-4 pull-right">
+                    <div class="page-header">
+                        <h3 class="text-success">Total</h3>
+                    </div>
+                    <div class="row">
+                        <p class="col-md-6">Cleared:</p><strong class="col-md-6 text-right">{{model.data.totalCleared | currency:'QR '}}</strong>
+                    </div>
+                    <div class="row">
+                        <p class="col-md-6">Dishonored:</p><strong class="col-md-6 text-right">{{model.data.totalDishonored | currency:'QR '}}</strong>
+                    </div>
+                    <div class="row">
+                        <p class="col-md-6">Reconciled:</p><strong class="col-md-6 text-right">{{model.data.totalReconcile | currency:'QR '}}</strong>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <p class="col-md-6">Total Balance Due:</p><strong class="col-md-6 text-right">{{model.data.balance | currency:'QR '}}</strong>
+                    </div>
+                </div>
+            </div>
             <hr />
             <div class="row">
                 <div class="col-md-2 pull-right">
@@ -202,33 +219,51 @@
         </div>
         <div class="col-md-3">
             <div class="well">
-                <strong class="text-success text-center">Contract Status: {{model.data.transactionStatusDescription}}</strong>
+                <div class="row">
+                    <strong class="col-md-3 text-success">Status:</strong>
+                    <strong class="col-md-9 text-right">{{model.data.contractStatusDescription}}</strong>
+                </div>
+                <div class="row">
+                    <strong class="col-md-3 text-success">Period:</strong>
+                    <span class="col-md-9 text-right">
+                            {{model.data.periodStart | date: 'MM/dd/yyyy'}} -
+                            {{model.data.periodEnd | date: 'MM/dd/yyyy'}}
+                    </span>
+                </div>
             </div>
             <div class="well">
                 <div class="row">
                     <div class="col-md-5">
-                        <p class="text-danger"><i class="fa fa-money"></i> Received:</p>
+                        <p class="text-muted"><i class="fa fa-dot-circle-o"></i> Received:</p>
                     </div>
                     <div class="col-md-7 text-right">
-                        <strong class="text-danger">{{model.data.totalReceived | currency : "QR "}}</strong>
+                        <strong class="text-muted">{{model.data.totalReceived | currency : "QR "}}</strong>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-5">
-                        <p class="text-danger"><i class="fa fa-money"></i> Cleared:</p>
+                        <p class="text-success"><i class="fa fa-dot-circle-o"></i> Cleared:</p>
                     </div>
                     <div class="col-md-7 text-right">
-                        <strong class="text-danger">{{model.data.totalCleared | currency : "QR "}}</strong>
+                        <strong class="text-muted">{{model.data.totalCleared | currency : "QR "}}</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <p class="text-muted"><i class="fa fa-dot-circle-o"></i> Bounce:</p>
+                    </div>
+                    <div class="col-md-7 text-right">
+                        <strong class="text-danger">{{model.data.totalBounce | currency : "QR "}}</strong>
                     </div>
                 </div>
                 <hr />
                 <!-- balance-->
                 <div class="row">
                     <div class="col-md-5">
-                        <p class="text-danger"><i class="fa fa-money"></i> Balance:</p>
+                        <p class="text-muted"><i class="fa fa-dot-circle-o"></i> Balance:</p>
                     </div>
                     <div class="col-md-7 text-right">
-                        <strong class="text-danger">{{model.data.balance | currency : "QR "}}</strong>
+                        <strong class="text-info">{{model.data.balance | currency : "QR "}}</strong>
                     </div>
                 </div>
                 <!--end component-->

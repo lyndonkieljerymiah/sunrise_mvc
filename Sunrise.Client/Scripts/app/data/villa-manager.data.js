@@ -108,11 +108,9 @@
 
             },
             save: function (data, action, failure) {
-
                 data.profileImage = null;
                 data.imageGalleries = null;
                 data.types = null;
-
                 var upload = Upload.upload(
                     {
                         url: "/api/villa/save",
@@ -121,35 +119,167 @@
                     });
 
                 upload.then(
-                    function (resp)
-                    {
+                    function (resp) {
                         action(resp.data);
                     },
                     function (resp) {
                         failure(resp);
-                });
+                    });
             },
-            edit: function (id, action, failure)
-            {
+            edit: function (id, action, failure) {
                 $http.get(router.apiPath("villa", "edit", id)).then(
-                    function (resp)
-                    {  
+                    function (resp) {
                         var data = resp.data;
                         data.validation = validation();
                         data.forDeletion = "";
                         data.profileImage = { id: 0, imageConverted: data.defaultImageUrl };
                         action(data);
                     },
-                    function (resp)
-                    {
+                    function (resp) {
                         failure(resp.data);
                     });
             },
             redirect: function (id) {
-                if (id === null || typeof(id) === "undefined")
+                if (id === null || typeof (id) === "undefined")
                     router.route("villa", "create");
                 else
                     router.route("villa", "edit", id);
             }
         }
     });
+
+mainApp.factory("VillaDataService", function ($http, modelStateValidation, router,Upload) {
+
+    function VillaDataService(villaData) {
+        this.setData(villaData);
+        this.txtSelected = "";
+    }
+
+    VillaDataService.prototype = {
+        setData: function (villaData) {
+            angular.extend(this, villaData);
+        },
+        create: function (succCb, errCb) {
+            var scope = this;
+            $http.get(router.apiPath("villa", "create")).then(
+                   function (respErr) {
+                       var data = respErr.data;
+                       data.profileImage = { id: 0, imageConverted: data.defaultImageUrl };
+                       scope.setData(data);
+                       succCb();
+                   },
+                   function (respErr) {
+                       errCb(modelStateValidation.parseError(respErr.data));
+                   }
+            );
+        },
+        save: function (succCb, errCb) {
+            this.profileImage = null;
+            this.imageGalleries = null;
+            this.types = null;
+            var upload = Upload.upload({ url: "/api/villa/save", method: 'POST', data: this });
+            upload.then(
+                function (resp) {
+                    succCb(resp.data);
+                },
+                function (resp) {
+                    errCb(modelStateValidation.parseError(resp.data));
+                });
+        },
+        edit: function (succCb, errCb) {
+            var scope = this;
+            $http.get(router.apiPath("villa", "edit", this.txtSelected)).then(
+                    function (resp) {
+                        var data = resp.data;
+                        data.forDeletion = "";
+                        data.profileImage = { id: 0, imageConverted: data.defaultImageUrl };
+                        scope.setData(data);
+                        succCb();
+                    },
+                    function (resp) {
+                        errCb(modelStateValidation.parseError(resp.data));
+                    });
+        },
+        update: function (succCb,errCb) {
+            this.profileImage = null;
+            this.imageGalleries = null;
+            this.types = null;
+            var upload = Upload.upload({ url: "/api/villa/update", method: 'PUT', data: this });
+
+            upload.then(
+                function (resp) {
+                    action(resp.data);
+                },
+                function (resp) {
+                    failure(resp);
+                });
+            
+        }
+    }
+    return VillaDataService;
+});
+
+mainApp.factory("VillaListDataService", function ($http, modelStateValidation, router) {
+
+    function VillaListDataService(villaData) {
+        this.setData(villaData);
+        this.txtSearch = "";
+    }
+
+    VillaListDataService.prototype = {
+        setData: function (villaData) {
+            angular.extend(this, villaData);
+        },
+        getVacant: function (succCb, errCb) {
+            var scope = this;
+            $http.get(router.apiPath("villa", "search", this.txtSearch))
+                  .then(
+                  function (respSucc) {
+                      var data = {rows:[]};
+                      if (respSucc.data.length > 0) {
+                          angular.forEach(respSucc.data, function (item) {
+                              var row = {
+                                  id: item.id,
+                                  profileImage: item.imageGallery,
+                                  description: item.description,
+                                  capacity: item.capacity,
+                                  ratePerMonth: item.ratePerMonth,
+                                  villaNo: item.villaNo,
+                                  status: item.statusDescription,
+                                  elecNo: item.elecNo,
+                                  waterNo: item.waterNo
+                              };
+                              data.rows.push(row);
+                          });
+                      }
+                      console.log(data);
+                      scope.setData(data);
+                      succCb();
+                },
+                function (respErr) {
+                    errCb(modelStateValidation.parseError(respErr.data));
+                }
+            );
+
+
+        },
+        getAll: function (succCb, errCb) {
+            var scope = this;
+            $http.get(router.apiPath("villa", "list", this.txtSearch))
+                  .then(
+                      function (resSucc) {
+                          var data = {
+                              rows: resSucc.data.listView,
+                              boards: resSucc.data.boards
+                          };
+                          scope.setData(data);
+                          succCb();
+                      },
+                      function (respErr) {
+                          errCb(modelStateValidation.parseError(respErr.data));
+                      });
+        }
+    };
+
+    return VillaListDataService;
+});

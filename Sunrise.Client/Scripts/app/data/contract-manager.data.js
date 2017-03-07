@@ -16,7 +16,7 @@
                                     periodStart: new Date(item.periodStart),
                                     periodEnd: new Date(item.periodEnd),
                                     amountPayable: item.amount,
-                                    status: item.statusDescription,
+                                    status: item.contractStatusDescription,
                                     editState: item.editState
                                 }
                                 row.push(col);
@@ -150,6 +150,7 @@ mainApp.factory("ContractDataService", function ($http, modelStateValidation, ro
     function ContractDataService(contractData) {
         this.setData(contractData);
     }
+
     ContractDataService.prototype = {
         setData: function (contractData) {
             angular.extend(this, contractData);
@@ -189,16 +190,18 @@ mainApp.factory("ContractDataService", function ($http, modelStateValidation, ro
             $http.post(router.apiPath("contract", "register"), dataCopy)
                 .then(
                     function (respSuccess) {
-                        succCb(respSuccess);
+                        succCb(respSuccess.data);
                     },
                     function (respError) {
                         errCb(modelStateValidation.parseError(respError.data, parent));
                     });
         },
         routeToBilling: function (id) {
+
             router.route("billing", "", id);
         }
     }
+
     return ContractDataService;
 });
 
@@ -260,6 +263,7 @@ mainApp.factory("RenewContractDataService",
         function RenewContracRenewContractDataService(renewData) {
             this.setData(renewData);
         }
+
         RenewContracRenewContractDataService.prototype = {
             setData: function (renewData) {
                 angular.extend(this, renewData);
@@ -284,12 +288,12 @@ mainApp.factory("RenewContractDataService",
                         },
                         function (response) {
                             errCb(modelStateValidation.parseError(response.data));
-                        }
-                );
+                        });
             }
         };
+
         return RenewContracRenewContractDataService;
-    }]);
+}]);
 
 mainApp.factory("TerminateContractDataService",
     ["$http", "router", "modelStateValidation", function ($http, router, modelStateValidation) {

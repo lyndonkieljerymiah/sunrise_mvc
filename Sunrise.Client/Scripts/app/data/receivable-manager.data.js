@@ -1,9 +1,9 @@
-﻿mainApp.factory("receivableDataManager", function ($http, modelStateValidation,router) {
+﻿mainApp.factory("receivableDataManager", function ($http, modelStateValidation, router) {
     return {
-        get: function(billCode,success,failure) {
+        get: function (billCode, success, failure) {
             $http.get("/api/receivable/" + billCode + "")
                 .then(
-                function(response) {
+                function (response) {
                     var data = response.data;
                     if (data.payments && data.payments.length > 0) {
                         data.payments.forEach(function (payment) {
@@ -39,8 +39,7 @@
                     data.paymentDictionary.reconcileInitialValue.periodEnd = new Date(data.paymentDictionary.reconcileInitialValue.periodEnd);
                     success(data);
                 },
-                function (response)
-                {   
+                function (response) {
                     failure(modelStateValidation.parseError(response.data));
                 });
         },
@@ -56,10 +55,9 @@
                         failure(modelStateValidation.parseError(response.data));
                     });
         },
-        loadUpdate: function (id,success,failure) {
+        loadUpdate: function (id, success, failure) {
             $http.get("/api/receivable/update/" + id)
-                .then(function (response)
-                {
+                .then(function (response) {
                     var data = {
                         chequeNo: response.data.chequeNo,
                         status: response.data.status,
@@ -70,27 +68,23 @@
                     };
                     success(data);
                 },
-                function (response)
-                {
+                function (response) {
 
                 });
         },
-        update: function (data,success,failure) {
+        update: function (data, success, failure) {
             $http.post("/api/receivable/update", data)
                 .then(function (response) {
                     success(response.data);
                 });
         },
-        reverse: function (data, action, failure)
-        {
+        reverse: function (data, action, failure) {
             $http.post("api/receivable/reverse", data)
-                .then(function (response)
-                {
+                .then(function (response) {
                     console.log(response.data);
                     action(response.data);
                 },
-                function (response)
-                {
+                function (response) {
                     failure(response.data);
                 });
         }
@@ -120,6 +114,9 @@ mainApp.factory("ReceivableDataService", function ($http, modelStateValidation, 
                         data.payments.forEach(function (payment) {
                             payment.paymentDate = new Date(payment.paymentDate);
                             payment.paymentDate.setMinutes(payment.paymentDate.getMinutes() + payment.paymentDate.getTimezoneOffset());
+
+                            payment.statusDate = new Date(payment.statusDate);
+                            payment.statusDate.setMinutes(payment.statusDate.getMinutes() + payment.statusDate.getTimezoneOffset());
 
                             payment.periodStart = new Date(payment.periodStart);
                             payment.periodStart.setMinutes(payment.periodStart.getMinutes() + payment.periodStart.getTimezoneOffset());
@@ -157,18 +154,36 @@ mainApp.factory("ReceivableDataService", function ($http, modelStateValidation, 
                 });
         },
         updateTotal: function () {
-            var totalCleared = 0;
+            
+            this.totalCleared = 0;
+            this.totalBounce = 0;
+            this.totalReceived = 0;
+
             for (var i = 0; i < this.payments.length; i++) {
-                if (this.payments[i].statusCode === "psc")
+                if (this.payments[i].statusCode === "psc") {
                     this.totalCleared = this.totalCleared + this.payments[i].amount;
+                }
+                else if (this.payments[i].statusCode === "psb") {
+                    this.totalBounce = (this.totalBounce + this.payments[i].amount) * -1;
+                }
+                else {
+                    this.totalReceived = this.totalReceived + this.payments[i].amount
+                }
             }
-            this.totalCleared = this.totalCleared + this.reconciles.sum("amount");
+            
+            this.totalReconcile = this.reconciles.sum("amount");
+            this.totalCleared = this.totalCleared;
+            this.totalDishonored = this.totalBounce;
             this.balance = this.amount - this.totalCleared;
+        },
+        hasDishonored: function() {
+            return (this.totalDishonored + this.totalReconcile) < 0 ? true:false;
         },
         getPayment: function (index) {
             return angular.copy(this.payments[index]);
         },
-        updatePayment: function (data) {
+        updatePayment: function (data, index) {
+
             //return status
             angular.forEach(this.paymentDictionary.statuses, function (item) {
                 if (data.statusCode == item.value) {
@@ -192,12 +207,17 @@ mainApp.factory("ReceivableDataService", function ($http, modelStateValidation, 
                     return;
                 }
             });
+
+            data.statusDate = Date.now();
+            data.isModify = true;
+
             angular.copy(data, this.payments[index]);
         },
         getNewReconcile: function () {
             return angular.copy(this.paymentDictionary.reconcileInitialValue)
         },
         addNewReconcile: function (data) {
+            
             //return payment
             angular.forEach(this.paymentDictionary.terms, function (item) {
                 if (data.paymentTypeCode == item.value) {
@@ -212,12 +232,13 @@ mainApp.factory("ReceivableDataService", function ($http, modelStateValidation, 
                     return;
                 }
             });
+
             this.reconciles.push(angular.copy(data));
         },
         getReconcile: function (index) {
             return angular.copy(this.reconciles[index]);
         },
-        updateReconcile: function (data,index) {
+        updateReconcile: function (data, index) {
             angular.forEach(this.paymentDictionary.terms, function (item) {
                 if (data.paymentTypeCode == item.value) {
                     data.paymentTypeDescription = item.text;
@@ -225,17 +246,26 @@ mainApp.factory("ReceivableDataService", function ($http, modelStateValidation, 
                 }
             });
 
-
             angular.forEach(this.paymentDictionary.banks, function (item) {
                 if (data.bankCode == item.value) {
                     data.bankDescription = item.text;
                     return;
                 }
             });
+            data.isModify = true;
             angular.copy(data, this.reconciles[index]);
+        },
+        save: function (succCb, errCb) {
+            $http.post("/api/receivable/update", this)
+               .then(
+               function (respSuccess) {
+                   succCb(respSuccess.data);
+               },
+               function (respError) {
+                   errCb(modelStateValidation.parseError(respError.data));
+               }
+            );
         }
-
     }
-    
     return ReceivableDataService;
 });

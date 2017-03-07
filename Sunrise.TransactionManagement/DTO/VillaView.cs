@@ -22,6 +22,8 @@ namespace Sunrise.TransactionManagement.DTO
         public string Description { get; private set; }
         public decimal RatePerMonth { get; private set; }
 
+        public VillaGalleryView Gallery { get; set; }
+
         public ICollection<VillaGalleryView> Galleries { get; set; }
     }
 }

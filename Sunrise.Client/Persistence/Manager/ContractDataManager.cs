@@ -20,6 +20,7 @@ namespace Sunrise.Client.Persistence.Manager
 
         private IUnitOfWork UOW { get; }
         private ContractConfig Config { get; }
+
         public ContractDataManager(IUnitOfWork unitOfWork)
         {
             UOW = unitOfWork;
@@ -42,7 +43,7 @@ namespace Sunrise.Client.Persistence.Manager
             {
                 var transaction = Contract.Map(vmTransaction.Code,
                     vmTransaction.RentalType,
-                    vmTransaction.ContractStatus,
+                    vmTransaction.ContractType,
                     vmTransaction.PeriodStart,
                     vmTransaction.PeriodEnd, vmTransaction.Amount,
                     vmTransaction.Villa.Id, vmTransaction.Register.Id, vmTransaction.UserId);
@@ -124,7 +125,7 @@ namespace Sunrise.Client.Persistence.Manager
                 {
                     //take the old one and update
                     var oldContract = await UOW.Contracts.FindQueryAsync(register.Id);
-                    var isSuccess = oldContract.ContractCompletion();
+                    var isSuccess = oldContract.ContractComplete();
                     //make sure the contract is completed before creating new one
                     if (isSuccess)
                     {

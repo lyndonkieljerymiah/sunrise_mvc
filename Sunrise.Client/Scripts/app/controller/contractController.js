@@ -1,6 +1,6 @@
 ﻿
 mainApp.controller("contractController", function (
-    $scope, ContractDataService, confirmationDialog, toaster, spinnerManager,$timeout) {
+    $scope, ContractDataService, confirmationDialog, toaster, spinnerManager, $timeout) {
 
     var isPageLoad = false;
     spinnerManager.scope = $scope;
@@ -11,35 +11,32 @@ mainApp.controller("contractController", function (
             save: save
         }
     };
-    //define errorstate
-    $scope.errorState = {};
-
+    $scope.errorState = {  };
     function create(villaId) {
+
         spinnerManager.start();
         $scope.model.data = new ContractDataService();
-        $scope.model.data.create(villaId,
-            function () {
-                //villa
-                $scope.nbSlides.images = $scope.model.data.villa.imageGalleries;
+        $scope.model.data.create(villaId, function () {
+            //villa
+            $scope.nbSlides.images = $scope.model.data.villa.imageGalleries;
+            $scope.$watch("model.data.register.tenantType", function (nv, ov, ob) {
+                $scope.model.data.register.isIndividual = nv === "ttin" ? true : false;
 
-                $scope.$watch("model.data.register.tenantType", function (nv, ov, ob) {
-                    $scope.model.data.register.isIndividual = nv === "ttin" ? true : false;
-                    if ($scope.model.data.register.isIndividual) {
-                        $scope.model.data.register.name = "";
-                        $scope.model.data.register.company.businessType = "";
-                        $scope.model.data.register.company.crNo = "";
-                        $scope.model.data.register.company.representative = "";
-                    }
-                    else {
-                        $scope.model.data.register.name = "";
-                        $scope.model.data.register.individual.qatarId = "";
-                        $scope.model.data.register.individual.company = "";
-                    }
-                });
-                spinnerManager.stop();
+                if ($scope.model.data.register.isIndividual) {
+                    $scope.model.data.register.name = "";
+                    $scope.model.data.register.company.businessType = "";
+                    $scope.model.data.register.company.crNo = "";
+                    $scope.model.data.register.company.representative = "";
+                }
+                else {
+                    $scope.model.data.register.name = "";
+                    $scope.model.data.register.individual.qatarId = "";
+                    $scope.model.data.register.individual.company = "";
+                }
             });
+            spinnerManager.stop();
+        });
     }
-
     function init(villaId) {
         create(villaId);
     }
@@ -96,19 +93,21 @@ mainApp.controller("contractController", function (
     }
 });
 
-mainApp.controller("villaSearchController", function (villaDataManager, $uibModalInstance) {
+mainApp.controller("villaSearchController", function ($scope, VillaListDataService, $uibModalInstance) {
 
     $ctrl = this;
-    $ctrl.villas = [];
-    $ctrl.txtSearch = "";
-    $ctrl.search = search;
-    $ctrl.select = select;
+    
+    $ctrl.model = {
+        data: new VillaListDataService(),
+        action: {
+            search: search,
+            select: select
+        }
+    }
 
     function search() {
-        villaDataManager
-            .searchByNo($ctrl.txtSearch, function (data) {
-                $ctrl.villas = data;
-            });
+        $ctrl.model.data.getVacant(function () {
+        });
     }
 
     function select(id) {
@@ -117,7 +116,6 @@ mainApp.controller("villaSearchController", function (villaDataManager, $uibModa
 
 
 });
-
 
 /***************************************
  * 
@@ -139,11 +137,10 @@ mainApp.controller("contractListController", function ($scope,
         $uibModal,
         router,
         toaster,
-        uiGridConstants)
-{
+        uiGridConstants) {
 
     var $ctrl = this;
-    
+
     $scope.ctrl = {
         action: {
             createNewContract: add,
@@ -209,7 +206,7 @@ mainApp.controller("contractListController", function ($scope,
             { displayName: 'Villa', field: 'villaNo', width: '10%', cellClass: 'text-center' },
             { displayName: 'Start', field: 'periodStart', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width: '10%', cellClass: 'text-center', enableFiltering: false },
             { displayName: 'End', field: 'periodEnd', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width: '10%', cellClass: 'text-center', enableFiltering: false },
-            { displayName: 'Status', field: 'statusDescription', width: '8%', cellClass: 'text-center' },
+            { displayName: 'Status', field: 'contractStatusDescription', width: '8%', cellClass: 'text-center' },
             {
                 name: 'action',
                 displayName: ' ',
@@ -266,6 +263,7 @@ mainApp.controller("contractListController", function ($scope,
                 entity: function () { return entity; }
             }
         });
+
         modalInstance.result.then(
             function (modalResult) {
                 toaster.pop("success", "Contract successfully terminated");
@@ -341,7 +339,7 @@ mainApp.controller("contractListController", function ($scope,
                 toaster.pop("error", "Unexpected error occured");
             }
         );
-        
+
     }
     function add() {
         var modalInstance = $uibModal.open({
@@ -410,7 +408,6 @@ function TerminateController($scope, entity, $uibModalInstance, TerminateContrac
     var $ctrl = this;
     $ctrl.model = new TerminateContractDataService();
     $ctrl.model.create(entity.id);
-    console.log($ctrl.model);
     $ctrl.save = save;
     $ctrl.cancel = cancel;
     function save() {
@@ -423,7 +420,7 @@ function TerminateController($scope, entity, $uibModalInstance, TerminateContrac
     }
 
     function cancel() {
-        $uibModalInstance.dismiss("cancel");
+        $uibModalInstance.dismiss();
     }
 }
 
@@ -444,8 +441,6 @@ function RenewDialogController($uibModalInstance, confirmationDialog, RenewContr
     $ctrl.model = new RenewContractDataService();
     $ctrl.model.create(entity.id);
     $ctrl.save = save;
-    console.log($ctrl.model);
-
     $ctrl.dismiss = dismiss;
 
     function save() {

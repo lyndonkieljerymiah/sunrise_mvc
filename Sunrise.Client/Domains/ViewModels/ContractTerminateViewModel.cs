@@ -18,6 +18,7 @@ namespace Sunrise.Client.Domains.ViewModels
 
         public string ContractId { get; set; }
 
+        [Display(Name="Code")]
         public string ContractCode { get; set; }
 
         [Required]

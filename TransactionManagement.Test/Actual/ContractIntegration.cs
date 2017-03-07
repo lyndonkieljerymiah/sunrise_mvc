@@ -43,7 +43,7 @@ namespace TransactionManagement.Test.Actual
 
                 //create for saving
                 var contractForSaving = Contract.Map(contract.Code, contract.RentalType.Code,
-                    contract.ContractStatus.Code, contract.Period.Start, contract.Period.End,
+                    contract.ContractType.Code, contract.Period.Start, contract.Period.End,
                     contract.Amount.Amount, villaMock.Id, tenantId, userId);
 
                 uow.Contracts.Add(contractForSaving);

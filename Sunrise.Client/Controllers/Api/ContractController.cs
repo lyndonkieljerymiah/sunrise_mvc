@@ -110,7 +110,7 @@ namespace Sunrise.Client.Controllers.Api
             var villaViewModel = await _villaDataManager.GetVilla(villaId);
             villaViewModel.DefaultImageUrl = Url.Content("~/Content/imgs/notavailable.png");
 
-            var selections = await _selectionDataManager.GetLookup(new[] {"TenantType", "RentalType", "ContractStatus"});
+            var selections = await _selectionDataManager.GetLookup(new[] {"TenantType", "RentalType", "ContractType" });
             if (villaViewModel.Type == null)
                 villaViewModel.Type = "vsav";
 
@@ -197,6 +197,7 @@ namespace Sunrise.Client.Controllers.Api
             if(ModelState.IsValid)
             {
                 string userId = User.Identity.GetUserId();
+
                 //validation
                 if (await _userManager.CheckTransactionCode(userId, vm.PassCode))
                 {

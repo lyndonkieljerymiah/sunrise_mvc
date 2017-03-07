@@ -23,7 +23,7 @@ namespace TransactionManagement.Test.Mock
             var contract = Contract.CreateNewEmpty(villaId, 12,rateAmount);
 
             contract.RentalType = StatusDictionary.CreateByDefault(rentalType);
-            contract.ContractStatus = StatusDictionary.CreateByDefault(contractStatus);
+            contract.ContractType = StatusDictionary.CreateByDefault(contractStatus);
             contract.VillaId = villaId;
             contract.TenantId = tenantId;
             contract.Period = DateTimeRange.SetRange(dateStart, 12);
@@ -48,8 +48,9 @@ namespace TransactionManagement.Test.Mock
 
 
         /// <summary>
-        /// TODO: #1 Test if contract is set to pending at first
-        /// 
+        /// TODO:   #1 Test if contract is set to pending at first
+        ///         #2 Check date period if 1 year
+        ///         
         /// </summary>
         [TestMethod]
         public void NewContract_Should_ProperlySet()

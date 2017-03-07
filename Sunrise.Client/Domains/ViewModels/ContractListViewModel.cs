@@ -17,20 +17,16 @@ namespace Sunrise.Client.Domains.ViewModels
 
         public DateTime PeriodStart { get; set; }
         public DateTime PeriodEnd { get; set; }
-        public string StatusDescription { get; set; }
-        public string StatusCode { get; set; }
+
+        public string ContractStatusDescription { get; set; }
+        public string ContractStatusCode { get; set; }
 
         public decimal AmountPayable { get; set; }
         public decimal CreditAmount { get; set; }
         public decimal AmountBalance { get; set; }
         public int MonthDue { get; set; }
 
-        public bool EditState { get { return new TransactionStatusDictionary(StatusCode).IsPending(); } }
-
-    }
-
-    public class InitialTerminate {
-        
+        public bool EditState { get { return new TransactionStatusDictionary(ContractStatusCode).IsPending(); } }
 
     }
 

@@ -61,7 +61,6 @@ namespace Sunrise.Client.Controllers.Api
         {
             var parent = await _selectionDataManager.GetLookup(new string[] { "VillaStatus" });
             var vm = await _villaDataManager.GetVillaMasterList("", VillaStatusEnum.All, 1, 100, Url.Content("~/Content/imgs/notavailable.png"));
-
             var villaMasterFile = new VillaListMasterFile
             {
                 ListView = vm
@@ -81,8 +80,7 @@ namespace Sunrise.Client.Controllers.Api
         [HttpGet]
         [Route("search/{villaNo?}")]
         public async Task<IHttpActionResult> Search(string villaNo = "")
-        {
-            var parent = await _selectionDataManager.GetLookup(new string[] { "VillaStatus" });
+        {   
             var vm = await _villaDataManager.GetVacantVillas(villaNo, 1, 100, Url.Content("~/Content/imgs/notavailable.png"));
             return Ok(vm);
         }
@@ -91,7 +89,6 @@ namespace Sunrise.Client.Controllers.Api
         [Route("update")]
         public async Task<IHttpActionResult> Update([ModelBinder] VillaViewModel vm)
         {
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -115,7 +112,17 @@ namespace Sunrise.Client.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _villaDataManager.CreateVilla(vm);
+            CustomResult result = new CustomResult();
+
+            if(string.IsNullOrEmpty(vm.Id))
+            {
+                result = await _villaDataManager.CreateVilla(vm);
+            }
+            else
+            {
+                result = await _villaDataManager.UpdateVilla(vm);
+            }
+            
             if (!result.Success)
             {
                 foreach (var error in result.Errors)
@@ -124,6 +131,7 @@ namespace Sunrise.Client.Controllers.Api
                 }
                 return BadRequest(ModelState);
             }
+
             return Ok(result);
         }
 

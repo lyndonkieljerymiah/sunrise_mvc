@@ -14,7 +14,7 @@
         </div>
 
         <div class="col-md-2 pull-right">
-            <div class="pull-right">
+            <div class="pull-right hide-media-print">
                 <button class="btn btn-success">
                     <i class="fa fa-print"></i>
                 </button>
@@ -26,19 +26,37 @@
         <div class="col-md-12" style="margin:10px 0"></div>
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-9">
+                <div class="col-md-9 col-p-9">
                     <div class="panel panel-info">
-                        <div class="panel-heading">Tenant Information</div>
+                        <div class="panel-heading">
+                            <i class="fa fa-user-circle"></i> Tenant Information
+                            <div class="pull-right">
+                                <button class="btn btn-xs btn-info"><i class="fa fa-gear"></i></button>
+                            </div>
+                        </div>
                         <div class="panel-body">
-                            <div class="col-md-9">
-                                <div class="body-content">
+                            <div class="col-md-12 col-p-12">
+                                <div class="col-md-3 hide-media-print" >
+                                    <div class="thumbnail">
+                                        <img  src="~/Content/imgs/user_profile.jpg" />
+                                    </div>
+                                </div>
+                                <div class="col-md-9 col-p-12">
                                     <div class="row">
-                                        <div class="col-md-2">Name:</div>
-                                        <div class="col-md-10">{{model.data.name}}</div>
+                                        <div class="col-md-2 col-p-2">Name:</div>
+                                        <div class="col-md-10 col-p-10">{{model.data.name}}</div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-2">Address:</div>
-                                        <div class="col-md-10">{{model.data.address}}</div>
+                                        <div class="col-md-2 col-p-2">Email:</div>
+                                        <div class="col-md-10 col-p-10">{{model.data.emailAddress}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2  col-p-2">Tel No:</div>
+                                        <div class="col-md-10 col-p-10">{{model.data.telNo}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2  col-p-2">Address:</div>
+                                        <div class="col-md-10 col-p-10">{{model.data.address}}</div>
                                     </div>
                                 </div>
                             </div>
@@ -59,7 +77,7 @@
                                     <td>{{model.data.periodEnd | date: "MM/dd/yyyy"}}</td>
                                     <td>{{model.data.amount | currency :"QR "}}</td>
                                     <td>{{model.data.ratePerMonth | currency :"QR "}}</td>
-                                    <td>{{model.data.villaStatus}}</td>
+                                    <td>{{model.data.villaStatusDescription}}</td>
                                 </tr>
                             </table>
                         </div>
@@ -75,7 +93,7 @@
                                     <th class="text-center">Covered Period</th>
                                     <th style="width:12%;text-align:center">Amount</th>
                                     <th style="width:10%;text-align:center">Status</th>
-                                    <th></th>
+                                    <th class="hide-media-print"></th>
                                 </tr>
                                 <tbody>
                                     <tr ng-repeat="payment in model.data.payments | orderBy : 'paymentDate':reverse track by $index"
@@ -90,13 +108,13 @@
                                         </td>
                                         <td class="text-right">{{payment.amount | currency:"QR "}}</td>
                                         <td class="text-center"><span class="label label-info">{{payment.statusDescription}}</span></td>
-                                        <th style="width:10%;text-align:center">
+                                        <th class="hide-media-print" style="width:10%;text-align:center">
                                             <button ng-click="model.action.remove(payment)" class="btn btn-danger btn-xs" tooltip-placement="top" uib-tooltip="Remove Payment"><i class="fa fa-trash"></i></button> &nbsp;
                                             <button ng-click="model.action.edit(payment)" class="btn btn-danger btn-xs" tooltip-placement="top" uib-tooltip="Edit Payment"><i class="fa fa-pencil"></i></button>
                                         </th>
                                     </tr>
                                 </tbody>
-                                <tfoot>
+                                <tfoot class="hide-media-print">
                                     <tr class="active">
                                         <td colspan="7"></td>
                                         <td class="text-center">
@@ -106,17 +124,35 @@
                                     </tr>
                                 </tfoot>
                             </table>
+                            <div class="row">
+                                <div class="col-md-4 pull-right col-p-6">
+                                    <div class="page-header">
+                                        <h3 class="text-success">Total</h3>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-6 col-p-6">Received:</p><strong class="col-md-6  col-p-6 text-right">{{model.data.totalReceived | currency:'QR '}}</strong>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-6  col-p-6">Cleared:</p><strong class="col-md-6  col-p-6 text-right">{{model.data.totalCleared | currency:'QR '}}</strong>
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <p class="col-md-6  col-p-6">Total Balance Due:</p><strong class="col-md-6  col-p-6 text-right">{{model.data.balance | currency:'QR '}}</strong>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="col-md-2 pull-right">
                             <button class="btn btn-primary btn-block" ng-click="model.action.save()" ng-show="model.data.saveEnabled"><i class="fa fa-save"></i> Save</button>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 col-p-3">
                     <!-- status component -->
                     <div class="well">
-                        <p><strong class="text-success text-center">Contract No: {{model.data.contractCode}}</strong></p>
-                        <p><strong class="text-success text-center">Status: {{model.data.transactionStatusDescription}}</strong></p>
+                        <p><strong class="text-success text-center">No: {{model.data.contractCode}}</strong></p>
+                        <p><strong class="text-success text-center">Status: {{model.data.contractStatusDescription}}</strong></p>
                     </div>
 
                     <div class="well">

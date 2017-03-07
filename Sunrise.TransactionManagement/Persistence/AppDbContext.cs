@@ -13,7 +13,7 @@ namespace Sunrise.TransactionManagement.Persistence
 {
     public class AppDbContext : BaseDbContext
     {
-        public DbSet<Contract> Transactions { get; set; }
+        public DbSet<Contract> Contracts { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Bill> Bill { get; set; }
         public DbSet<Reconcile> Reconcile { get; set; }
@@ -23,7 +23,7 @@ namespace Sunrise.TransactionManagement.Persistence
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasDefaultSchema("stm");
 
-            modelBuilder.Entity<Contract>().ToTable("Transaction");
+            modelBuilder.Entity<Contract>().ToTable("Contract");
             modelBuilder.Entity<Bill>().ToTable("Bill");
 
             modelBuilder.Entity<Payment>().ToTable("Payment");

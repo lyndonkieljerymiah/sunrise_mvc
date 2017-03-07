@@ -16,20 +16,20 @@ namespace Sunrise.VillaManagement.Model
         private ICollection<VillaGallery> ForDeletion { get; set; }
 
         #region Factory
-        public static Villa Map(string villaNo,string elecNo,string waterNo,
+        public static Villa Map(string villaNo, string location,string elecNo,string waterNo,
             string qtelNo,string type,int capacity,string description,decimal ratePerMonth)
         {
-           return new Villa(villaNo, elecNo, waterNo, qtelNo, type, capacity, description,ratePerMonth);
+           return new Villa(villaNo,location, elecNo, waterNo, qtelNo, type, capacity, description,ratePerMonth);
         }
         #endregion
-
-
+        
         #region Constructor
-        internal Villa(string villaNo, string elecNo, string waterNo, string qtelNo, 
+        internal Villa(string villaNo, string location, string elecNo, string waterNo, string qtelNo, 
             string type, int capacity, string description,decimal ratePerMonth) : this()
         {
 
             this.VillaNo = villaNo;
+            this.Location = location;
             this.ElecNo = elecNo;
             this.WaterNo = waterNo;
             this.QtelNo = qtelNo;
@@ -49,13 +49,14 @@ namespace Sunrise.VillaManagement.Model
             State = new VillaState();
             MakeAvailable();
             ForDeletion = new HashSet<VillaGallery>();
+            this.IsActive = true;
         }
         #endregion
-
-
+        
         public string Id { get; private set; }
         public DateTime DateStamp { get; private set; }
         public string VillaNo { get; set; }
+        public string Location { get; set; }
         public string ElecNo { get; set; }
         public string WaterNo { get; set; }
         public string QtelNo { get; set; }
@@ -64,14 +65,17 @@ namespace Sunrise.VillaManagement.Model
         public int Capacity { get; set; }
         public string Description { get; set; }
         public decimal RatePerMonth { get; set; }
-        public virtual ICollection<VillaGallery> Galleries { get; set; }
         public int ProfileIndex { get; set; }
+        public bool IsActive { get; set; }
 
-        public void Update(string villaNo, string elecNo, string waterNo,
+        public virtual ICollection<VillaGallery> Galleries { get; set; }
+
+        public void Update(string villaNo,string location, string elecNo, string waterNo,
             string qtelNo, string type, int capacity, 
             string description, decimal ratePerMonth)
         {
             this.VillaNo = villaNo;
+            this.Location = location;
             this.ElecNo = elecNo;
             this.WaterNo = waterNo;
             this.QtelNo = qtelNo;
@@ -81,36 +85,29 @@ namespace Sunrise.VillaManagement.Model
             this.RatePerMonth = ratePerMonth;
         }
 
-
         #region ver 1.1 - new approach pattern
         public void MakeAvailable()
         {
             this.Status = this.State.Vacant();
         }
-        
         public void MakeReserved()
         {
             this.Status = this.State.Reserved();
         }
-        
         public void MakeOccupied()
         {
             this.Status = this.State.Occupied();
         }
-        
         public void MarkGalleryForDeletion(int galleryId)
         {
             var gallery = Galleries.SingleOrDefault(g => g.Id == galleryId);
             ForDeletion.Add(gallery);
-
         }
-
         public ICollection<VillaGallery> GetForDeletion()
         {
             return ForDeletion;
         }
         #endregion
-
 
         #region ver 1.0 - deprecated soon
         /// <summary>

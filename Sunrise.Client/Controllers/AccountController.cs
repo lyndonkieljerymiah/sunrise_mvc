@@ -35,6 +35,7 @@ namespace Sunrise.Client.Controllers
             get
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+                
             }
             private set 
             { 
@@ -153,8 +154,13 @@ namespace Sunrise.Client.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = model.UserName, Email = model.Email, TransactionCode = model.TransactionCode};
+                var user = new User {
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    TransactionCode = model.TransactionCode};
+
                 var result = await UserManager.CreateAsync(user, model.Password);
+                
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);

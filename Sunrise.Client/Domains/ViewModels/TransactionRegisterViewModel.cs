@@ -17,7 +17,7 @@ namespace Sunrise.Client.Domains.ViewModels
         public ContractRegisterCreateViewModel()
         {
             this.RentalTypes = new List<SelectListItem>();
-            this.ContractStatuses = new List<SelectListItem>();
+            this.ContractTypes = new List<SelectListItem>();
             this.Villa = new VillaViewModel();
             this.Register = new TenantRegisterViewModel();
         }
@@ -29,7 +29,7 @@ namespace Sunrise.Client.Domains.ViewModels
         public string RentalType { get; set; }
         
         [Required]
-        public string ContractStatus { get; set; }
+        public string ContractType { get; set; }
         
 
         [Required]
@@ -54,12 +54,12 @@ namespace Sunrise.Client.Domains.ViewModels
         public TenantRegisterViewModel Register { get; set; }
 
         public IEnumerable<SelectListItem> RentalTypes { get; private set; }
-        public IEnumerable<SelectListItem> ContractStatuses { get; private set; }
+        public IEnumerable<SelectListItem> ContractTypes { get; private set; }
 
         public void SetContractStatuses(IEnumerable<Selection> selections)
         {
-            this.ContractStatuses = selections
-                 .Where(s => s.Type == "ContractStatus")
+            this.ContractTypes = selections
+                 .Where(s => s.Type == "ContractType")
                  .Select(s => new SelectListItem() { Text = s.Description, Value = s.Code });
         }
         public void SetRentalTypes(IEnumerable<Selection> selections)

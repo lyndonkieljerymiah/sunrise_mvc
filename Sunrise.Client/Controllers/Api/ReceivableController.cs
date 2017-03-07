@@ -37,6 +37,7 @@ namespace Sunrise.Client.Controllers.Api
         public async Task<IHttpActionResult> GetBill(string billCode)
         {
             var bill = await _billDataManager.GetBillByCode(billCode);
+
             if (bill == null)
             {
                 ModelState.AddModelError("BillInvalidCodeException", "Invalid Bill No");
@@ -44,6 +45,7 @@ namespace Sunrise.Client.Controllers.Api
             }
             var selections = await _selectionDataManager
                 .GetLookup(new[] { "Bank", "PaymentTerm", "PaymentMode", "PaymentStatus" });
+
             bill.Initialize(selections);
 
             return Ok(bill);
@@ -59,7 +61,6 @@ namespace Sunrise.Client.Controllers.Api
         public async Task<IHttpActionResult> Update(BillingViewModel vm)
         {
             var userId = User.Identity.GetUserId();
-                
             //update the payment
             var result = await _billDataManager.Update(vm, userId);
             return Ok(result);

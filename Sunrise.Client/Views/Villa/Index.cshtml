@@ -3,40 +3,53 @@
     ViewBag.Title = "Villa Master File";
 }
 
-<div ng-controller="villaListController as $ctrl" ng-init="$ctrl.list()">
+<div ng-controller="villaListController as $ctrl" ng-init="model.action.getAll()">
     <spinner></spinner>
     <div class="row">
         <div class="col-md-12">
             <div class="page-header">
-                <h4>Villa List</h4>
+                <h4>@ViewBag.Title</h4>
             </div>
         </div>
-        <div class="col-md-3 pull-left"><search-box placeholder="Search Villa..." search-key="txtSearch"></search-box></div>
+
+        <!--board -->
+        <div class="row">
+            <div class="col-md-4 col-lg-4" ng-repeat="board in model.data.boards">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-5x fa-fw fa-home"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">{{board.total}} </div>
+                                <h5>{{board.header}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body"></div>
+                </div>
+            </div>
+        </div>
+        <!--end board -->
+
+        <!--search-->
+        <div class="col-md-3 pull-left">
+            <search-box 
+                placeholder="Search Villa..." 
+                search-key="model.data.txtSearch"></search-box>
+        </div>
+
         <div class="col-md-2 pull-right">
             <div class="pull-right">
-                <button class="btn btn-primary" ng-click="$ctrl.redirect()"><i class="fa fa-plus-circle"></i> Add Villa</button>
+                <button 
+                    class="btn btn-primary" 
+                    ng-click="model.action.addVilla()"><i class="fa fa-plus-circle"></i> Add Villa</button>
             </div>
         </div>
     </div>
     <hr />
-    <div class="row">
-        <div class="col-md-4 col-lg-4" ng-repeat="board in boards">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <i class="fa fa-5x fa-fw fa-home"></i>
-                        </div>
-                        <div class="col-xs-9 text-right">
-                            <div class="huge">{{board.total}} </div>
-                            <h5>{{board.header}}</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body"></div>
-            </div>
-        </div>
-    </div>
+
     <div class="row">
         <div class="col-md-12 nb-list-container">
             <table class="table table-condensed table-bordered">
@@ -49,25 +62,26 @@
                     <th style="width:5%;text-align:center">Status</th>
                     <th style="width:5%"></th>
                 </tr>
-                <tr ng-repeat="model in models | filter:txtSearch">
+                <tr ng-repeat="item in model.data.rows">
                     <td class="text-center">
                         <div class="thumbnail">
-                            <img alt="" src="{{model.imageGallery.imageConverted}}" style="width:100%" />
+                            <img alt="" src="{{item.imageGallery.imageConverted}}" style="width:100%" />
                         </div>
                     </td>
-                    <td class="text-center">{{model.villaNo}}</td>
-                    <td>{{model.description}}</td>
-                    <td class="text-center">{{model.capacity}}</td>
-                    <td class="text-left">{{model.ratePerMonth | currency: 'QR '}}</td>
-                    <td class="text-center">{{model.status}}</td>
+                    <td class="text-center">{{item.villaNo}}</td>
+                    <td>{{item.description}}</td>
+                    <td class="text-center">{{item.capacity}}</td>
+                    <td class="text-right">{{item.ratePerMonth | currency: 'QR '}}</td>
+                    <td class="text-center">{{item.statusDescription}}</td>
                     <td class="text-center">
-                        <button ng-click="$ctrl.redirect(model.id)" class="btn btn-sm btn-default"><i class="fa fa-pencil-square"></i></button>
+                        <button ng-click="model.action.editVilla(item.id)" class="btn btn-sm btn-default"><i class="fa fa-pencil-square"></i></button>
                     </td>
                 </tr>
             </table>
         </div>
     </div>
 </div>
+
 @section scripts {
     <script src="~/Scripts/app/data/villa-manager.data.js"></script>
     <script src="~/Scripts/app/controller/villaController.js"></script>

@@ -33,7 +33,7 @@ namespace Sunrise.Client.Domains.ViewModels
         public string ElecNo { get; set; }
         public string WaterNo { get; set; }
         public string QtelNo { get; set; }
-        public string Status { get; set; }
+        public string StatusDescription { get; set; }
         public string StatusCode { get; set; }
         public string Type { get; set; }
         public string DefaultImageUrl { get; set; }

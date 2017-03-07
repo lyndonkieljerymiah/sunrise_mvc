@@ -8,6 +8,7 @@
 
 mainApp.controller("receivableController", ReceivableController);
 ReceivableController.$inject = ["$scope", "receivableDataManager","ReceivableDataService", "alertDialog", "confirmationDialog", "toaster", "modelStateValidation", "$uibModal", "spinnerManager"];
+
 function ReceivableController(
     $scope,
     receivableDataManager,
@@ -68,20 +69,24 @@ function ReceivableController(
     }
 
     function searchContract() {
+
         if ($scope.model.txtSearch.trim().length === 0) {
             toaster.pop("error", "", "Please Enter Search...");
             return 0;
         }
+
         spinnerManager.start();
         $scope.model.data = new ReceivableDataService();
         $scope.model.data.create($scope.model.txtSearch,
             function (respSuccess) {
-                $scope.$watch("ctrl.data.payments", function (nv, ov, ob) {
+                
+                $scope.$watch("model.data.payments", function (nv, ov, ob) {
                     $scope.model.data.updateTotal();
                 }, true);
-                $scope.$watch("ctrl.data.reconciles", function (nv, ov, ob) {
+                $scope.$watch("model.data.reconciles", function (nv, ov, ob) {
                     $scope.model.data.updateTotal();
                 }, true);
+
                 $scope.model.enabledUpdate = true;
                 spinnerManager.stop();
             },
@@ -93,19 +98,23 @@ function ReceivableController(
         );
     }
     function update() {
-
         confirmationDialog.open({
             title: 'Update Confirmation',
             description: 'Are you sure you want to update?',
             buttons: ['Yes', 'No'],
             action: function (response) {
                 spinnerManager.start();
-                receivableDataManager.update($scope.ctrl.data,
-                    function (data) {
-                        if (data.success) {
-                            toaster.pop("success", "Save successful");
-                            spinnerManager.stop();
-                            //$scope.action.searchContract();
+                $scope.model.data.save(
+                    function (respSuccess) {
+                        if (respSuccess.success) {
+                            toaster.pop("success", "", "Save successful");
+                            searchContract();
+                        }
+                        spinnerManager.stop();
+                    },
+                    function (respError) {
+                        for (var key in respError) {
+                            toaster.pop("error","", respError[key]);
                         }
                     });
             }
@@ -130,27 +139,34 @@ function ReceivableController(
             }
         });
     }
-
     function editPayment(item) {
+
         var index = $scope.model.data.payments.indexOf(item);
         if (index >= 0) {
             var payment = $scope.model.data.getPayment(index); 
             var modalInstance = modal(1, payment);
             modalInstance.result.then(function (returnData) {
-                $scope.model.data.updatePayment(returnData);
+                $scope.model.data.updatePayment(returnData,index);
             });
         }
     }
     function addReconciledPayment() {
-        var reconcile = $scope.model.data.getNewReconcile();
-        var uibModalInstance = modal(2, reconcile);
-        uibModalInstance.result.then(function (returnData) {
-            $scope.model.data.addNewReconcile(returnData);
-        });
+
+        //check first if has dishonored amount
+        if ($scope.model.data.hasDishonored()) {
+            var reconcile = $scope.model.data.getNewReconcile();
+            var uibModalInstance = modal(2, reconcile);
+            uibModalInstance.result.then(function (returnData) {
+                $scope.model.data.addNewReconcile(returnData);
+            });
+        }
+        else {
+            toaster.pop("error", "", "There's nothing to reconcile");
+        }
     }
     function editReconciledPayment(item)
     {
-        var index = $scope.ctrl.data.reconciles.indexOf(item);
+        var index = $scope.model.data.reconciles.indexOf(item);
         if (index >= 0) {
             var reconcile = $scope.model.data.getReconcile(index);
             var modalInstance = modal(2, reconcile);
@@ -178,7 +194,8 @@ mainApp.controller("paymentController",
         }
     });
 
-mainApp.controller("reconcileController", function (reconcile, paymentObject, $uibModalInstance) {
+mainApp.controller("reconcileController",
+    function (reconcile, paymentObject, $uibModalInstance) {
 
     var $ctrl = this;
     $ctrl.paymentObject = paymentObject;
@@ -187,7 +204,7 @@ mainApp.controller("reconcileController", function (reconcile, paymentObject, $u
     $ctrl.cancel = function () {
         $uibModalInstance.dismiss();
     }
-
+    
     $ctrl.save = function () {
         $uibModalInstance.close($ctrl.reconcile);
     }

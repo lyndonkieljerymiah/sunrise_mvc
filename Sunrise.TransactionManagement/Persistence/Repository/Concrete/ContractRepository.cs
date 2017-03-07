@@ -23,35 +23,36 @@ namespace Sunrise.TransactionManagement.Persistence.Repository.Concrete
 
         public async Task<IEnumerable<ContractView>> GetActiveContracts()
         {
-            var contracts = await _context.Database.SqlQuery<ContractView>("dbo.GetAllContracts").ToListAsync();
-            return contracts.Where(c => TransactionStatusDictionary.GetActive().Contains(c.StatusCode));
-        }
+            var contracts = await _context.Database
+                .SqlQuery<ContractView>("dbo.GetAllContracts")
+                .ToListAsync();
 
+            return contracts.Where(c => TransactionStatusDictionary.GetActive().Contains(c.ContractStatusCode));
+        }
         public async Task<IEnumerable<ContractView>> GetContracts(string[] status = null)
         {   
             var contracts = await _context.Database.SqlQuery<ContractView>("dbo.GetAllContracts").ToListAsync();
-            return contracts.Where(c => status.Contains(c.StatusCode));
+            return contracts.Where(c => status.Contains(c.ContractStatusCode));
         }
-
         public async Task<IEnumerable<ContractView>> GetOfficialContracts()
         {
             var contracts = await _context.Database.SqlQuery<ContractView>("dbo.GetAllContracts").ToListAsync();
-            return contracts.Where(c => TransactionStatusDictionary.GetOfficials().Contains(c.StatusCode));
+            return contracts.Where(c => TransactionStatusDictionary.GetOfficials().Contains(c.ContractStatusCode));
         }
-
-
         public async Task<ContractSingleView> GetSingleContract(string id)
         {
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("ContractId",id)
             };
 
-            var contract = await _context.Database.SqlQuery<ContractSingleView>("dbo.GetContractById @ContractId", parameters.ToArray()).SingleOrDefaultAsync();
+            var contract = await _context.Database
+                .SqlQuery<ContractSingleView>("dbo.GetContractById @ContractId", parameters.ToArray())
+                .SingleOrDefaultAsync();
             return contract;
 
         }
-
-
+        
     }
 }

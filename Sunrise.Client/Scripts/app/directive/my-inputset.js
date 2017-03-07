@@ -13,8 +13,7 @@
                    "<span class='input-group-btn'>",
                    "<button class='btn btn-default' ng-click='trigger()'><i class='fa fa-search'></i></button>",
                    "</span></div>"].join(''),
-        link: function (scope, element, attrs)
-        {
+        link: function (scope, element, attrs) {
             scope.trigger = function () {
                 scope.action();
             }
@@ -52,6 +51,7 @@ mainApp.directive("dateTimePicker", function () {
     }
 });
 
+
 mainApp.directive("dtPickerAttrib", function () {
     return {
         restrict: "A",
@@ -68,7 +68,6 @@ mainApp.directive("dtPickerAttrib", function () {
     }
 });
 
-
 mainApp.directive("inputSet", function () {
     return {
         restrict: 'EA',
@@ -82,7 +81,7 @@ mainApp.directive("inputSet", function () {
             validState: "=",
             errorMsg: "=",
             myType: "@",
-            myId : "@"
+            myId: "@"
         },
         template: ["<div class='{{myClass}}'>",
                    "<input type='{{myType}}' class='form-control' ng-model='myModel' ng-blur='myBlur' id='{{myId}}' name='{{myId}}' />",
@@ -94,9 +93,8 @@ mainApp.directive("inputSet", function () {
 
             //check input validation
             var inp = el.find("input");
-            
-            inp.bind("change", function ()
-            {   
+
+            inp.bind("change", function () {
                 if (scope.myNumeric) {
                     scope.validState = doValidation(scope.myNumeric);
                     if (!scope.validState) {
@@ -145,11 +143,12 @@ mainApp.directive("modelStateAttribute", function () {
         },
         link: function (scope, elem, attrs) {
             var formObject = $(elem);
-            scope.errorState = {
+            scope.modelScope = {
                 validate: function (cbException) {
                     //make it clean at the first time
-                    scope.errorState.clear = true;
-                    scope.errorState.error = {};
+                    scope.modelScope.clear = true;
+                    scope.modelScope.error = {
+                    };
 
                     //check required
                     var allRequired = formObject.find("[data-val-required]");
@@ -164,8 +163,8 @@ mainApp.directive("modelStateAttribute", function () {
                                 }
                                 if (!isExcempted) {
                                     if ($(input).val().trim().length === 0 || $(input).val() === undefined) {
-                                        scope.errorState.error[$(input).attr("ng-model")] = $(input).attr("data-val-required");
-                                        scope.errorState.clear = false;
+                                        scope.modelScope.error[$(input).attr("ng-model")] = $(input).attr("data-val-required");
+                                        scope.modelScope.clear = false;
                                     }
                                 }
                             }
@@ -173,13 +172,12 @@ mainApp.directive("modelStateAttribute", function () {
                     }
                 },
                 clear: true,
-                addError: function(name,value) {
-                    scope.errorState.error[name] = value;
-                }
+                addError: function (name, value) {
+                    scope.modelScope.error[name] = value;
+                },
+                error: { }
             };
-            if (scope.modelScope) {
-                scope.modelScope = scope.errorState;
-            }
+
             function doValidation(type, value) {
                 var errorMessage = "";
                 switch (type) {
@@ -207,6 +205,23 @@ mainApp.directive("modelStateAttribute", function () {
                 }
                 return errorMessage;
             }
+        }
+    }
+});
+
+
+mainApp.directive("ngEnter", function () {
+    return {
+        restrict: "A",
+        link: function (scope, elem, attrs) {
+            elem.bind("keydown keypress", function (ev) {
+                if (ev.which === 13) {
+                    scope.$apply(function () {
+                        scope.$eval(attrs.ngEnter);
+                    });
+                    ev.preventDefault();
+                }
+            });
         }
     }
 });

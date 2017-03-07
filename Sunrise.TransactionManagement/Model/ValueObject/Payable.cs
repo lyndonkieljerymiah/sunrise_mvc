@@ -15,7 +15,6 @@ namespace Sunrise.TransactionManagement.Model.ValueObject
 
         public static Payable Create(decimal rateAmount,DateTimeRange dateRange)
         {
-
             return new Payable(rateAmount, dateRange);
         }
 
@@ -24,7 +23,6 @@ namespace Sunrise.TransactionManagement.Model.ValueObject
             _rateCalculation = new MonthRateCalculation(rateAmount);
             this.Amount = _rateCalculation.Calculate(rateAmount, dateRange.Start, dateRange.End);
         }
-
 
         public Payable(decimal amount)
         {

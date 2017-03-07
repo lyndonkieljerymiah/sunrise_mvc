@@ -55,13 +55,9 @@
     <Compile Include="Data\Factory\MasterFileFactory.cs" />
     <Compile Include="Data\MasterFile\ISelectionDataService.cs" />
     <Compile Include="Data\MasterFile\SelectionDataService.cs" />
-    <Compile Include="Migrations\201701021715465_Initial.cs" />
-    <Compile Include="Migrations\201701021715465_Initial.Designer.cs">
-      <DependentUpon>201701021715465_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201701021806123_UpdateCompanyPlural.cs" />
-    <Compile Include="Migrations\201701021806123_UpdateCompanyPlural.Designer.cs">
-      <DependentUpon>201701021806123_UpdateCompanyPlural.cs</DependentUpon>
+    <Compile Include="Migrations\201702200841451_Initial.cs" />
+    <Compile Include="Migrations\201702200841451_Initial.Designer.cs">
+      <DependentUpon>201702200841451_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Selection.cs" />
@@ -80,13 +76,9 @@
       <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201701021715465_Initial.resx">
-      <DependentUpon>201701021715465_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701021806123_UpdateCompanyPlural.resx">
-      <DependentUpon>201701021806123_UpdateCompanyPlural.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702200841451_Initial.resx">
+      <DependentUpon>201702200841451_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

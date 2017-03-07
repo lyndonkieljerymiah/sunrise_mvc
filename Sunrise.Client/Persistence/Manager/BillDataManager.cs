@@ -18,6 +18,7 @@ namespace Sunrise.Client.Persistence.Manager
         {
             UOW = unitOfWork;
         }
+
         public async Task<BillingViewModel> GenerateBill(string contractId)
         {
             //check whether the contract has a pending bill exist
@@ -44,18 +45,22 @@ namespace Sunrise.Client.Persistence.Manager
                     DateStamp = bill.DateStamp,
                     StatusCode = bill.Status.Code,
                     ContractCode = editableContract.Code,
-                    TransactionStatusCode = editableContract.StatusDescription,
-                    TransactionStatusDescription = editableContract.StatusDescription,
+                    ContractStatusCode = editableContract.ContractStatusDescription,
+                    ContractStatusDescription = editableContract.ContractStatusDescription,
                     PeriodStart = editableContract.PeriodStart,
                     PeriodEnd = editableContract.PeriodEnd,
+                    TenantCode = editableContract.TenantCode,
                     Name = editableContract.Name,
+                    EmailAddress = editableContract.EmailAddress,
+                    TelNo = editableContract.TelNo,
+                    MobileNo = editableContract.MobileNo,
                     Address = editableContract.Address,
                     VillaNo = editableContract.VillaNo,
                     ElecNo = editableContract.ElecNo,
                     WaterNo = editableContract.WaterNo,
                     QtelNo = editableContract.QTelNo,
                     RentalType = editableContract.RentalTypeDescription,
-                    VillaStatus = editableContract.VillaStatus,
+                    VillaStatusDescription = editableContract.VillaStatusDescription,
                     RatePerMonth = editableContract.RatePerMonth,
                     Amount = editableContract.Amount
                 };
@@ -67,6 +72,12 @@ namespace Sunrise.Client.Persistence.Manager
 
             return billViewModel;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="billCode"></param>
+        /// <returns></returns>
         public async Task<BillingViewModel> GetBillByCode(string billCode)
         {
             //get bill
@@ -75,7 +86,7 @@ namespace Sunrise.Client.Persistence.Manager
         }
 
         /// <summary>
-        /// insert and update
+        /// create bill and insert payment
         /// </summary>
         /// <param name="model"></param>
         /// <param name="userId"></param>
@@ -109,12 +120,16 @@ namespace Sunrise.Client.Persistence.Manager
                                 break;
                         }
                     }
+
                     if (isSuccess)
-                    {   
+                    {
                         bill.ActivateBill();
                         UOW.Bills.Add(bill);
+
+                        //update contract
                         contract.ActivateStatus();
                         UOW.Contracts.Update(contract);
+
                         await UOW.Commit();
                         result.Success = true;
                         await updateStatus(contract.VillaId);
@@ -142,19 +157,25 @@ namespace Sunrise.Client.Persistence.Manager
                                                     payment.PeriodStart,
                                                     payment.PeriodEnd, payment.Amount, payment.Remarks, userId);
                             }
-                            if (payment.IsDeleted)
+                            else
                             {
-                                existingBill.RemovePayment(payment.Id);
-                            }
-                            else if (payment.IsModify && !payment.IsDeleted)
-                            {
-                                existingBill.UpdatePayment(payment.Id, payment.PaymentDate, payment.PaymentTypeCode,
-                                    payment.PaymentModeCode,
-                                    payment.ChequeNo,
-                                    payment.BankCode,
-                                    payment.PeriodStart,
-                                    payment.PeriodEnd,
-                                    payment.Amount, payment.Remarks, userId);
+                                if (payment.IsDeleted)
+                                {
+                                    existingBill.RemovePayment(payment.Id);
+                                }
+                                else if (payment.IsModify && !payment.IsDeleted)
+                                {
+                                    existingBill.UpdatePayment(
+                                        payment.Id, 
+                                        payment.PaymentDate, 
+                                        payment.PaymentTypeCode,
+                                        payment.PaymentModeCode,
+                                        payment.ChequeNo,
+                                        payment.BankCode,
+                                        payment.PeriodStart,
+                                        payment.PeriodEnd,
+                                        payment.Amount, payment.Remarks, userId);
+                                }
                             }
                         }
 
@@ -171,6 +192,13 @@ namespace Sunrise.Client.Persistence.Manager
             }
             return result;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<CustomResult> Update(BillingViewModel model, string userId)
         {
             var result = new CustomResult();
@@ -182,40 +210,12 @@ namespace Sunrise.Client.Persistence.Manager
                 {
                     if (model.Payments.Count > 0)
                     {
-                        //update 
-                        foreach (var payment in model.Payments)
-                        {
-                            var isExist = bill.Payments.Any(p => p.Id == payment.Id);
-                            if (payment.IsModify && !payment.IsDeleted)
-                            {
-                                bill.UpdatePayment(payment.Id, 
-                                    payment.PaymentDate,
-                                    payment.PaymentTypeCode,
-                                    payment.PaymentModeCode,
-                                    payment.ChequeNo,
-                                    payment.BankCode,
-                                    payment.PeriodStart,
-                                    payment.PeriodEnd,
-                                    payment.Amount, payment.Remarks,payment.StatusCode, userId);
-                            }
-                        }
+                        UpdatePayment(model, userId, bill);
                     }
 
-                    if(model.Reconciles.Count > 0)
+                    if (model.Reconciles.Count > 0)
                     {
-                        foreach (var reconcile in model.Reconciles)
-                        {
-                            bill.AddReconcile(
-                                reconcile.ChequeNo,
-                                reconcile.PaymentTypeCode,
-                                reconcile.ReferenceNo,
-                                reconcile.BankCode, 
-                                reconcile.DishonouredAmount, 
-                                reconcile.Amount, 
-                                reconcile.PeriodStart, 
-                                reconcile.PeriodEnd, 
-                                reconcile.Remarks);
-                        }
+                        UpdateReconcile(model, bill);
                     }
                     UOW.Bills.Update(bill);
                     await UOW.Commit();
@@ -228,7 +228,84 @@ namespace Sunrise.Client.Persistence.Manager
             }
             return result;
         }
-        
-        
+
+      
+
+        #region private method
+        private void UpdatePayment(BillingViewModel model, string userId, Bill bill)
+        {
+            //update 
+            foreach (var payment in model.Payments)
+            {
+                var isExist = bill.Payments.Any(p => p.Id == payment.Id);
+                if (isExist)
+                {
+                    if (payment.IsModify && !payment.IsDeleted)
+                    {
+                        bill.UpdatePayment(payment.Id,
+                            payment.PaymentDate,
+                            payment.PaymentTypeCode,
+                            payment.PaymentModeCode,
+                            payment.ChequeNo,
+                            payment.BankCode,
+                            payment.PeriodStart,
+                            payment.PeriodEnd,
+                            payment.Amount,
+                            payment.Remarks,
+                            payment.StatusCode,
+                            userId);
+                    }
+                    else if (payment.IsDeleted)
+                    {
+                        //will be deleted when further requirements 
+                        bill.RemovePayment(payment.Id);
+                    }
+                    else
+                    {
+                        //do something in the future
+                    }
+                }
+            }
+        }
+        private void UpdateReconcile(BillingViewModel model, Bill bill)
+        {
+            foreach (var reconcile in model.Reconciles)
+            {
+                var isReconExist = bill.Reconciles.Any(r => r.Id == reconcile.Id);
+                if (isReconExist)
+                {
+                    if (reconcile.IsModify && !reconcile.IsDeleted)
+                    {
+                        bill.UpdateReconcile(
+                            reconcile.Id,
+                            reconcile.ChequeNo,
+                            reconcile.ReferenceNo,
+                            reconcile.BankCode,
+                            reconcile.DishonouredAmount,
+                            reconcile.Amount,
+                            reconcile.PeriodStart,
+                            reconcile.PeriodEnd, reconcile.Remarks);
+                    }
+                    else if (reconcile.IsDeleted)
+                    {
+                        bill.RemoveReconcile(reconcile.Id);
+                    }
+                }
+                else
+                {
+                    bill.AddReconcile(
+                        reconcile.ChequeNo,
+                        reconcile.PaymentTypeCode,
+                        reconcile.ReferenceNo,
+                        reconcile.BankCode,
+                        reconcile.DishonouredAmount,
+                        reconcile.Amount,
+                        reconcile.PeriodStart,
+                        reconcile.PeriodEnd,
+                        reconcile.Remarks);
+                }
+            }
+        }
+        #endregion
     }
 }

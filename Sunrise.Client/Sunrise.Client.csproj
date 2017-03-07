@@ -266,6 +266,7 @@
     <Compile Include="Domains\ViewModels\Identity\ResetPasswordViewModel.cs" />
     <Compile Include="Domains\ViewModels\Identity\SendCodeViewModel.cs" />
     <Compile Include="Domains\ViewModels\Identity\VerifyCodeViewModel.cs" />
+    <Compile Include="Domains\ViewModels\InquiryViewModel.cs" />
     <Compile Include="Domains\ViewModels\Manage\AddPhoneNumberViewModel.cs" />
     <Compile Include="Domains\ViewModels\Manage\ChangePasswordViewModel.cs" />
     <Compile Include="Domains\ViewModels\Manage\ConfigureTwoFactorViewModel.cs" />
@@ -297,13 +298,9 @@
     <Compile Include="Infrastructure\Validations\CustomRequiredMatchToValidation.cs" />
     <Compile Include="Infrastructure\Validations\CustomTenantRequire.cs" />
     <Compile Include="Infrastructure\Validations\PropertyValidationAttribute.cs" />
-    <Compile Include="Migrations\201701031413553_Initial.cs" />
-    <Compile Include="Migrations\201701031413553_Initial.Designer.cs">
-      <DependentUpon>201701031413553_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201702120909114_AddTransactionCode.cs" />
-    <Compile Include="Migrations\201702120909114_AddTransactionCode.Designer.cs">
-      <DependentUpon>201702120909114_AddTransactionCode.cs</DependentUpon>
+    <Compile Include="Migrations\201702211010417_Initial.cs" />
+    <Compile Include="Migrations\201702211010417_Initial.Designer.cs">
+      <DependentUpon>201702211010417_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Persistence\Context\AppDbContext.cs" />
@@ -317,6 +314,8 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\imgs\user_profile.jpg" />
+    <Content Include="Content\print.css" />
     <Content Include="Content\vendor\bootstrap\bootstrap-cyborg.css" />
     <Content Include="Content\vendor\bootstrap\bootstrap-theme.css" />
     <Content Include="Content\vendor\bootstrap\bootstrap-theme.min.css" />
@@ -501,6 +500,7 @@
     <Content Include="Content\vendor\bootstrap\bootstrap.css.map" />
     <Content Include="Content\vendor\bootstrap\bootstrap-theme.css.map" />
     <Content Include="Content\parts\nav.less" />
+    <Content Include="Content\bootstrap-print.less" />
     <None Include="Properties\PublishProfiles\Intranet.pubxml" />
     <Content Include="Scripts\libs\fullcalendar\.bower.json" />
     <Content Include="Scripts\libs\fullcalendar\bower.json" />
@@ -1767,6 +1767,7 @@
     <Content Include="Views\Receivable\Payment.cshtml" />
     <Content Include="Views\Receivable\Reconcile.cshtml" />
     <Content Include="Views\Contract\TerminateTemplate.cshtml" />
+    <Content Include="Views\Contract\Inquiry.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1802,18 +1803,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201701031413553_Initial.resx">
-      <DependentUpon>201701031413553_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702120909114_AddTransactionCode.resx">
-      <DependentUpon>201702120909114_AddTransactionCode.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <TypeScriptCompile Include="Scripts\libs\moment\moment.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201702211010417_Initial.resx">
+      <DependentUpon>201702211010417_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

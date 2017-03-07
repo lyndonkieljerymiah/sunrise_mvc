@@ -31,12 +31,12 @@ namespace Sunrise.Client.Persistence.Manager
 
             //fetch existing villa
             villa = await Factory.Villas.GetVillaById(vm.Id);
-
-            villa.Update(vm.VillaNo, vm.ElecNo,
+            
+            villa.Update(vm.VillaNo,vm.Location, vm.ElecNo,
             vm.WaterNo, vm.QtelNo, vm.Type,
             vm.Capacity, vm.Description, vm.RatePerMonth);
             villa.ProfileIndex = vm.ProfileIndex;
-
+            
             if (vm.ImageGalleries.Count > 0)
             {
                 foreach (var gallery in vm.ImageGalleries)
@@ -73,7 +73,7 @@ namespace Sunrise.Client.Persistence.Manager
             var result = new CustomResult();
             Villa villa;
 
-            villa = Villa.Map(vm.VillaNo, vm.ElecNo,
+            villa = Villa.Map(vm.VillaNo,vm.Location, vm.ElecNo,
             vm.WaterNo, vm.QtelNo, vm.Type,
             vm.Capacity, vm.Description, vm.RatePerMonth);
             villa.ProfileIndex = vm.ProfileIndex;
@@ -103,20 +103,28 @@ namespace Sunrise.Client.Persistence.Manager
             }
             return result;
         }
-
+        
+        /// <summary>
+        /// Get Vacant Villas
+        /// </summary>
+        /// <param name="villaNo"></param>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="noImageUrl"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<VillaListViewModel>> GetVacantVillas(string villaNo = "", int pageNumber = 1, int pageSize = 20, string noImageUrl = "")
         {
-            var villas = await Factory.Villas.GetVillasForDisplay(villaNo, VillaStatusEnum.Available, pageNumber, pageSize);
-
+            var villas = await Factory.Villas.GetVillas(villaNo, VillaStatusEnum.Available, pageNumber, pageSize);
             ICollection<VillaListViewModel> viewModels = new List<VillaListViewModel>();
             foreach (var villa in villas)
             {
                 VillaListViewModel viewModel = Mapper.Map<VillaListViewModel>(villa);
-                viewModel.ImageGallery.Id = viewModel.ImageGallery.Id;
-                viewModel.ImageGallery.FileName = viewModel.ImageGallery.FileName;
                 if (villa.Gallery != null)
                 {
-                    viewModel.ImageGallery.SetImageBlob(villa.Gallery.Blob.Blob);
+                    viewModel.ImageGallery.Id = villa.Gallery.Id;
+                    viewModel.ImageGallery.FileName = villa.Gallery.FileName;
+                    viewModel.ImageGallery.SetImageBlob(villa.Gallery.Blob);
+
                 }
                 else
                 {
@@ -135,7 +143,7 @@ namespace Sunrise.Client.Persistence.Manager
             int pageNo = 1,
             int pageSize = 20, string noImageUrl = "")
         {
-            var villas = await Factory.Villas.GetVillasForDisplay(villaNo, status, pageNo, pageSize);
+            var villas = await Factory.Villas.GetVillas(villaNo, status, pageNo, pageSize);
 
             ICollection<VillaListViewModel> viewModels = new List<VillaListViewModel>();
             foreach (var villa in villas)
@@ -145,7 +153,7 @@ namespace Sunrise.Client.Persistence.Manager
                 viewModel.ImageGallery.FileName = viewModel.ImageGallery.FileName;
                 if (villa.Gallery != null)
                 {
-                    viewModel.ImageGallery.SetImageBlob(villa.Gallery.Blob.Blob);
+                    viewModel.ImageGallery.SetImageBlob(villa.Gallery.Blob);
                 }
                 else
                 {

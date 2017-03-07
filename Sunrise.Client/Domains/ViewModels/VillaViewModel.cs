@@ -28,8 +28,12 @@ namespace Sunrise.Client.Domains.ViewModels
 
         public string Id { get; set; }
         public DateTime DateStamp { get; private set; }
+
         [Required]
         public string VillaNo { get; set; }
+
+        [Required]
+        public string Location { get; set; }
 
         [Required]
         public string ElecNo { get; set; }
@@ -57,6 +61,7 @@ namespace Sunrise.Client.Domains.ViewModels
         
         public IEnumerable<SelectListItem> Types { get; set; }
         public ICollection<ImageGalleryViewModel> ImageGalleries { get; set; }
+
         public void SetLookup(IEnumerable<Selection> selections)
         {
             this.Types = selections
@@ -77,7 +82,6 @@ namespace Sunrise.Client.Domains.ViewModels
                     "data:image/jpg;base64," + Convert.ToBase64String(Blob.Blob);
             }
         }
-
         public string ImageUrl { get; set; }
         public bool MarkDeleted { get; set; }
     }

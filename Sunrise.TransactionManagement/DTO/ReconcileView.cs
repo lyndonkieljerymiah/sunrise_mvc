@@ -11,8 +11,6 @@ namespace Sunrise.TransactionManagement.DTO
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public string BillId { get; set; }
-        public string PaymentModeCode { get; set; }
-        public string PaymentModeDescription { get; set; }
         public string PaymentTypeCode { get; set; }
         public string PaymentTypeDescription { get; set; }
         public string BankDescription { get; set; }

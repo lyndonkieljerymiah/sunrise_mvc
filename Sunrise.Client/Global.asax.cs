@@ -61,13 +61,14 @@ namespace Sunrise.Client
                     .ForMember(dest => dest.Individual, opts => opts.Condition(src => (src.Individual != null)));
                 #endregion
                 #region VillaView to ViewModel
-                cfg.CreateMap<VillaGallery, ImageGalleryViewModel>().ReverseMap();
 
+                cfg.CreateMap<VillaGallery, ImageGalleryViewModel>().ReverseMap();
                 cfg.CreateMap<Villa, VillaViewModel>()
                 .ForMember(dest => dest.ImageGalleries, opts => opts.MapFrom(src => src.Galleries))
                 .ReverseMap();
 
-                cfg.CreateMap<VillaManagement.DTO.VillaListDTO, VillaListViewModel>().ReverseMap();
+                cfg.CreateMap<VillaManagement.DTO.VillaView, VillaListViewModel>().ReverseMap();
+
                 #endregion
                 
                 #region contract 
@@ -82,7 +83,7 @@ namespace Sunrise.Client
                 cfg.CreateMap<BillView, BillingViewModel>().ReverseMap();
 
                 cfg.CreateMap<Contract, ContractRegisterCreateViewModel>()
-                .ForMember(dest=> dest.ContractStatus, opts => opts.MapFrom(src => src.ContractStatus.Code))
+                .ForMember(dest=> dest.ContractType, opts => opts.MapFrom(src => src.ContractType.Code))
                 .ForMember(dest => dest.RentalType, opts => opts.MapFrom(src => src.RentalType.Code))
                 .ForMember(dest => dest.Amount, opts => opts.MapFrom(src => src.Amount.Amount))
                 .ReverseMap();

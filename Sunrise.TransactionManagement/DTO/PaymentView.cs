@@ -17,7 +17,6 @@ namespace Sunrise.TransactionManagement.DTO
         public string PaymentTypeCode { get; set; }
         public string PaymentModeDescription { get; set; }
         public string PaymentModeCode { get; set; }
-
         
         public string ChequeNo { get; set; }
         public string BankDescription { get; set; }

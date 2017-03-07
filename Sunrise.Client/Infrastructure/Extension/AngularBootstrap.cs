@@ -184,9 +184,9 @@ namespace Sunrise.Client.Infrastructure.Extension
             fieldId = fieldId.ToCamelCase();
 
             StringBuilder builder = new StringBuilder();
-            builder.Append("<strong class='text-danger'>");
+            builder.Append("<span class='text-danger' ng-show='errorState.error[\"" + parent + "." + fullBindingName + "\"]'>");
             builder.Append("{{errorState.error['" + parent + "." + fullBindingName + "']}}");
-            builder.Append("</strong>");
+            builder.Append("</span>");
 
             return new MvcHtmlString(builder.ToString());
         }

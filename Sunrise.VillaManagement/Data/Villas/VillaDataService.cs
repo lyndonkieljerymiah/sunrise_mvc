@@ -11,7 +11,7 @@ using Sunrise.VillaManagement.Infrastructure.State;
 using Sunrise.VillaManagement.Persistence;
 using System.Data.Entity;
 using PagedList.EntityFramework;
-
+using System.Data.SqlClient;
 
 namespace Sunrise.VillaManagement.Data.Villas
 {
@@ -99,33 +99,13 @@ namespace Sunrise.VillaManagement.Data.Villas
 
             return result;
         }
-        public async Task<IEnumerable<VillaListDTO>> GetVillasForDisplay(string villaNo = "", VillaStatusEnum status = VillaStatusEnum.All, int pageNumber = 1, int pageSize = 20)
-        {
-            var villas = ReferenceContext
-                .Villas
-                .Include(v => v.Galleries)
-                .Select(v => new VillaListDTO
-                {
-                    Id = v.Id,
-                    VillaNo = v.VillaNo,
-                    DateStamp = v.DateStamp,
-                    ElecNo = v.ElecNo,
-                    WaterNo = v.WaterNo,
-                    QTelNo = v.QtelNo,
-                    Status = v.Status,
-                    StatusCode = v.StatusCode,
-                    Type = v.Type,
-                    Capacity = v.Capacity,
-                    Description = v.Description,
-                    ProfileIndex = v.ProfileIndex,
-                    RatePerMonth = v.RatePerMonth,
-                    Gallery = ReferenceContext.Galleries.FirstOrDefault(g => g.Id == v.ProfileIndex)
-                });
-            string state = "";
 
+        public async Task<IEnumerable<VillaView>> GetVillas(string villaNo = "", VillaStatusEnum status = VillaStatusEnum.All, int pageNumber = 1, int pageSize = 20)
+        {
+            var villas = await GetVillaQuery();
+            string state = "";
             if (!string.IsNullOrEmpty(villaNo) && status != VillaStatusEnum.All)
-            {
-                
+            {   
                 switch (status)
                 {
                     case VillaStatusEnum.Available:
@@ -168,11 +148,20 @@ namespace Sunrise.VillaManagement.Data.Villas
                         break;
                 }
             }
+            else
+            {
 
-            return (await villas
-                        .OrderBy(v => v.VillaNo)
-                        .ToPagedListAsync(pageNumber, pageSize)
-                        ).ToList();
+            }
+
+            if (villas != null)
+            {
+                foreach (var villa in villas)
+                {
+                    villa.Galleries = (await GetGalleryQuery(villa.Id)).ToList();
+                    villa.Gallery = villa.Galleries.SingleOrDefault(g => g.Id == villa.ProfileIndex);
+                }
+            }
+            return villas.OrderBy(v => v.VillaNo);
         }
         public async Task<Villa> GetVillaByNo(string villaNo)
         {
@@ -186,14 +175,41 @@ namespace Sunrise.VillaManagement.Data.Villas
         {
             return await Context.Villas.FindAsync(id);
         }
-
         public async Task<Villa> GetVillaById(string Id)
         {
             var villa = await Context
                .Villas
-               .Include(v => v.Galleries).SingleOrDefaultAsync(v => v.Id == Id);
+               .Include(v => v.Galleries)
+               .SingleOrDefaultAsync(v => v.Id == Id);
 
             return villa;
         }
+
+        #region private method
+        private async Task<IEnumerable<VillaView>> GetVillaQuery()
+        {
+            var villas =  await Context.Database
+                                .SqlQuery<VillaView>("GetVillas")
+                                .ToListAsync();
+            return villas;
+        }
+        private async Task<IEnumerable<VillaGalleryView>> GetGalleryQuery(string villaId)
+        {
+            try
+            {
+                var parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("villaId",villaId)
+                };
+
+                return await Context.Database.SqlQuery<VillaGalleryView>("GetVillaGalleries @villaId", parameters.ToArray()).ToListAsync();
+            }
+            catch(Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+        #endregion
+
     }
 }

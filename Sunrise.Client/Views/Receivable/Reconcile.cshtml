@@ -1,7 +1,6 @@
 ﻿@using Sunrise.Client.Infrastructure.Extension
 @model Sunrise.Client.Domains.ViewModels.ReconcileViewModel
 
-
 <form id="reconcilePaymentForm" class="form-horizontal">
     <div class="modal-header">
         <h5 class="modal-title">Payment Reconciliation</h5>
@@ -28,7 +27,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-md-2 text-right">Cheque No:</label>
+            <label class="col-md-2 text-right">No:</label>
             <div class="col-md-10">
                 @Html.NgInputFor(m => m.ChequeNo, "$ctrl.reconcile", "text", new string[] { "ng-disabled='$ctrl.payment.chequeFieldDisabled'", "required=''" })
                 @Html.ValidationMessageFor(m => m.ChequeNo)
@@ -54,16 +53,22 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-md-2 text-right">Dishonored Amount:</label>
+            <label class="col-md-2 text-right">Dishonored:</label>
             <div class="col-md-10">
-                @Html.NgInputFor(m => m.DishonouredAmount,"$ctrl.reconcile","amount",new string[] { "place-holder='Amount'", @"ng-pattern='/^\d +/'","required" })
+                @Html.NgInputFor(m => m.DishonouredAmount,"$ctrl.reconcile","amount",new string[] { "place-holder='Amount'","required" })
             </div>
         </div>
 
         <div class="form-group">
             <label class="col-md-2 text-right">Amount:</label>
             <div class="col-md-10">
-                @Html.NgInputFor(m => m.Amount, "$ctrl.reconcile", "amount", new string[] { "place-holder='Amount'", @"ng-pattern='/^\d +/'", "required" })
+                @Html.NgInputFor(m => m.Amount, "$ctrl.reconcile", "amount", new string[] { "place-holder='Amount'", "required" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 text-right">Remarks:</label>
+            <div class="col-md-10">
+                @Html.NgTextAreaFor(m => m.Remarks,"$ctrl.reconcile")
             </div>
         </div>
     </div>

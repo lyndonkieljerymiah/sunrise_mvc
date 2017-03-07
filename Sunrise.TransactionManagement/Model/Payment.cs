@@ -10,11 +10,18 @@ namespace Sunrise.TransactionManagement.Model
 {
     public class Payment
     {
-        
-        public static Payment Create(DateTime paymentDate,PaymentTypeDictionary paymentType, PaymentModeDictionary paymentMode, string chequeNo,
+
+        public static Payment Create(
+            DateTime paymentDate,
+            PaymentTypeDictionary paymentType, 
+            PaymentModeDictionary paymentMode, 
+            string chequeNo,
             string bank, DateTimeRange coveredPeriod,
-            decimal amount,string remarks,string userId)
+            decimal amount,
+            string remarks,
+            string userId)
         {
+
             var p = new Payment
             {
                 PaymentDate = paymentDate,
@@ -26,6 +33,7 @@ namespace Sunrise.TransactionManagement.Model
                 Amount = amount,
                 Remarks = remarks
             };
+
             p.LogStamp(userId);
             return p;
         }
@@ -41,18 +49,20 @@ namespace Sunrise.TransactionManagement.Model
         }
 
         public int Id { get; set; }
-        public DateTime PaymentDate { get; set; }
         public string BillId { get; set; }
+        public DateTime PaymentDate { get; set; }
         public PaymentTypeDictionary PaymentType { get; set; }
         public PaymentModeDictionary PaymentMode { get; set; }
        
         public string ChequeNo { get; set; }
-        public StatusDictionary Bank { get; set; }
 
+        public StatusDictionary Bank { get; set; }
         public DateTimeRange Period { get; set; }
         public decimal Amount { get; set; }
+
         public PaymentStatusDictionary Status { get; private set; }
         public DateTime? StatusDate { get; private set; }
+
         public string Remarks { get; set; }
         public bool IsReverse { get; set; }
 

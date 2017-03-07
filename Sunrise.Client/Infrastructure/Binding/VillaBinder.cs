@@ -26,11 +26,12 @@ namespace Sunrise.Client.Infrastructure.Binding
                 actionContext.ModelState.AddModelError("VillaNo", "Villa No is Required");
                 return false;
             }
-            
+
 
             VillaViewModel vm = new VillaViewModel
             {
                 Id = form.Get("id"),
+                Location = form.Get("location"),
                 VillaNo = form.Get("villaNo"),
                 ElecNo = form.Get("elecNo"),
                 WaterNo = form.Get("waterNo"),
@@ -45,9 +46,9 @@ namespace Sunrise.Client.Infrastructure.Binding
             try
             {
                 //get gallery for deletion if any
-                var keys = string.IsNullOrEmpty(form.Get("forDeletion")) ? "" :
+                var keys = 
+                    string.IsNullOrEmpty(form.Get("forDeletion")) ? "" :
                     form.Get("forDeletion").Substring(0, form.Get("forDeletion").Length - 1);
-
                 if (keys.Length > 0)
                 {
                     //convert to array
@@ -99,7 +100,6 @@ namespace Sunrise.Client.Infrastructure.Binding
                 return false;
             }
         }
-        
     }
 
     public class VillaModelBinderProvider : ModelBinderProvider

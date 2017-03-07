@@ -44,6 +44,12 @@ namespace Utilities.ValueObjects
             return dt;
         }
 
+        public bool IsRangeConflict(DateTime date)
+        {
+            if (date.Date >= this.Start && date.Date <= this.End)
+                return true;
+            return false;
+        }
         
         public int GetMonthValue(DateTime dateValue)
         {   
@@ -51,6 +57,7 @@ namespace Utilities.ValueObjects
             var monthDue = Convert.ToInt16(totalDays) / 30;
             return monthDue;
         }
+        
         
         
 

@@ -11,7 +11,12 @@ namespace Sunrise.TransactionManagement.DTO
     {
         public int Id { get; set; }
         public string VillaId { get; set; }
-        public ImageBlob Blob { get; set; }
+        public byte[] Blob { get; set; }
+        public string FileFormat { get; set; }
+        public string FileName { get; set; }
+        public string MimeType { get; set; }
+        public int Size { get; set; }
+
         public virtual VillaView Villa { get; set; }
     }
 }

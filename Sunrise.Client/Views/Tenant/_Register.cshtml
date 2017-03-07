@@ -5,7 +5,7 @@
     ViewBag.Controller = "model.data.register";
 }
 <div>
-    <div class="form-group" model-state-attribute>
+    <div class="form-group">
         <label class="col-md-3 text-right">Type:</label>
         <div class="col-md-9">
             @Html.NgDropdownFor(m => m.TenantType, "model.data.register.tenantTypes", (string)ViewBag.Controller)

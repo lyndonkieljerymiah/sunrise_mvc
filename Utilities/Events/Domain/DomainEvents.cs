@@ -12,9 +12,7 @@ namespace Utilities.Events.Domain
     {
         [ThreadStatic] //each has it's own thread
         private static List<Delegate> actions;
-
-        public static IContainer Container { get; set; }
-
+        
         /// <summary>
         /// TODO: Registers a callback for the given domain event
         /// </summary>
@@ -25,6 +23,7 @@ namespace Utilities.Events.Domain
         {
             if (actions == null)
                 actions = new List<Delegate>();
+
             actions.Add(callback);
         }
 
@@ -36,10 +35,21 @@ namespace Utilities.Events.Domain
             actions = null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="args"></param>
         public static void Raise<T>(T args) 
             where T : IDomainEvent
         {
-            
+            if(actions != null)
+            {
+                foreach (var action in actions)
+                {
+                    ((Action<T>)action)(args);
+                }
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ namespace TransactionManagement.Test.Setup
             var contract = Contract.CreateNewEmpty(villaId, 12, rateAmount);
 
             contract.RentalType = StatusDictionary.CreateByDefault(rentalType);
-            contract.ContractStatus = StatusDictionary.CreateByDefault(contractStatus);
+            contract.ContractType = StatusDictionary.CreateByDefault(contractStatus);
             contract.VillaId = villaId;
             contract.TenantId = tenantId;
             contract.Period = DateTimeRange.SetRange(dateStart, 12);

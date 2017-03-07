@@ -1,160 +1,161 @@
-﻿@model Sunrise.Client.Domains.ViewModels.VillaViewModel
+﻿@using Sunrise.Client.Infrastructure.Extension
+@model Sunrise.Client.Domains.ViewModels.VillaViewModel
 
 @{
-    ViewBag.Title = "Create Villa";
+    ViewBag.Title = "Villa Form";
 }
-<form id="villaEntryForm" class="form-horizontal"
-      ng-controller="villaController as $ctrl"
-      ng-init="$ctrl.create('@ViewBag.Id')">
 
-    <spinner></spinner>
-    <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="page-header">
-                <h4>Villa Entry Form</h4>
+<div ng-controller="villaController as $ctrl" ng-init="model.action.create('@ViewBag.Id')">
+    <form id="villaEntryForm" class="form-horizontal" model-state-attribute model-scope="errorState">
+        <spinner></spinner>
+        <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h4>@ViewBag.Title</h4>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container-fluid">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-7">
-                        <div class="form-group">
-                            <label class="col-md-2">Villa No:</label>
-                            <input-set my-class="col-md-9"
-                                       my-model="model.villaNo"
-                                       my-required="true"
-                                       my-id="villaNo"
-                                       valid-state="modelError.villaNo.isValid"
-                                       error-msg="modelError.villaNo.errorMessage">
-                                <span ng-hide="modelError.villaNo.isValid">{{modelError.villaNo.errorMessage}}</span>
-                            </input-set>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2">Description:</label>
-                            <div class="col-md-9">
-                                <textarea class="form-control" ng-model="model.description"></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2">Electricity No:</label>
-                            <input-set my-class="col-md-9" my-model="model.elecNo"></input-set>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2">Water No:</label>
-                            <input-set my-class="col-md-9" my-model="model.waterNo"></input-set>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2">Qtel No:</label>
-                            <input-set my-class="col-md-9" my-model="model.qtelNo">
-                                <span></span>
-                            </input-set>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-md-2">Capacity:</label>
-                            <input-set my-class="col-md-9"
-                                       my-model="model.capacity"
-                                       my-numeric="number"
-                                       valid-state="modelError.capacity.isValid"
-                                       error-msg="modelError.capacity.errorMessage">
-                                <span ng-hide="modelError.capacity.isValid">{{modelError.capacity.errorMessage}}</span>
-                            </input-set>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2">Rate Per Month</label>
-                            <input-set my-class="col-md-9" my-model="model.ratePerMonth" my-numeric="currency" valid-state="model.validation.ratePerMonth.isValid" error-msg="model.validation.ratePerMonth.errorMessage">
-                                <span ng-hide="modelError.ratePerMonth.isValid">{{modelError.ratePerMonth.errorMessage}}</span>
-                            </input-set>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2">Type:</label>
-                            <div class="col-md-9">
-                                <select class="form-control" ng-model="model.type">
-                                    <option value="">--Select Type--</option>
-                                    <option ng-repeat="type in model.types" value="{{type.value}}">{{type.text}}</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="thumbnail">
-                            <img alt="" src="{{model.profileImage.imageConverted}}" style="width:100%" />
-                        </div>
-                    </div>
-                </div>
-                <hr />
-
-                <uib-tabset>
-                    <uib-tab index="0" heading="Image Gallery">
-                        <div class="row">
-                            <div class="col-md-9">
-                                <div class="body-content">
-                                    <table class="table table-condensed table-bordered">
-                                        <tr class="active">
-                                            <th style="width:5%">No</th>
-                                            <th style="width:5%">Default</th>
-                                            <th>File Name</th>
-                                            <th>Size</th>
-                                            <th style="width:10%">Image</th>
-                                            <th style="width:5%"></th>
-                                        </tr>
-                                        <tr ng-repeat="gallery in model.imageGalleries" ng-hide="gallery.markDeleted" class="slide-animation">
-                                            <td class="text-center active">{{$index}}</td>
-                                            <td class="text-center">
-                                                <input type="radio" ng-model="model.profileIndex" ng-value="gallery.id" />
-                                            </td>
-                                            <td>{{gallery.blob.fileName}}</td>
-                                            <td>{{gallery.blob.size}}</td>
-                                            <td class="text-center"><img src="{{gallery.imageConverted}}" style="width:50px;height:50px" /></td>
-                                            <td class="text-center">
-                                                <button class="btn btn-danger btn-sm" ng-click="$ctrl.remove(gallery)"><i class="fa fa-close"></i></button>
-                                            </td>
-                                        </tr>
-                                    </table>
+        <div class="container-fluid">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="form-group">
+                                <label class="col-md-2">Location:</label>
+                                <div class="col-md-9">
+                                    @Html.NgInputFor(m => m.Location, "model.data")
+                                    @Html.NgValidateFor(m => m.Location, "model.data")
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">Image Gallery</div>
-                                    <div class="panel-body">
-                                        <div class="thumbnail">
-                                            <table class="table table-condensed">
-                                                <tr>
-                                                    <th>File Name</th>
-                                                    <th>Photo</th>
-                                                </tr>
-                                                <tr ng-repeat="f in model.files">
-                                                    <td>{{f.name}}</td>
-                                                    <td><img ngf-thumbnail="f" style="width:50%" /></td>
-                                                </tr>
-                                            </table>
+                            <div class="form-group">
+                                <label class="col-md-2">Villa No:</label>
+                                <div class="col-md-9">
+                                    @Html.NgInputFor(m => m.VillaNo, "model.data")
+                                    @Html.NgValidateFor(m => m.VillaNo, "model.data")
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2">Description:</label>
+                                <div class="col-md-9">
+                                    @Html.NgTextAreaFor(m => m.Description, "model.data" )
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2">Electricity No:</label>
+                                <div class="col-md-9">
+                                    @Html.NgInputFor(m => m.ElecNo,"model.data")
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2">Water No:</label>
+                                <div class="col-md-9">
+                                    @Html.NgInputFor(m=> m.WaterNo,"model.data")
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2">Qtel No:</label>
+                                <div class="col-md-9">
+                                    @Html.NgInputFor(m => m.QtelNo,"model.data")
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2">Capacity:</label>
+                                <div class="col-md-9">
+                                    @Html.NgInputFor(m => m.Capacity,"model.data","number" )
+                                    @Html.NgValidateFor(m => m.Capacity, "model.data")
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2">Rate Per Month:</label>
+                                <div class="col-md-9">
+                                    @Html.NgInputFor(m => m.RatePerMonth, "model.data","currency")
+                                    @Html.NgValidateFor(m => m.RatePerMonth,"model.data")
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2">Type:</label>
+                                <div class="col-md-9">
+                                    @Html.NgDropdownFor(m => m.Type, "model.data.types","model.data" )
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="thumbnail">
+                                <img alt="" src="{{model.data.profileImage.imageConverted}}" style="width:100%" />
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <uib-tabset>
+                        <uib-tab index="0" heading="Image Gallery">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div class="body-content">
+                                        <table class="table table-condensed table-bordered">
+                                            <tr class="active">
+                                                <th style="width:5%">No</th>
+                                                <th style="width:5%">Default</th>
+                                                <th>File Name</th>
+                                                <th>Size</th>
+                                                <th style="width:10%">Image</th>
+                                                <th style="width:5%"></th>
+                                            </tr>
+                                            <tr ng-repeat="gallery in model.data.imageGalleries" ng-hide="gallery.markDeleted" class="slide-animation">
+                                                <td class="text-center active">{{$index}}</td>
+                                                <td class="text-center">
+                                                    <input type="radio" ng-model="model.profileIndex" ng-value="gallery.id" />
+                                                </td>
+                                                <td>{{gallery.blob.fileName}}</td>
+                                                <td>{{gallery.blob.size}}</td>
+                                                <td class="text-center"><img src="{{gallery.imageConverted}}" style="width:50px;height:50px" /></td>
+                                                <td class="text-center">
+                                                    <button class="btn btn-danger btn-sm" ng-click="model.action.remove(gallery)"><i class="fa fa-close"></i></button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Image Gallery</div>
+                                        <div class="panel-body">
+                                            <div class="thumbnail">
+                                                <table class="table table-condensed">
+                                                    <tr>
+                                                        <th>File Name</th>
+                                                        <th>Photo</th>
+                                                    </tr>
+                                                    <tr ng-repeat="f in model.data.files">
+                                                        <td>{{f.name}}</td>
+                                                        <td><img ngf-thumbnail="f" style="width:50%" /></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <button class="btn btn-default btn-block"
+                                                    ngf-select ng-model="model.data.files" name="files" ngf-pattern="'image/*'"
+                                                    ngf-accept="'image/*'" ngf-max-size="20MB" multiple>
+                                                Add Image
+                                            </button>
                                         </div>
-                                        <button class="btn btn-default btn-block"
-                                                ngf-select ng-model="model.files" name="files" ngf-pattern="'image/*'"
-                                                ngf-accept="'image/*'" ngf-max-size="20MB" multiple>
-                                            Add Image
-                                        </button>
                                     </div>
                                 </div>
                             </div>
+                        </uib-tab>
+                    </uib-tabset>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-md-2 pull-right">
+                            <button class="btn btn-default btn-block" ng-click="model.action.save()">Save</button>
                         </div>
-                    </uib-tab>
-                </uib-tabset>
-
-
-            </div>
-            <div class="panel-footer">
-                <div class="row">
-                    <div class="col-md-2 pull-right"><button class="btn btn-default btn-block" ng-click="$ctrl.save()">Save</button></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-</form>
+    </form>
+</div>
 
 @section scripts {
     <script src="~/Scripts/app/data/villa-manager.data.js"></script>

@@ -10,6 +10,7 @@
 
     <!-- Other basic Style-->
     @Styles.Render("~/Content/css")
+    <link href="~/Content/print.css" rel="stylesheet" media="print"/>
 
     <style>
         [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
@@ -33,7 +34,7 @@
             <div class="sidebar-nav navbar-collapse">
                 <ul class="nav" id="side-menu">
                     <li>
-                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Contracts <span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Contracts <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="@Url.Action("index","contract")">List Contracts</a>
@@ -42,19 +43,19 @@
                         <!-- /.nav-second-level -->
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Accounts <span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Accounts <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="@Url.Action("index","receivable")">Invoice</a>
+                                <a href="@Url.Action("index","receivable")">Receivable</a>
                             </li>
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Master File <span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Master File <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="@Url.Action("Index","Villa")">Villa Master File</a>
+                                <a href="@Url.Action("Index","Villa")"><i class="fa fa-home"></i> Villa Master File</a>
                             </li>
                         </ul>
                         <!-- /.nav-second-level -->

@@ -1,17 +1,17 @@
 ﻿<div class="modal-body">
     <div class="row">
         <div class="col-md-12">
-            <form class="form-horizontal" ng-init="$ctrl.search()">
+            <form class="form-horizontal" ng-init="$ctrl.model.action.search()">
                 <div class="form-group">
                     <div class="col-md-6">
-                        <search-box search-key="$ctrl.txtSearch" action="$ctrl.search()" placeholder="Search Villa..."></search-box>
+                        <search-box search-key="$ctrl.model.txtSearch" action="$ctrl.model.action.search()" placeholder="Search Villa..."></search-box>
                     </div>
                 </div>
             </form>
         </div>
         <div class="body-content" style="height: 550px; overflow:scroll">
             <div class="row">
-                <div class="col-md-2" ng-repeat="villa in $ctrl.villas | orderBy : 'villaNo'" style="margin-bottom:10px">
+                <div class="col-md-2" ng-repeat="villa in $ctrl.model.data.rows | orderBy : 'villaNo'" style="margin-bottom:10px">
                     <div class="nb-card">
                         <div class="nb-image">
                             <div class="card__image">
@@ -27,8 +27,7 @@
                             </ul>
                         </div>
                         <div class="nb-footer">
-                            <button class="nb-btn text-success" ng-click="$ctrl.select(villa.id)" uib-tooltip="Click here to select villa {{villa.villaNo}}">{{villa.status}}</button>
-
+                            <button class="nb-btn text-success" ng-click="$ctrl.model.action.select(villa.id)" uib-tooltip="Click here to select villa {{villa.villaNo}}">{{villa.status}}</button>
                         </div>
                     </div>
                 </div>

@@ -11,9 +11,7 @@ namespace Sunrise.TransactionManagement.Persistence.Repository.Abstract
 {
     public interface IBillRepository : IBaseRepository<Bill>
     {
-        Task<BillView> GetBill(string billId);
+        Task<BillView> GetBill(string billCode);
         Task<BillView> GetBillByContractCode(string contractId);
-
-
     }
 }

@@ -23,6 +23,7 @@ namespace Sunrise.Client.Domains.ViewModels
             var dt = DateTimeRange.SetRange(12);
             this.PeriodStart = dt.Start;
             this.PeriodEnd = dt.End;
+
             this.Payments = new HashSet<PaymentViewModel>();
             this.Reconciles = new HashSet<ReconcileViewModel>();
         }
@@ -35,8 +36,8 @@ namespace Sunrise.Client.Domains.ViewModels
 
         public string ContractCode { get; set; }
         public DateTime DateStamp { get; set; }
-        public string TransactionStatusCode { get; set; }
-        public string TransactionStatusDescription { get; set; }
+        public string ContractStatusCode { get; set; }
+        public string ContractStatusDescription { get; set; }
         public DateTime PeriodStart { get; set; }
         public DateTime PeriodEnd { get; set; }
         public Decimal Amount { get; set; }
@@ -65,8 +66,12 @@ namespace Sunrise.Client.Domains.ViewModels
         }
 
         //tenant
+        public string TenantCode { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
+        public string EmailAddress { get; set; }
+        public string TelNo { get; set; }
+        public string MobileNo { get; set; }
 
         //villa
         public string VillaNo { get; set; }
@@ -75,7 +80,7 @@ namespace Sunrise.Client.Domains.ViewModels
         public string WaterNo { get; set; }
         public string QtelNo { get; set; }
         public string RentalType { get; set; }
-        public string VillaStatus { get; set; }
+        public string VillaStatusDescription { get; set; }
         public decimal RatePerMonth { get; set; }
 
         public ICollection<PaymentViewModel> Payments { get; set; }
@@ -83,9 +88,14 @@ namespace Sunrise.Client.Domains.ViewModels
 
         public PaymentDictionary PaymentDictionary { get; private set; }
 
+        #region total sum
         public decimal TotalReceived { get; set; }
         public decimal TotalCleared { get; set; }
+        public decimal TotalBounce { get; set; }
+        public decimal TotalReconcile { get; set; }
+        public decimal TotalDishonored { get; set; }
         public decimal Balance { get; set; }
+        #endregion
 
         public void Initialize(IEnumerable<Selection> selections)
         {
@@ -100,6 +110,7 @@ namespace Sunrise.Client.Domains.ViewModels
             payment.PaymentTypeCode = PaymentTypeDictionary.CreateCheque().Code;
             payment.PaymentDate = DateTime.Today;
             payment.Amount = this.RatePerMonth;
+
             this.PaymentDictionary.InitialValue = payment;
 
             var reconcile = new ReconcileViewModel();
@@ -164,15 +175,17 @@ namespace Sunrise.Client.Domains.ViewModels
 
         public string StatusCode { get; set; }
         public string StatusDescription { get; set; }
-
-
+        
         public DateTime? StatusDate { get; set; }
         public string Remarks { get; set; }
 
+        #region payment tracking state
         public bool IsModify { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsModifyStatus { get; set; }
+        #endregion
 
+        #region payment status navigation read only
         public bool IsClear
         {
             get
@@ -184,9 +197,16 @@ namespace Sunrise.Client.Domains.ViewModels
         {
             get
             {
-                return new PaymentStatusDictionary(StatusCode).IsReceived() ? true:false;
+                return new PaymentStatusDictionary(StatusCode).IsReceived() ? true : false;
             }
         }
+        //state check one time only not for navigation
+        public bool IsEditable => IsReceived; 
+        #endregion
+
+
+
+
     }
 
     public class PaymentDictionary
@@ -289,8 +309,14 @@ namespace Sunrise.Client.Domains.ViewModels
 
         public string Remarks { get; set; }
 
+        #region tracking state navigation
         public bool IsModify { get; set; }
         public bool IsDeleted { get; set; }
+        #endregion
+        
+        public bool IsEditable => false;
+        public bool IsDeletable => false;
+
     }
 
 

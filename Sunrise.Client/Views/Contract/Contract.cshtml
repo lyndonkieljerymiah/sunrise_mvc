@@ -10,7 +10,6 @@
     <form class="form-horizontal" model-state-attribute model-scope="errorState">
         <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
         <spinner></spinner>
-
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header">
@@ -23,7 +22,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="panel panel-yellow">
-                                    <div class="panel-heading">New Tenant</div>
+                                    <div class="panel-heading"><i class="fa fa-user-circle-o"></i> New Tenant</div>
                                     <div class="panel-body">
                                         <!-- angular -->
                                         <div ng-include="model.data.template"></div>
@@ -84,8 +83,8 @@
                                         <div class="form-group">
                                             <label class="col-md-4 text-right">Contract Status:</label>
                                             <div class="col-md-8">
-                                                @Html.NgDropdownFor(m => m.ContractStatus, "model.data.contractStatuses", (string)ViewBag.Controller)
-                                                @Html.NgValidateFor(m => m.ContractStatus, (string)ViewBag.Controller)
+                                                @Html.NgDropdownFor(m => m.ContractType, "model.data.contractTypes", (string)ViewBag.Controller)
+                                                @Html.NgValidateFor(m => m.ContractType, (string)ViewBag.Controller)
                                             </div>
                                         </div>
                                         <div class="page-header">
